@@ -13,7 +13,8 @@ export const COLORS = {
     secondaryGray: '#808080',
     success: '#00C851',
     error: '#ff4444',
-    background: "#FFFFFF"
+    background: "#FFFFFF",
+    gray : "#D9D9D9"
 }
 
 export const SIZES = {
