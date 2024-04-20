@@ -4,6 +4,7 @@ import Homepages from '../screens/Homepages';
 import PlanScreen from '../screens/PlanScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import BottomTabNavigation from './BottomTabNavigation';
+import AddExerciseScreen from '../screens/AddExerciseScreen';
 const Stack = createNativeStackNavigator();
 function AppNavigation() {
     return (
@@ -18,9 +19,11 @@ function AppNavigation() {
                         headerShown: false,
                     }}
                 /> */}
-                 <Stack.Screen name="Plan" component={PlanScreen} />
+              
           {/* <Stack.Screen name="Home" component={Homepages} /> */}
           {/* <Stack.Screen name="Explore" component={ExploreScreen} /> */}
+          {/* <Stack.Screen name="Plan" component={PlanScreen} /> */}
+          <Stack.Screen name="AddExercise" component={AddExerciseScreen} />
          
         </Stack.Navigator>
       </NavigationContainer>
