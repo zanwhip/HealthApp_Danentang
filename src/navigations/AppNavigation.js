@@ -5,6 +5,8 @@ import PlanScreen from '../screens/PlanScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import BottomTabNavigation from './BottomTabNavigation';
 import AddExerciseScreen from '../screens/AddExerciseScreen';
+import EditDailyGoalsScreen from '../screens/EditDailyGoalsScreen';
+import ExerciseDailyDiaryScreen from '../screens/ExerciseDailyDiaryScreen';
 const Stack = createNativeStackNavigator();
 function AppNavigation() {
     return (
@@ -23,7 +25,9 @@ function AppNavigation() {
           {/* <Stack.Screen name="Home" component={Homepages} /> */}
           {/* <Stack.Screen name="Explore" component={ExploreScreen} /> */}
           {/* <Stack.Screen name="Plan" component={PlanScreen} /> */}
-          <Stack.Screen name="AddExercise" component={AddExerciseScreen} />
+          {/* <Stack.Screen name="AddExercise" component={AddExerciseScreen} /> */}
+          {/* <Stack.Screen name="EditDailyGoals" component={EditDailyGoalsScreen} /> */}
+          <Stack.Screen name="ExerciseDailyDiary" component={ExerciseDailyDiaryScreen} />
          
         </Stack.Navigator>
       </NavigationContainer>
