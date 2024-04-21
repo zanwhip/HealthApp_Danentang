@@ -9,7 +9,8 @@ import { useTheme } from '../themes/ThemeProvider'
 
 import Homepages from '../screens/Homepages';
 import ExploreScreen from '../screens/ExploreScreen';
-    
+import ExerciseDailyDiaryScreen from '../screens/ExerciseDailyDiaryScreen';
+import ProfileFoodScreen from '../screens/ProfileFoodScreen';
 const Tab = createBottomTabNavigator()
 
 
@@ -30,7 +31,7 @@ const BottomTabNavigation = () => {
             }
         }}>
             <Tab.Screen
-                name="Home"
+                name="Explore"
                 component={ExploreScreen}
                 options={{
                     tabBarIcon: ({ focused }) => {
@@ -98,8 +99,8 @@ const BottomTabNavigation = () => {
             />
 
             <Tab.Screen
-                name="scan"
-                component={Homepages}
+                name="ExerciseDailyDiary"
+                component={ExerciseDailyDiaryScreen}
                 options={{
                     tabBarIcon: ({ focused }) => {
                         return (
@@ -120,7 +121,7 @@ const BottomTabNavigation = () => {
             />
             <Tab.Screen
                 name="Profile"
-                component={Homepages}
+                component={ProfileFoodScreen}
                 options={{
                     tabBarIcon: ({ focused }) => {
                         return (

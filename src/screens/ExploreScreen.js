@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   container : {
     flex : 1,
     backgroundColor : COLORS.background,
-    marginBottom : 100
+
   },
   search : {
     height : 50,
