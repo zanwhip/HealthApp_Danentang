@@ -1,11 +1,18 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  SafeAreaView,
+} from 'react-native';
 import React from 'react';
 import HeaderToday from '../components/HeaderToday';
 import Box from '../components/Box';
 import SwitchButton from '../components/SwitchButton';
-import { DonutChart } from 'react-native-circular-chart';
 import { COLORS } from '../constants';
-import HalfPie from '../components/HalfPie';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import { Divider, Button } from '@rneui/themed';
 
 const DiaryFoodScreen = () => {
   const switchBtnContent = [
@@ -21,21 +28,14 @@ const DiaryFoodScreen = () => {
     },
   ];
 
-  const DATA = [
-    { name: 'Remaining', value: 1486, color: 'orange' },
-    { name: 'none', value: 2000, color: COLORS.background },
-  ];
-
-  const widthAndHeight = 130;
-  const series = [30, 70, 0];
-  const sliceColor = ['#F2B455', '#EEEEEE', '#F2B455'];
-
   return (
     <View style={styles.container}>
       <HeaderToday />
-      <View style={styles.containerContent}>
-        <SwitchButton switchBtnContent={switchBtnContent} />
-        {/* <HalfPie /> */}
+      <ScrollView style={{ paddingHorizontal: 20 }}>
+        <View style={{ alignItems: 'center' }}>
+          <SwitchButton switchBtnContent={switchBtnContent} />
+        </View>
+
         <Box
           content={
             <View style={styles.boxContentContainer}>
@@ -68,10 +68,42 @@ const DiaryFoodScreen = () => {
                   </Text>
                 </View>
                 <View style={styles.resultContainer}>
-                  <HalfPie />
+                  <AnimatedCircularProgress
+                    size={150}
+                    width={18}
+                    fill={20}
+                    arcSweepAngle={200}
+                    lineCap={'round'}
+                    rotation={260}
+                    tintColor='orange'
+                    onAnimationComplete={() =>
+                      console.log('onAnimationComplete')
+                    }
+                    backgroundColor={COLORS.background}
+                  />
+                  <View
+                    style={{
+                      position: 'absolute',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Text style={{ fontSize: 18, fontWeight: '400' }}>
+                      1486
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        fontWeight: '400',
+                        color: '#797979',
+                      }}
+                    >
+                      remaining
+                    </Text>
+                  </View>
                 </View>
                 <View style={styles.resultContainer}>
-                  <Text style={{ fontSize: 18, fontWeight: '400' }}>0</Text>
+                  <Text style={{ fontSize: 18, fontWeight: '400' }}>232</Text>
                   <Text
                     style={{
                       fontSize: 15,
@@ -79,14 +111,198 @@ const DiaryFoodScreen = () => {
                       color: '#797979',
                     }}
                   >
-                    burned
+                    eaten
                   </Text>
                 </View>
               </View>
             </View>
           }
         />
-      </View>
+        <Box
+          styleBox={{ marginTop: 10 }}
+          content={
+            <View style={styles.boxContentContainer}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Text style={styles.title}>Breakfast</Text>
+                <Text style={styles.title}>282</Text>
+              </View>
+              <Divider width={1} />
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginVertical: 10,
+                }}
+              >
+                <View style={{ flexDirection: 'column' }}>
+                  <Text style={styles.nameFood}>Açai Bowl</Text>
+                  <Text style={styles.numberFood}>1 bowl</Text>
+                </View>
+                <Text style={styles.caloFood}>180</Text>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginVertical: 10,
+                }}
+              >
+                <View style={{ flexDirection: 'column' }}>
+                  <Text style={styles.nameFood}>Omelette</Text>
+                  <Text style={styles.numberFood}>2 servings</Text>
+                </View>
+                <Text style={styles.caloFood}>102</Text>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: 5,
+                }}
+              >
+                <Button
+                  icon={
+                    <Image
+                      style={{ height: 10, width: 10 }}
+                      source={require('../../assets/plus.png')}
+                    />
+                  }
+                  buttonStyle={styles.addBtn}
+                  onPress={() => {
+                    console.log('hi');
+                  }}
+                />
+                <Button title='Add' type='clear' />
+              </View>
+            </View>
+          }
+        />
+        <Box
+          styleBox={{ marginTop: 10 }}
+          content={
+            <View style={styles.boxContentContainer}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Text style={styles.title}>Lunch</Text>
+              </View>
+              <Divider width={1} />
+
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: 5,
+                }}
+              >
+                <Button
+                  icon={
+                    <Image
+                      style={{ height: 10, width: 10 }}
+                      source={require('../../assets/plus.png')}
+                    />
+                  }
+                  buttonStyle={styles.addBtn}
+                  onPress={() => {
+                    console.log('hi');
+                  }}
+                />
+                <Button title='Add' type='clear' />
+              </View>
+            </View>
+          }
+        />
+        <Box
+          styleBox={{ marginTop: 10 }}
+          content={
+            <View style={styles.boxContentContainer}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Text style={styles.title}>Dinner</Text>
+              </View>
+              <Divider width={1} />
+
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: 5,
+                }}
+              >
+                <Button
+                  icon={
+                    <Image
+                      style={{ height: 10, width: 10 }}
+                      source={require('../../assets/plus.png')}
+                    />
+                  }
+                  buttonStyle={styles.addBtn}
+                  onPress={() => {
+                    console.log('hi');
+                  }}
+                />
+                <Button title='Add' type='clear' />
+              </View>
+            </View>
+          }
+        />
+        <Box
+          styleBox={{ marginTop: 10 }}
+          content={
+            <View style={styles.boxContentContainer}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Text style={styles.title}>Snacks</Text>
+              </View>
+              <Divider width={1} />
+
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginVertical: 5,
+                }}
+              >
+                <Button
+                  icon={
+                    <Image
+                      style={{ height: 10, width: 10 }}
+                      source={require('../../assets/plus.png')}
+                    />
+                  }
+                  buttonStyle={styles.addBtn}
+                  onPress={() => {
+                    console.log('hi');
+                  }}
+                />
+                <Button title='Add' type='clear' />
+              </View>
+            </View>
+          }
+        />
+      </ScrollView>
     </View>
   );
 };
@@ -112,10 +328,34 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   resultContainer: {
-    flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  nameFood: {
+    fontSize: 18,
+    fontWeight: '400',
+  },
+  numberFood: {
+    color: '#727272',
+    fontSize: 15,
+    fontWeight: '400',
+  },
+  caloFood: {
+    fontSize: 15,
+    fontWeight: '400',
+  },
+  addBtn: {
+    width: 18,
+    height: 18,
+    borderRadius: 100,
+  },
+  addContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginTop: 10,
   },
 });
 export default DiaryFoodScreen;

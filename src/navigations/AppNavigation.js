@@ -20,7 +20,7 @@ function AppNavigation() {
             headerShown: false,
           }}
         />
-        <Stack.Screen name='Home' component={DiaryFoodScreen} />
+        <Stack.Screen name='Home' component={Homepages} />
         <Stack.Screen name='Explore' component={ExploreScreen} />
       </Stack.Navigator>
     </NavigationContainer>

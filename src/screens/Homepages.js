@@ -11,6 +11,7 @@ import Box from '../components/Box';
 import PieChart from 'react-native-pie-chart';
 import { Button, ListItem } from '@rneui/themed';
 import { COLORS } from '../constants';
+import HeaderHomePages from '../components/HeaderHomePages';
 
 const Homepages = () => {
   const widthAndHeight = 130;
@@ -19,7 +20,8 @@ const Homepages = () => {
 
   var [numberWater, setNumberWater] = useState(30);
   return (
-    <SafeAreaView style={[styles.flex1]}>
+    <View style={[styles.flex1]}>
+      <HeaderHomePages />
       <ScrollView
         style={[styles.flex1, styles.container]}
         showsHorizontalScrollIndicator={false}
@@ -200,7 +202,7 @@ const Homepages = () => {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -8,7 +8,7 @@ import { useTheme } from '../themes/ThemeProvider';
 
 import Homepages from '../screens/Homepages';
 import ExploreScreen from '../screens/ExploreScreen';
-import HeaderHomePages from '../components/headerHomePages';
+import HeaderHomePages from '../components/HeaderHomePages';
 import DiaryFoodScreen from '../screens/DiaryFoodScreen';
 
 const Tab = createBottomTabNavigator();
@@ -55,7 +55,7 @@ const BottomTabNavigation = () => {
       /> */}
       <Tab.Screen
         name='Home'
-        component={DiaryFoodScreen}
+        component={Homepages}
         options={{
           tabBarIcon: ({ focused }) => {
             return (

@@ -5,11 +5,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const HeaderToday = () => {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Image source={require('../../assets/calendar.png')} />
       <Text style={styles.textTitle}>Today</Text>
       <Image source={require('../../assets/dotMore.png')} />
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({
