@@ -9,6 +9,7 @@ import EditDailyGoalsScreen from '../screens/EditDailyGoalsScreen';
 import ExerciseDailyDiaryScreen from '../screens/ExerciseDailyDiaryScreen';
 import ExerciseDetailsScreen from '../screens/ExerciseDetailsScreen';
 import ProfileFoodScreen from '../screens/ProfileFoodScreen';
+
 const Stack = createNativeStackNavigator();
 function AppNavigation() {
     return (
@@ -16,13 +17,13 @@ function AppNavigation() {
         <Stack.Navigator  screenOptions={{
           headerShown: false // Bỏ hiển thị header
         }}>
-           <Stack.Screen
+           {/* <Stack.Screen
                     name="BottomTabNavigation"
                     component={BottomTabNavigation}
                     options={{
                         headerShown: false,
                     }}
-                />
+                /> */}
               
           {/* <Stack.Screen name="Home" component={Homepages} /> */}
           {/* <Stack.Screen name="Explore" component={ExploreScreen} /> */}
@@ -32,6 +33,7 @@ function AppNavigation() {
           {/* <Stack.Screen name="ExerciseDailyDiary" component={ExerciseDailyDiaryScreen} /> */}
           {/* <Stack.Screen name="ExerciseDetails" component={ExerciseDetailsScreen} /> */}
           <Stack.Screen name="ProfileFood" component={ProfileFoodScreen} />
+         
         </Stack.Navigator>
       </NavigationContainer>
     );

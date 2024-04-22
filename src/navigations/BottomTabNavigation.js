@@ -2,15 +2,16 @@ import { View, Text, Platform } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Ionicons } from '@expo/vector-icons'
-import { AntDesign } from '@expo/vector-icons'; 
 import { COLORS } from '../constants'
 import { useTheme } from '../themes/ThemeProvider'
-
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import Homepages from '../screens/Homepages';
 import ExploreScreen from '../screens/ExploreScreen';
 import ExerciseDailyDiaryScreen from '../screens/ExerciseDailyDiaryScreen';
 import ProfileFoodScreen from '../screens/ProfileFoodScreen';
+import { AntDesign } from '@expo/vector-icons';
+import { FontAwesome6 } from '@expo/vector-icons';
 const Tab = createBottomTabNavigator()
 
 
@@ -35,11 +36,8 @@ const BottomTabNavigation = () => {
                 component={ExploreScreen}
                 options={{
                     tabBarIcon: ({ focused }) => {
-                        return (
-                            <AntDesign 
-                            name="home" 
-                            size={24
-                            } color={
+                      return (
+                            <MaterialCommunityIcons name="view-dashboard-outline" size={36} color={
                                 focused
                                     ? COLORS.focus
                                     : COLORS.unfocus
@@ -55,9 +53,8 @@ const BottomTabNavigation = () => {
                 options={{
                     tabBarIcon: ({ focused }) => {
                         return (
-                            <Ionicons
-                                name="game-controller-outline"
-                                size={24}
+                            // <MaterialIcons name="explore" size={24} color="black" />
+                            <MaterialIcons name="explore" size={36}
                                 color={
                                     focused
                                     ? COLORS.focus
@@ -72,6 +69,7 @@ const BottomTabNavigation = () => {
             <Tab.Screen
                 name="ChatBot"
                 component={Homepages}
+                
                 options={{
                     tabBarIcon: ({ focused }) => {
                         return (
@@ -91,7 +89,11 @@ const BottomTabNavigation = () => {
                                
                             }}
                         >
-                          
+                          <FontAwesome6 name="add" size={36} color={
+                                    focused
+                                    ? COLORS.focus
+                                    : COLORS.unfocus
+                                } />
                         </View>
                         )
                     },
@@ -105,9 +107,8 @@ const BottomTabNavigation = () => {
                     tabBarIcon: ({ focused }) => {
                         return (
                             <View>
-                               <Ionicons
-                                name="game-controller-outline"
-                                size={24}
+                                {/* <MaterialIcons name="history" size={24} color="black" /> */}
+                                <MaterialIcons name="history" size={36} 
                                 color={
                                     focused
                                     ? COLORS.focus
@@ -125,10 +126,9 @@ const BottomTabNavigation = () => {
                 options={{
                     tabBarIcon: ({ focused }) => {
                         return (
+                          
                             <View>
-                               <Ionicons
-                                name="game-controller-outline"
-                                size={24}
+                                <AntDesign name="user" size={36}
                                 color={
                                     focused
                                     ? COLORS.focus
