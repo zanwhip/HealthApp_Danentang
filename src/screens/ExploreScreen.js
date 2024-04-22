@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   },
   search : {
     height : 50,
-    width : '90%',
+    width : '80%',
     backgroundColor : '#FFF',
     top :  - 60,
     justifyContent : 'space-between',
