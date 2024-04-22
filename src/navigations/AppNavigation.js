@@ -1,7 +1,6 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
 import Homepages from '../screens/Homepages';
-import PlanScreen from '../screens/PlanScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import BottomTabNavigation from './BottomTabNavigation';
 import AddExerciseScreen from '../screens/AddExerciseScreen';
@@ -23,6 +22,7 @@ import LoginScreen1 from '../screens/LoginScreen1';
 import LoginScreen2 from '../screens/LoginScreen2';
 import SignUpScreen from '../screens/SignUpScreen';
 
+import DiaryFoodScreen from '../screens/DiaryFoodScreen';
 const Stack = createNativeStackNavigator();
 function AppNavigation() {
     return (
@@ -60,11 +60,11 @@ function AppNavigation() {
           {/* <Stack.Screen name="LoginScreen" component={LoginScreen} /> */}
           {/* <Stack.Screen name="LoginScreen1" component={LoginScreen1} /> */}
           {/* <Stack.Screen name="LoginScreen2" component={LoginScreen2} /> */}
-          <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+          {/* <Stack.Screen name="SignUpScreen" component={SignUpScreen} /> */}
 
-
-          
-
+          {/* Trương Thị Hương Giang */}
+           <Stack.Screen name="Home" component={Homepages} />
+           {/* <Stack.Screen name="DiaryFoodScreen" component={DiaryFoodScreen} /> */}
          
         </Stack.Navigator>
       </NavigationContainer>
@@ -72,4 +72,4 @@ function AppNavigation() {
   }
   
 
-  export default AppNavigation
+export default AppNavigation;
