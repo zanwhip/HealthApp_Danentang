@@ -23,7 +23,7 @@ const chartData = {
     fillShadowGradientOpacity: 1,
   };
 
-const AddFood_AcaiScreen = () => {
+const AddFood_AcaiScreen = ({navigation}) => {
   return (
     <View>
     <View style={styles.header}>

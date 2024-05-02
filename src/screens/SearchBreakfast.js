@@ -37,7 +37,7 @@ const BreakfastListItem = ({item}) => {
 };
 
 
-const SearchBreakfast = () => {
+const SearchBreakfast = ({navigation}) => {
 // state for switch button 
 
 

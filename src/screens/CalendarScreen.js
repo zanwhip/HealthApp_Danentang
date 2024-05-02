@@ -59,7 +59,7 @@ const MyCalendar = () => {
     ); 
 }; 
 
-const CalendarScreen = () => {
+const CalendarScreen = ({navigation}) => {
 
   return (
     <View>

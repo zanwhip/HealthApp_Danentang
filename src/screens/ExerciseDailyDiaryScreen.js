@@ -28,7 +28,7 @@ const chartData = {
 
    
   
-const ExerciseDailyDiaryScreen = () => {
+const ExerciseDailyDiaryScreen = ({navigation}) => {
 
     
   return (

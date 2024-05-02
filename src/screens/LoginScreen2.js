@@ -9,14 +9,14 @@ import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { COLORS } from "../constants";
 
-const LoginScreen2 = () => {
+const LoginScreen2 = ({navigation}) => {
     const handleLogin = () => {
         // Handle login action
       };
   return (
     <View>
-      <View style={styles.container}>
-        <TouchableOpacity>
+      <View style={styles.container} >
+        <TouchableOpacity >
           <AntDesign
             name="arrowleft"
             size={27}
@@ -39,7 +39,7 @@ const LoginScreen2 = () => {
           keyboardType="visible-password"
         />
       </View>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('BottomTabNavigation')}>
           <Text style={{ color : 'white', fontSize : 16, fontWeight : 'bold' }}>Log In</Text>
         </TouchableOpacity>
         <TouchableOpacity  style={{ width : '100%', justifyContent : 'center', alignItems :'center' }}>
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     marginRight: 10, // Add space between icon and text
   },
   login: {
-    // fontFamily: "Inter",
+   
     fontSize: 24,
     fontWeight: "bold",
     color: "black",

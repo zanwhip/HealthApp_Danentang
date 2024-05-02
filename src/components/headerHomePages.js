@@ -1,15 +1,20 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { COLORS } from '../constants';
+import AppNavigation from '../navigations/AppNavigation';
 
-const HeaderHomePages = (title) => {
+const HeaderHomePages = (title, {navigation}) => {
   return (
     <View>
       <View style={styles.container}>
+        <TouchableOpacity onPress={() => navigation.navigate('ProfileFood')}>
         <Image
+        
           style={styles.avatar}
           source={require('../../assets/avatar.png')}
         />
+        </TouchableOpacity>
+        
         <Text style={styles.textWelcome}>
           {title ? 'Good Morning!' : title}
         </Text>

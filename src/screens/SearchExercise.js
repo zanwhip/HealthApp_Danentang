@@ -33,7 +33,7 @@ const ExerciseListItem = ({item}) => {
 };
 
 
-const SearchExercise = () => {
+const SearchExercise = ({navigation}) => {
 // state for switch button 
 
 

@@ -4,7 +4,7 @@ import { ImageBackground } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../constants';
 
-const PlanScreen = () => {
+const PlanScreen = ({navigation}) => {
   return (
     <View>
      <ImageBackground source={require('../assets/img/exercise.png')} style={styles.picture}>

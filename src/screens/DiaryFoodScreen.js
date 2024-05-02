@@ -14,7 +14,7 @@ import { COLORS } from '../constants';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { Divider, Button } from '@rneui/themed';
 
-const DiaryFoodScreen = () => {
+const DiaryFoodScreen = ({navigation}) => {
   const switchBtnContent = [
     {
       id: 1,

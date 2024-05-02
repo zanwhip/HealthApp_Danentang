@@ -7,7 +7,7 @@ import { Entypo } from '@expo/vector-icons';
 import { ImageBackground } from 'react-native';
 
 
-const ExploreScreen = () => {
+const ExploreScreen = ({navigation}) => {
   return (
     <ScrollView style={styles.container}>
       <Header />

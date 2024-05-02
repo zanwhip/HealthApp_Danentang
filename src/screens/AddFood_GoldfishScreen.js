@@ -5,7 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../constants';
 import { AntDesign } from '@expo/vector-icons';
 
-const AddFood_GoldfishScreen = () => {
+const AddFood_GoldfishScreen = ({navigation}) => {
   return (
     <View>
     <View style={styles.header}>

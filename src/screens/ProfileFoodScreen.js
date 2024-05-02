@@ -5,9 +5,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { COLORS } from '../constants';
 import { AntDesign } from '@expo/vector-icons';
-   
+import AppNavigation from '../navigations/AppNavigation';
   
-const ProfileFoodScreen = () => {
+const ProfileFoodScreen = ({navigation}) => {
 
     
   return (

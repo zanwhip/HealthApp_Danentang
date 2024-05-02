@@ -11,7 +11,7 @@ const steps = 60;
 const cals = 100;
 const exercises = 40;
   
-const EditDailyGoalsScreen = () => {
+const EditDailyGoalsScreen = ({navigation}) => {
 
     
   return (

@@ -9,7 +9,7 @@ import {
   import React from "react";
   import { COLORS } from "../constants";
   
-  const SignUpScreen = () => {
+  const SignUpScreen = ({navigation}) => {
       const handleLogin = () => {
           // Handle login action
         };
@@ -48,7 +48,7 @@ import {
         <Text style= {{ color : '#ADADAD', marginTop : 30, textAlign : 'center' }}>By signing up for MyFitnessPal, you are agreeing to our <Text style={{ color : COLORS.primary }}>Privacy Policy</Text> and <Text style={{ color : COLORS.primary }}>Terms</Text>.</Text>
         </View>
        
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('LoginScreen2')}>
             <Text style={{ color : 'white', fontSize : 16, fontWeight : 'bold' }}>Next</Text>
           </TouchableOpacity>
         
@@ -86,7 +86,7 @@ import {
       marginRight: 10, // Add space between icon and text
     },
     signup: {
-      fontFamily: "Inter",
+   
       fontSize: 24,
       fontWeight: "bold",
       color: "black",

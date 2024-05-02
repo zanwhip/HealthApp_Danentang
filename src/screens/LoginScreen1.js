@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { COLORS } from '../constants';
 
-const LoginScreen1 = () => {
+const LoginScreen1 = ({navigation}) => {
   const handleSignUp = () => {
     // Handle sign up action
   };
@@ -16,10 +16,10 @@ const LoginScreen1 = () => {
       <View style={styles.background}>
         <Text style={styles.title}>myfitnesspal</Text>
         <View style={{ marginTop : 400 }}>
-        <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SignUpScreen')}>
           <Text style={styles.buttonText}>Sign Up For Free</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleLogin} style={styles.button1}>
+        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen2')} style={styles.button1}>
           <Text style={styles.login}>Log In</Text>
         </TouchableOpacity>
         </View>

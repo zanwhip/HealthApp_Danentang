@@ -8,6 +8,8 @@ import { useTheme } from '../themes/ThemeProvider';
 
 import Homepages from '../screens/Homepages';
 import ExploreScreen from '../screens/ExploreScreen';
+import DiaryFoodScreen from '../screens/DiaryFoodScreen';
+import ProfileFoodScreen from '../screens/ProfileFoodScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -30,32 +32,17 @@ const BottomTabNavigation = () => {
         },
       }}
     >
-      {/* <Tab.Screen
+      <Tab.Screen
         name='Home'
         component={Homepages}
         options={{
-          headerShown: true,
-          headerTitle: () => <HeaderHomePages />,
+          headerShown: false,
+        
           headerTitleAlign: 'left',
           headerStyle: {
             backgroundColor: COLORS.blue,
             height: 100,
           },
-          tabBarIcon: ({ focused }) => {
-            return (
-              <AntDesign
-                name='home'
-                size={24}
-                color={focused ? COLORS.focus : COLORS.unfocus}
-              />
-            );
-          },
-        }}
-      /> */}
-      <Tab.Screen
-        name='Home'
-        component={Homepages}
-        options={{
           tabBarIcon: ({ focused }) => {
             return (
               <AntDesign
@@ -82,6 +69,7 @@ const BottomTabNavigation = () => {
           },
         }}
       />
+      
       {/* <Tab.Screen
         name='Game'
         component={Homepages}
@@ -99,8 +87,8 @@ const BottomTabNavigation = () => {
       /> */}
 
       <Tab.Screen
-        name='ChatBot'
-        component={Homepages}
+        name='center'
+        component={DiaryFoodScreen}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
@@ -124,8 +112,8 @@ const BottomTabNavigation = () => {
       />
 
       <Tab.Screen
-        name='scan'
-        component={Homepages}
+        name='Dairy'
+        component={DiaryFoodScreen}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
@@ -142,7 +130,7 @@ const BottomTabNavigation = () => {
       />
       <Tab.Screen
         name='Profile'
-        component={Homepages}
+        component={ProfileFoodScreen}
         options={{
           tabBarIcon: ({ focused }) => {
             return (

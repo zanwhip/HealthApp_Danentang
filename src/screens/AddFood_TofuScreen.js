@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../constants';
 import { AntDesign } from '@expo/vector-icons';
-const AddFood_TofuScreen = () => {
+const AddFood_TofuScreen = ({navigation}) => {
   return (
     <View>
     <View style={styles.header}>

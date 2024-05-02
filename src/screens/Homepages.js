@@ -5,6 +5,7 @@ import {
   Image,
   SafeAreaView,
   ScrollView,
+  TouchableOpacity
 } from 'react-native';
 import React, { useState } from 'react';
 import Box from '../components/Box';
@@ -12,8 +13,9 @@ import PieChart from 'react-native-pie-chart';
 import { Button, ListItem } from '@rneui/themed';
 import { COLORS } from '../constants';
 import HeaderHomePages from '../components/headerHomePages';
+import AppNavigation from '../navigations/AppNavigation';
 
-const Homepages = () => {
+const Homepages = ({navigation}) => {
   const widthAndHeight = 130;
   const series = [30, 50];
   const sliceColor = ['#EEEEEE', '#F2B455'];
@@ -21,7 +23,27 @@ const Homepages = () => {
   var [numberWater, setNumberWater] = useState(30);
   return (
     <View style={[styles.flex1]}>
-      <HeaderHomePages />
+     <View style={{display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    backgroundColor: COLORS.primary,
+    paddingTop : 20, 
+    height: 100,
+    width: '100%',}}>
+        <TouchableOpacity onPress={() => navigation.navigate('ProfileFood')}>
+        <Image
+        
+          style={styles.avatar}
+          source={require('../../assets/avatar.png')}
+        />
+        </TouchableOpacity>
+        
+        <Text style={{ color: COLORS.white, fontSize: 30, fontWeight: '700', }}>
+          Good Morning!
+        </Text>
+        <Image source={require('../../assets/clarity_notification-line.png')} />
+      </View>
       <ScrollView
         style={[styles.flex1, styles.container]}
         showsHorizontalScrollIndicator={false}

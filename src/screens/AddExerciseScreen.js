@@ -40,7 +40,7 @@ const chartData = {
     return hex.match(/.{1,2}/g).map(val => parseInt(val, 16)).join(',');
   }
   
-const AddExerciseScreen = () => {
+const AddExerciseScreen = ({navigation}) => {
 
     
   return (
