@@ -21,8 +21,14 @@ import LoginScreen from '../screens/LoginScreen';
 import LoginScreen1 from '../screens/LoginScreen1';
 import LoginScreen2 from '../screens/LoginScreen2';
 import SignUpScreen from '../screens/SignUpScreen';
+
+
 import SearchFoodScreen from '../screens/SearchFoodScreen';
 import APIcodeFood from '../screens/APIcodeFoodScreen';
+import ChatScreen from '../screens/WelcomeChatScreen1';
+import WelcomeChatScreen from '../screens/ChatScreen';
+
+
 import PlanScreen from '../screens/PlanScreen';
 
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
@@ -51,6 +57,12 @@ function AppNavigation() {
         <Stack.Navigator  screenOptions={{
           headerShown: false // Bỏ hiển thị header
         }}> 
+         <Stack.Screen name="chat" component={ChatScreen} />
+        <Stack.Screen name="WelcomeChat" component={WelcomeChatScreen} 
+        options={{headerShown:false}} />
+       
+        
+       
          <Stack.Screen name="APIcodeFood" component={APIcodeFood} />
         <Stack.Screen name="SearchFood" component={SearchFoodScreen} />
            
