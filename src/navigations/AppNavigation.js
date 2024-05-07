@@ -21,22 +21,49 @@ import LoginScreen from '../screens/LoginScreen';
 import LoginScreen1 from '../screens/LoginScreen1';
 import LoginScreen2 from '../screens/LoginScreen2';
 import SignUpScreen from '../screens/SignUpScreen';
-
+import SearchFoodScreen from '../screens/SearchFoodScreen';
+import APIcodeFood from '../screens/APIcodeFoodScreen';
 import PlanScreen from '../screens/PlanScreen';
+
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+
+
+
 
 import DiaryFoodScreen from '../screens/DiaryFoodScreen';
 const Stack = createNativeStackNavigator();
+
+
+const client = new ApolloClient({
+  uri: 'https://oneonta.stepzen.net/api/belligerent-waterbuffalo/__graphql',
+  cache: new InMemoryCache(),
+  headers: {
+    Authorization:
+      'apikey oneonta::stepzen.io+1000::f1fd564cbba026853eeedfbb05322edfe26263d2973848915d962dd16878e937',
+  },
+});
+
+
 function AppNavigation() {
     return (
+    <ApolloProvider client={client}>
       <NavigationContainer>
         <Stack.Navigator  screenOptions={{
           headerShown: false // Bỏ hiển thị header
-        }}>
-            {/* <Stack.Screen name="LoginScreen" component={LoginScreen} /> */}
-          {/* <Stack.Screen name="LoginScreen1" component={LoginScreen1} />
+        }}> 
+         <Stack.Screen name="APIcodeFood" component={APIcodeFood} />
+        <Stack.Screen name="SearchFood" component={SearchFoodScreen} />
+           
+           
+         
+
+
+            <Stack.Screen name="LoginScreen" component={LoginScreen} />
+          <Stack.Screen name="LoginScreen1" component={LoginScreen1} />
           <Stack.Screen name="LoginScreen2" component={LoginScreen2} />
           <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-        */}
+
+       
            <Stack.Screen
                     name="BottomTabNavigation"
                     component={BottomTabNavigation}
@@ -44,7 +71,7 @@ function AppNavigation() {
                         headerShown: false,
                     }}
                 />
-              {/* Lê văn hải */}
+           
           <Stack.Screen name="CalendarScreen" component={CalendarScreen} />
         
           <Stack.Screen name="Explore" component={ExploreScreen} />
@@ -55,7 +82,7 @@ function AppNavigation() {
           <Stack.Screen name="ExerciseDetails" component={ExerciseDetailsScreen} />
           <Stack.Screen name="ProfileFood" component={ProfileFoodScreen} />
 
-          {/* Phương hà */}
+    
           <Stack.Screen name="SearchExercise" component={SearchExercise} />
           <Stack.Screen name="AddFood_AcaiScreen" component={EditDailyGoalsScreen} />
           <Stack.Screen name="AddFood_GoldfishScreen" component={AddFood_GoldfishScreen} />
@@ -65,12 +92,16 @@ function AppNavigation() {
 
          
 
-          {/* Trương Thị Hương Giang */}
-           {/* <Stack.Screen name="Home" component={Homepages} /> */}
+        
+           <Stack.Screen name="Home" component={Homepages} />
            <Stack.Screen name="DiaryFoodScreen" component={DiaryFoodScreen} />
          
+
+          
+          
         </Stack.Navigator>
       </NavigationContainer>
+      </ApolloProvider>
     );
   }
   
