@@ -57,7 +57,16 @@ function AppNavigation() {
         <Stack.Navigator  screenOptions={{
           headerShown: false // Bỏ hiển thị header
         }}> 
-         <Stack.Screen name="chat" component={ChatScreen} />
+        
+        <Stack.Screen
+                    name="BottomTabNavigation"
+                    component={BottomTabNavigation}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+          <Stack.Screen name="Home" component={Homepages} />
+         {/* <Stack.Screen name="chat" component={ChatScreen} />
         <Stack.Screen name="WelcomeChat" component={WelcomeChatScreen} 
         options={{headerShown:false}} />
        
@@ -76,13 +85,6 @@ function AppNavigation() {
           <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
 
        
-           <Stack.Screen
-                    name="BottomTabNavigation"
-                    component={BottomTabNavigation}
-                    options={{
-                        headerShown: false,
-                    }}
-                />
            
           <Stack.Screen name="CalendarScreen" component={CalendarScreen} />
         
@@ -105,11 +107,11 @@ function AppNavigation() {
          
 
         
-           <Stack.Screen name="Home" component={Homepages} />
+         
            <Stack.Screen name="DiaryFoodScreen" component={DiaryFoodScreen} />
          
 
-          
+           */}
           
         </Stack.Navigator>
       </NavigationContainer>
