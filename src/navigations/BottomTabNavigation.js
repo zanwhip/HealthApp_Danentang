@@ -1,4 +1,4 @@
-import { View, Text, Platform } from 'react-native';
+import { View, Text, Platform, Image } from 'react-native';
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,7 +10,7 @@ import Homepages from '../screens/Homepages';
 import ExploreScreen from '../screens/ExploreScreen';
 import DiaryFoodScreen from '../screens/DiaryFoodScreen';
 import ProfileFoodScreen from '../screens/ProfileFoodScreen';
-
+import CenterControl from '../components/CenterControl';
 
 const Tab = createBottomTabNavigator();
 
@@ -37,7 +37,6 @@ const BottomTabNavigation = () => {
         component={Homepages}
         options={{
           headerShown: false,
-        
           headerTitleAlign: 'left',
           headerStyle: {
             backgroundColor: COLORS.blue,
@@ -45,10 +44,9 @@ const BottomTabNavigation = () => {
           },
           tabBarIcon: ({ focused }) => {
             return (
-              <AntDesign
-                name='home'
-                size={24}
-                color={focused ? COLORS.focus : COLORS.unfocus}
+              <Image
+                tintColor={focused ? COLORS.focus : COLORS.unfocus}
+                source={require('../assets/icon/dashboard.png')}
               />
             );
           },
@@ -60,101 +58,24 @@ const BottomTabNavigation = () => {
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-              <AntDesign
-                name='home'
-                size={24}
-                color={focused ? COLORS.focus : COLORS.unfocus}
+              <Image
+                tintColor={focused ? COLORS.focus : COLORS.unfocus}
+                source={require('../assets/icon/explore.png')}
               />
             );
           },
         }}
       />
-      
-      {/* <Tab.Screen
-        name='Game'
-        component={Homepages}
+
+      <Tab.Screen
+        name='center'
+        component={DiaryFoodScreen}
         options={{
           tabBarIcon: ({ focused }) => {
-            return (
-              <Ionicons
-                name='game-controller-outline'
-                size={24}
-                color={focused ? COLORS.focus : COLORS.unfocus}
-              />
-            );
+            return <CenterControl focused={focused} />;
           },
         }}
-      /> */}
-
-<Tab.Screen
-  name='center'
-  component={DiaryFoodScreen}
-  options={{
-    tabBarIcon: ({ focused }) => {
-      return (
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: COLORS.primary,
-            height: Platform.OS == 'ios' ? 80 : 60,
-            width: Platform.OS == 'ios' ? 80 : 60,
-            top: Platform.OS == 'ios' ? -30 : -20,
-            borderRadius: Platform.OS == 'ios' ? 50 : 30,
-            borderWidth: 10,
-          
-            borderColor: '#fff',
-          }}
-        >
-          {focused && (
-            <>
-              {/* Three circles positioned above the center */}
-              <View
-                style={{
-                  position: 'absolute',
-                  backgroundColor : COLORS.primary,
-                  height: 60,
-                  width: 60,
-                  borderRadius: 30, // Half of height and width for a circle
-                  top: -50, // Adjust as needed
-                  left: '-50%', // Center horizontally
-                  transform: [{ translateX: -45 }], // Adjust position to center
-                }}
-              />
-              <View
-                style={{
-                  position: 'absolute',
-                  backgroundColor : COLORS.primary,
-                  height: 60,
-                  width: 60,
-                  borderRadius: 30, // Half of height and width for a circle
-                  top: -75, // Adjust as needed
-                  left: '20%', // Center horizontally
-                  transform: [{ translateX: -15 }], // Adjust position to center
-                }}
-              />
-              <View
-                style={{
-                  position: 'absolute',
-                  
-                  height: 60,
-                  width: 60,
-                  borderRadius: 30, // Half of height and width for a circle
-                  top: -50, // Adjust as needed
-                  left: '100%', // Center horizontally
-                  transform: [{ translateX: 15 }], // Adjust position to center
-                  backgroundColor : COLORS.primary,
-                
-                }}
-              />
-            </>
-          )}
-        </View>
-      );
-    },
-  }}
-/>
-
+      />
 
       <Tab.Screen
         name='Dairy'
@@ -162,13 +83,10 @@ const BottomTabNavigation = () => {
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-              <View>
-                <Ionicons
-                  name='game-controller-outline'
-                  size={24}
-                  color={focused ? COLORS.focus : COLORS.unfocus}
-                />
-              </View>
+              <Image
+                tintColor={focused ? COLORS.focus : COLORS.unfocus}
+                source={require('../assets/icon/diary.png')}
+              />
             );
           },
         }}
@@ -180,10 +98,9 @@ const BottomTabNavigation = () => {
           tabBarIcon: ({ focused }) => {
             return (
               <View>
-                <Ionicons
-                  name='game-controller-outline'
-                  size={24}
-                  color={focused ? COLORS.focus : COLORS.unfocus}
+                <Image
+                  tintColor={focused ? COLORS.focus : COLORS.unfocus}
+                  source={require('../assets/icon/profile.png')}
                 />
               </View>
             );

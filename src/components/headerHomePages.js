@@ -1,20 +1,20 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { COLORS } from '../constants';
-import AppNavigation from '../navigations/AppNavigation';
+import { useNavigation } from '@react-navigation/native';
 
-const HeaderHomePages = (title, {navigation}) => {
+const HeaderHomePages = (title) => {
+  const navigation = useNavigation();
   return (
     <View>
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => navigation.navigate('ProfileFood')}>
-        <Image
-        
-          style={styles.avatar}
-          source={require('../../assets/avatar.png')}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          <Image
+            style={styles.avatar}
+            source={require('../../assets/avatar.png')}
+          />
         </TouchableOpacity>
-        
+
         <Text style={styles.textWelcome}>
           {title ? 'Good Morning!' : title}
         </Text>
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     backgroundColor: COLORS.primary,
-    paddingTop : 20, 
+    paddingTop: 20,
     height: 100,
     width: '100%',
   },

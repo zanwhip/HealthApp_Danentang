@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 
-const LoginScreen = ({navigation}) => {
+const LoginScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.background} />
       <Text style={styles.text}>myfitnesspal</Text>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
     color: 'white',
-    
   },
 });
 

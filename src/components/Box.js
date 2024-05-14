@@ -1,14 +1,18 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { COLORS } from '../constants';
 import PieChart from 'react-native-pie-chart';
 
-const Box = ({ title, content, styleBox }) => {
+const Box = ({ title, content, styleBox, disabled, onPress }) => {
   return (
-    <View style={[styles.box, styleBox]}>
+    <TouchableOpacity
+      style={[styles.box, styleBox]}
+      disabled={disabled ? true : false}
+      onPress={onPress}
+    >
       <Text style={styles.title}>{title ? title : ''}</Text>
       {content ? content : <></>}
-    </View>
+    </TouchableOpacity>
   );
 };
 const styles = StyleSheet.create({
