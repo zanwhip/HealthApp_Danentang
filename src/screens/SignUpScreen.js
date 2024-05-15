@@ -11,7 +11,7 @@ import { COLORS } from '../constants';
 
 const SignUpScreen = ({ navigation }) => {
   const handleSignup = () => {
-    navigation.navigate('BottomTabNavigation');
+    navigation.navigate('Home');
   };
   return (
     <View>

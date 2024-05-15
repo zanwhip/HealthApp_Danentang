@@ -5,16 +5,32 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
+  TouchableOpacity
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import HeaderToday from '../components/HeaderToday';
 import Box from '../components/Box';
 import SwitchButton from '../components/SwitchButton';
 import { COLORS } from '../constants';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { Divider, Button } from '@rneui/themed';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 const DiaryFoodScreen = ({navigation}) => {
+  
+const [isVisible1, setIsVisible1] = useState(false);
+const [isVisible2, setIsVisible2] = useState(false);
+const [isVisible3, setIsVisible3] = useState(false);
+
+const onPressContainer = () => {
+  // Toggle visibility of circles
+  setIsVisible1(!isVisible1);
+  setIsVisible2(!isVisible2);
+  setIsVisible3(!isVisible3);
+}; 
+
   const switchBtnContent = [
     {
       id: 1,
@@ -303,7 +319,63 @@ const DiaryFoodScreen = ({navigation}) => {
           }
         />
       </ScrollView>
+      
+      {/* Bottom tab */}
+      <View style={styles.bottomBar}>
+        <TouchableOpacity style={styles.iconTab}  onPress={() => navigation.navigate('Home')}>
+        <MaterialCommunityIcons name="view-dashboard-outline" size={36} color={
+                                 COLORS.unfocus
+                                  
+                            } />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.iconTab} onPress={() => navigation.navigate('Explore')} >
+        <MaterialIcons name="explore" size={36}
+                                color={COLORS.unfocus}
+                            />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.iconTab}>
+       
+       </TouchableOpacity>
+
+        <TouchableOpacity style={styles.iconTab} >
+        <MaterialIcons name="history" size={36} 
+                                color={COLORS.focus}
+                            />
+        </TouchableOpacity>
+       
+        <TouchableOpacity style={styles.iconTab} onPress={() => navigation.navigate('Profile')}>
+        <AntDesign name="user" size={36}
+                                color={COLORS.unfocus}
+                            />
+        </TouchableOpacity>
+      </View>
+      {/* Circle */}
+      <TouchableOpacity onPress={onPressContainer}>
+        <View
+          style={styles.centerCircle}
+        >
+          
+        </View>
+      </TouchableOpacity>
+      {isVisible1 && (
+        <View style={[styles.circle, { bottom: 90, left: '27%' }]}>
+         
+        </View>
+      )}
+      {isVisible2 && (
+        <View style={[styles.circle, { bottom: 130, left: '44%' }]}>
+      
+        </View>
+      )}
+      {isVisible3 && (
+        <View style={[styles.circle, { bottom: 90, left: '60%' }]}>
+       
+        </View>
+      )}
     </View>
+   
   );
 };
 const styles = StyleSheet.create({
@@ -357,5 +429,43 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
+  
+  // Bottom tab css
+  bottomBar: {
+    position: 'absolute',
+    bottom: 0,
+    flexDirection: 'row', 
+    height: 80,
+    width : '100%',
+    backgroundColor: COLORS.primary,
+
+  },
+  centerCircle : {
+    position: 'absolute',
+    width: 80,
+    height: 80,
+    backgroundColor: COLORS.primary,
+    bottom: 40,
+    borderColor: '#fff',
+    borderWidth: 10,
+    borderRadius: 40,
+    marginHorizontal : '41%',
+    
+
+  },
+  circle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: COLORS.primary, // Change the color as needed
+    position: 'absolute',
+  },
+  iconTab : { 
+    width : '20%', 
+    height : 80, 
+    backgroundColor :COLORS.primary, 
+    justifyContent : 'center', 
+    alignItems : 'center' }
+
 });
 export default DiaryFoodScreen;

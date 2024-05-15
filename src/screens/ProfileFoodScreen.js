@@ -1,14 +1,26 @@
-import { ScrollView, StyleSheet, Text, View,Image  } from 'react-native'
-import React from 'react'
+import { ScrollView, StyleSheet, Text, View,Image , TouchableOpacity } from 'react-native'
+import React, {useState} from 'react'
 import { FontAwesome5 } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
+
 import { Feather } from '@expo/vector-icons';
 import { COLORS } from '../constants';
 import { AntDesign } from '@expo/vector-icons';
-import AppNavigation from '../navigations/AppNavigation';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+
   
 const ProfileFoodScreen = ({navigation}) => {
 
+    const [isVisible1, setIsVisible1] = useState(false);
+    const [isVisible2, setIsVisible2] = useState(false);
+    const [isVisible3, setIsVisible3] = useState(false);
+    
+    const onPressContainer = () => {
+      // Toggle visibility of circles
+      setIsVisible1(!isVisible1);
+      setIsVisible2(!isVisible2);
+      setIsVisible3(!isVisible3);
+    };
     
   return (
     <View style={styles.container}>
@@ -228,7 +240,62 @@ const ProfileFoodScreen = ({navigation}) => {
 
       </ScrollView>
     
-  </View>
+      {/* Bottom tab */}
+      <View style={styles.bottomBar}>
+        <TouchableOpacity style={styles.iconTab}  onPress={() => navigation.navigate('Home')}>
+        <MaterialCommunityIcons name="view-dashboard-outline" size={36} color={
+                                 COLORS.unfocus
+                                  
+                            } />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.iconTab} >
+        <MaterialIcons name="explore" size={36}
+                                color={COLORS.unfocus}
+                            />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.iconTab}>
+       
+       </TouchableOpacity>
+
+        <TouchableOpacity style={styles.iconTab} onPress={() => navigation.navigate('DiaryFood')}>
+        <MaterialIcons name="history" size={36} 
+                                color={COLORS.unfocus}
+                            />
+        </TouchableOpacity>
+       
+        <TouchableOpacity style={styles.iconTab} onPress={() => navigation.navigate('Profile')}>
+        <AntDesign name="user" size={36}
+                                color={COLORS.focus}
+                            />
+        </TouchableOpacity>
+      </View>
+      {/* Circle */}
+      <TouchableOpacity onPress={onPressContainer}>
+        <View
+          style={styles.centerCircle}
+        >
+          
+        </View>
+      </TouchableOpacity>
+      {isVisible1 && (
+        <View style={[styles.circle, { bottom: 90, left: '27%' }]}>
+         
+        </View>
+      )}
+      {isVisible2 && (
+        <View style={[styles.circle, { bottom: 130, left: '44%' }]}>
+      
+        </View>
+      )}
+      {isVisible3 && (
+        <View style={[styles.circle, { bottom: 90, left: '60%' }]}>
+       
+        </View>
+      )}
+    </View>
+ 
   )
 }
 
@@ -293,7 +360,45 @@ const styles = StyleSheet.create({
         flexDirection : 'row', 
         paddingHorizontal : 10, 
         justifyContent : 'space-between', 
-        alignItems :'center' }
+        alignItems :'center' },
+        
+  // Bottom tab css
+  bottomBar: {
+    position: 'absolute',
+    bottom: 0,
+    flexDirection: 'row', 
+    height: 80,
+    width : '100%',
+    backgroundColor: COLORS.primary,
+
+  },
+  centerCircle : {
+    position: 'absolute',
+    width: 80,
+    height: 80,
+    backgroundColor: COLORS.primary,
+    bottom: 40,
+    borderColor: '#fff',
+    borderWidth: 10,
+    borderRadius: 40,
+    marginHorizontal : '41%',
+    
+
+  },
+  circle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: COLORS.primary, // Change the color as needed
+    position: 'absolute',
+  },
+  iconTab : { 
+    width : '20%', 
+    height : 80, 
+    backgroundColor :COLORS.primary, 
+    justifyContent : 'center', 
+    alignItems : 'center' }
+
      
      
 })

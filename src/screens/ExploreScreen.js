@@ -1,15 +1,29 @@
-import { View, Text,StyleSheet, ScrollView } from 'react-native'
-import React from 'react'
+import { View, Text,StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
+import React, { useState } from 'react'
 import { COLORS } from '../constants'
 import Header from '../components/header'
 import { EvilIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { ImageBackground } from 'react-native';
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 const ExploreScreen = ({navigation}) => {
+  
+const [isVisible1, setIsVisible1] = useState(false);
+const [isVisible2, setIsVisible2] = useState(false);
+const [isVisible3, setIsVisible3] = useState(false);
+
+const onPressContainer = () => {
+  // Toggle visibility of circles
+  setIsVisible1(!isVisible1);
+  setIsVisible2(!isVisible2);
+  setIsVisible3(!isVisible3);
+};
   return (
-    <ScrollView style={styles.container}>
+    
+    <View style={styles.container}>
       <Header />
       <View style={styles.search}>
       <EvilIcons name="search" size={24} color="black" />
@@ -18,7 +32,7 @@ const ExploreScreen = ({navigation}) => {
         <Entypo name="list" size={24} color="black" />
       </View>
 
-
+    <ScrollView style ={{ top : -30 }}>
       <View style={{ paddingHorizontal : 15,  }}>
         <Text>Suggested</Text>
         <View style={{ flexDirection : 'row' }}>
@@ -163,7 +177,64 @@ const ExploreScreen = ({navigation}) => {
       </View>
       
       </View>
-    </ScrollView>
+      </ScrollView>
+      
+      {/* Bottom tab */}
+      <View style={styles.bottomBar}>
+        <TouchableOpacity style={styles.iconTab}  onPress={() => navigation.navigate('Home')}>
+        <MaterialCommunityIcons name="view-dashboard-outline" size={36} color={
+                                 COLORS.unfocus
+                                  
+                            } />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.iconTab} >
+        <MaterialIcons name="explore" size={36}
+                                color={COLORS.focus}
+                            />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.iconTab}>
+       
+       </TouchableOpacity>
+
+        <TouchableOpacity style={styles.iconTab} onPress={() => navigation.navigate('DiaryFood')}>
+        <MaterialIcons name="history" size={36} 
+                                color={COLORS.unfocus}
+                            />
+        </TouchableOpacity>
+       
+        <TouchableOpacity style={styles.iconTab} onPress={() => navigation.navigate('Profile')}>
+        <AntDesign name="user" size={36}
+                                color={COLORS.unfocus}
+                            />
+        </TouchableOpacity>
+      </View>
+      {/* Circle */}
+      <TouchableOpacity onPress={onPressContainer}>
+        <View
+          style={styles.centerCircle}
+        >
+          
+        </View>
+      </TouchableOpacity>
+      {isVisible1 && (
+        <View style={[styles.circle, { bottom: 90, left: '27%' }]}>
+         
+        </View>
+      )}
+      {isVisible2 && (
+        <View style={[styles.circle, { bottom: 130, left: '44%' }]}>
+      
+        </View>
+      )}
+      {isVisible3 && (
+        <View style={[styles.circle, { bottom: 90, left: '60%' }]}>
+       
+        </View>
+      )}
+    </View>
+   
   )
 }
 
@@ -204,7 +275,6 @@ const styles = StyleSheet.create({
   banner1 : {
     height : 300,
     width : 390 ,
-   
     justifyContent : 'flex-end',
     padding: 10,
     
@@ -212,7 +282,6 @@ const styles = StyleSheet.create({
   banner2 : {
     height : 250,
     width : 320 ,
-   
     justifyContent : 'flex-end',
     padding: 10,
     marginRight: 20
@@ -258,6 +327,43 @@ const styles = StyleSheet.create({
     alignItems : 'center' , 
     justifyContent :'center', 
     marginRight : 20,  
-  }
+  },
+  
+  // Bottom tab css
+  bottomBar: {
+    position: 'absolute',
+    bottom: 0,
+    flexDirection: 'row', 
+    height: 80,
+    width : '100%',
+    backgroundColor: COLORS.primary,
+
+  },
+  centerCircle : {
+    position: 'absolute',
+    width: 80,
+    height: 80,
+    backgroundColor: COLORS.primary,
+    bottom: 40,
+    borderColor: '#fff',
+    borderWidth: 10,
+    borderRadius: 40,
+    marginHorizontal : '41%',
+    
+
+  },
+  circle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: COLORS.primary, // Change the color as needed
+    position: 'absolute',
+  },
+  iconTab : { 
+    width : '20%', 
+    height : 80, 
+    backgroundColor :COLORS.primary, 
+    justifyContent : 'center', 
+    alignItems : 'center' }
 }
 )

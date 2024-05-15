@@ -41,7 +41,7 @@ const LoginScreen2 = ({ navigation }) => {
       </View>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('BottomTabNavigation')}
+        onPress={() => navigation.navigate('Home')}
       >
         <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
           Log In
