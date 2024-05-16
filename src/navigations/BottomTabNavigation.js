@@ -45,8 +45,8 @@ const BottomTabNavigation = () => {
           },
           tabBarIcon: ({ focused }) => {
             return (
-              <AntDesign
-                name='home'
+              <MaterialCommunityIcons 
+              name="view-dashboard"                
                 size={32}
                 color={focused ? COLORS.focus : COLORS.unfocus}
               />
