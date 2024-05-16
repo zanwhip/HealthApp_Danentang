@@ -1,5 +1,5 @@
 // screens/SearchScreen.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TextInput, Button, ActivityIndicator, StyleSheet } from 'react-native';
 import FoodListItem from '../components/FoodListItem';
 import { gql, useLazyQuery } from '@apollo/client';
@@ -30,10 +30,19 @@ const SearchFoodScreen = ({ navigation }) => {
 
   const [runSearch, { data, loading, error }] = useLazyQuery(query);
 
-  const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [permission, setPermission] = useState(null);
+
+  useEffect(() => {
+    const requestPermission = async () => {
+      const { status } = await Camera.requestPermissionsAsync();
+      setPermission(status === 'granted');
+    };
+
+    requestPermission();
+  }, []);
 
   // Request only if permission is not granted, and we can ask again
-  requestPermission();
+
 
   const performSearch = () => {
     runSearch({ variables: { ingr: search } });

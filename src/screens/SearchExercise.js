@@ -74,13 +74,30 @@ const SearchExercise = ({navigation}) => {
       <FontAwesome name="filter" size={34} color="black" style={{ marginTop : 5, marginRight : 10 }} />
       
     </View>
-  
-      <ExerciseListItem  item={{name : 'run', label: 'Run',hour:30, cal:150}}/>
-      <ExerciseListItem  item={{name : 'bicycle', label: 'Bicycle',hour:1, cal:150}}/>
-      <ExerciseListItem  item={{name : 'walk',label: 'Walk',hour:2, cal:200}}/>
-      <ExerciseListItem  item={{name : 'swim',label: 'Swim',hour:1, cal:450}}/>
-      <ExerciseListItem  item={{name : 'dance-pole',label: 'Dance',hour:1, cal:400}}/>
+      <TouchableOpacity onPress={() => navigation.navigate('AddExercise')}>
+      <ExerciseListItem  item={{name : 'run', label: 'Run',hour:30, cal:150}} />
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate('AddExercise')}>
+      <ExerciseListItem item={{name : 'bicycle', label: 'Bicycle',hour:1, cal:150}} />
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate('AddExercise')}>
+      <ExerciseListItem  item={{name : 'walk',label: 'Walk',hour:2, cal:200}} />
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate('AddExercise')}>
+      <ExerciseListItem   item={{name : 'swim',label: 'Swim',hour:1, cal:450}} />
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate('AddExercise')}>
+      <ExerciseListItem  item={{name : 'dance-pole',label: 'Dance',hour:1, cal:400}} />
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate('AddExercise')}>
       <ExerciseListItem  item={{name : 'jump-rope',label: 'Jump Rope',hour:2, cal:275}}/>
+      </TouchableOpacity>
+      
       
       </View>
       </ScrollView>

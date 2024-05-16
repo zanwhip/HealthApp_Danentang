@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View,Image } from 'react-native'
+import { ScrollView, StyleSheet, Text, View,Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { ImageBackground } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -49,7 +49,10 @@ const AddExerciseScreen = ({navigation}) => {
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10, width: '100%'}}>
     <Ionicons name="arrow-back" size={36} color="#fff" />
     <Text style={styles.title}>Add Exercise</Text>
+    <TouchableOpacity onPress={() => navigation.navigate('ExerciseDailyDiary')}>
     <MaterialIcons name="done" size={36} color="#fff" />
+    </TouchableOpacity>
+    
   </View>
       </View>
      <View style={styles.Infor}>

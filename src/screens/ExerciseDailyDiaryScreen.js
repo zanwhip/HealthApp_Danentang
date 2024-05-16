@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View,Image  } from 'react-native'
+import { ScrollView, StyleSheet, Text, View,Image, TouchableOpacity  } from 'react-native'
 import React from 'react'
 import { FontAwesome } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
@@ -43,12 +43,12 @@ const ExerciseDailyDiaryScreen = ({navigation}) => {
     <ScrollView>
       <View style={{ width :'100%', height : 40, alignItems :'center' }}>
       <View style={styles.type}>
-        <View style={{ marginHorizontal : 10, width : '40%', justifyContent: 'center', height : 30, alignItems :'center' }}>
+        <TouchableOpacity style={{ marginHorizontal : 10, width : '40%', justifyContent: 'center', height : 30, alignItems :'center' }} onPress={() => navigation.navigate('DiaryFoodScreen')}>
             <Text style={{ color: COLORS.primary }}>Food</Text>
-        </View>
-        <View style={{ marginHorizontal : 10, width : '50%', justifyContent: 'center', height : 30, alignItems :'center', backgroundColor : COLORS.primary , borderRadius : 15}}>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ marginHorizontal : 10, width : '50%', justifyContent: 'center', height : 30, alignItems :'center', backgroundColor : COLORS.primary , borderRadius : 15}} >
             <Text style={{ color: '#fff' }}>Exercise</Text>
-        </View>
+        </TouchableOpacity>
     </View>
     <View style={styles.statistic}>
         <View style={{ flexDirection :'row' }}>

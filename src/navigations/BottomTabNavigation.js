@@ -12,10 +12,11 @@ import ExploreScreen from '../screens/ExploreScreen';
 import DiaryFoodScreen from '../screens/DiaryFoodScreen';
 import ProfileFoodScreen from '../screens/ProfileFoodScreen';
 import CenterControl from '../components/CenterControl';
+import AppNavigation from '../navigations/AppNavigation';
 
 const Tab = createBottomTabNavigator();
 
-const BottomTabNavigation = () => {
+const BottomTabNavigation = ({ navigation }) => {
   const { colors } = useTheme();
   return (
     <Tab.Navigator
@@ -77,7 +78,7 @@ const BottomTabNavigation = () => {
         component={DiaryFoodScreen}
         options={{
           tabBarIcon: ({ focused }) => {
-            return <CenterControl focused={focused} />;
+            return <CenterControl focused={focused} navigation={navigation}/>;
           },
         }}
       />

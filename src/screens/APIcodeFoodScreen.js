@@ -5,6 +5,7 @@ import { gql, useQuery } from '@apollo/client';
 import dayjs from 'dayjs';
 import FoodLogListItem from '../components/FoodLogListItem';
 
+
 const query = gql`
   query foodLogsForDate($date: Date!, $user_id: String!) {
     foodLogsForDate(date: $date, user_id: $user_id) {

@@ -5,6 +5,7 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
 import React from 'react';
 import HeaderToday from '../components/HeaderToday';
@@ -32,9 +33,9 @@ const DiaryFoodScreen = ({navigation}) => {
     <View style={styles.container}>
       <HeaderToday />
       <ScrollView style={{ paddingHorizontal: 20 }}>
-        <View style={{ alignItems: 'center' }}>
+        <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => navigation.navigate('ExerciseDailyDiary')}>
           <SwitchButton switchBtnContent={switchBtnContent} />
-        </View>
+        </TouchableOpacity>
 
         <Box
           content={

@@ -65,8 +65,8 @@ const PlanScreen = ({navigation}) => {
         
         <View style={{ width : '100%', height : 300 }}></View>
         </ScrollView>
-        <View style={{ backgroundColor :COLORS.primary, height :50, width : '80%', marginHorizontal :'10%', justifyContent : 'center', alignItems : 'center', borderRadius : 15, alignContent :'center', position : 'absolute' , marginTop : 550}}>
-            <Text style={{  marginTop : 20, fontWeight :'bold',  fontSize :18, color : '#FFF', }}>Try Plan for Free</Text>
+        <View style={{ backgroundColor :COLORS.primary, height :50, width : '80%', marginHorizontal :'10%',  borderRadius : 15, alignItems :'center', position : 'absolute' , marginTop : 550, justifyContent :'center'}}>
+            <Text style={{   fontWeight :'bold',  fontSize :18, color : '#FFF', }}>Try Plan for Free</Text>
         </View>
     </View>
    

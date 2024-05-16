@@ -3,6 +3,7 @@ import React from 'react';
 import { COLORS } from '../constants';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import AppNavigation from '../navigations/AppNavigation';
 const CenterControl = ({ focused ,navigation  }) => {
   return (
     <View
@@ -34,7 +35,7 @@ const CenterControl = ({ focused ,navigation  }) => {
               justifyContent : 'center',
               alignItems: 'center'
             }}
-           
+            onPress={() => navigation.navigate('SearchExercise')}
          >
          <MaterialIcons name="directions-run" size={36} color="white" />
          </TouchableOpacity>
@@ -51,6 +52,7 @@ const CenterControl = ({ focused ,navigation  }) => {
               justifyContent : 'center',
               alignItems: 'center'
             }}
+            onPress={() => navigation.navigate('APIcodeFood')}
           >
           <MaterialCommunityIcons name="silverware-fork-knife" size={36} color="white" />
           </TouchableOpacity>
