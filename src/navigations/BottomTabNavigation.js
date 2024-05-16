@@ -5,7 +5,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { COLORS } from '../constants';
 import { useTheme } from '../themes/ThemeProvider';
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import Homepages from '../screens/Homepages';
 import ExploreScreen from '../screens/ExploreScreen';
 import DiaryFoodScreen from '../screens/DiaryFoodScreen';
@@ -44,9 +45,10 @@ const BottomTabNavigation = () => {
           },
           tabBarIcon: ({ focused }) => {
             return (
-              <Image
-                tintColor={focused ? COLORS.focus : COLORS.unfocus}
-                source={require('../assets/icon/dashboard.png')}
+              <AntDesign
+                name='home'
+                size={32}
+                color={focused ? COLORS.focus : COLORS.unfocus}
               />
             );
           },
@@ -58,10 +60,13 @@ const BottomTabNavigation = () => {
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-              <Image
-                tintColor={focused ? COLORS.focus : COLORS.unfocus}
-                source={require('../assets/icon/explore.png')}
-              />
+              <MaterialIcons name="explore" size={36}
+                                color={
+                                    focused
+                                    ? COLORS.focus
+                                    : COLORS.unfocus
+                                }
+                            />
             );
           },
         }}
@@ -83,10 +88,13 @@ const BottomTabNavigation = () => {
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-              <Image
-                tintColor={focused ? COLORS.focus : COLORS.unfocus}
-                source={require('../assets/icon/diary.png')}
-              />
+              <MaterialIcons name="history" size={36} 
+              color={
+                  focused
+                  ? COLORS.focus
+                  : COLORS.unfocus
+              }
+          />
             );
           },
         }}
@@ -98,10 +106,13 @@ const BottomTabNavigation = () => {
           tabBarIcon: ({ focused }) => {
             return (
               <View>
-                <Image
-                  tintColor={focused ? COLORS.focus : COLORS.unfocus}
-                  source={require('../assets/icon/profile.png')}
-                />
+                 <AntDesign name="user" size={32}
+                                color={
+                                    focused
+                                    ? COLORS.focus
+                                    : COLORS.unfocus
+                                }
+                            />
               </View>
             );
           },

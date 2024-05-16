@@ -52,6 +52,13 @@ function AppNavigation() {
           }}
         >
           <Stack.Screen name='LoginScreen1' component={LoginScreen1} />
+          <Stack.Screen
+            name='BottomTabNavigation'
+            component={BottomTabNavigation}
+            options={{
+              headerShown: false,
+            }}
+          />
           <Stack.Screen name='chat' component={ChatScreen} />
           <Stack.Screen
             name='WelcomeChat'
@@ -85,13 +92,7 @@ function AppNavigation() {
             component={ExerciseDetailsScreen}
           />
           <Stack.Screen name='ProfileFood' component={ProfileFoodScreen} />
-          <Stack.Screen
-            name='BottomTabNavigation'
-            component={BottomTabNavigation}
-            options={{
-              headerShown: false,
-            }}
-          />
+        
           <Stack.Screen name='SearchExercise' component={SearchExercise} />
           <Stack.Screen
             name='AddFood_AcaiScreen'

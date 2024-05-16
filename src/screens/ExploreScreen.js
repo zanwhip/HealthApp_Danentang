@@ -9,7 +9,7 @@ import { ImageBackground } from 'react-native';
 
 const ExploreScreen = ({navigation}) => {
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <Header />
       <View style={styles.search}>
       <EvilIcons name="search" size={24} color="black" />
@@ -18,8 +18,8 @@ const ExploreScreen = ({navigation}) => {
         <Entypo name="list" size={24} color="black" />
       </View>
 
-
-      <View style={{ paddingHorizontal : 15,  }}>
+<ScrollView style={{ }}>
+      <View style={{ padding: 15,  }}>
         <Text>Suggested</Text>
         <View style={{ flexDirection : 'row' }}>
         <View style={styles.suggestedaround}>
@@ -163,7 +163,8 @@ const ExploreScreen = ({navigation}) => {
       </View>
       
       </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   )
 }
 
@@ -175,10 +176,11 @@ const styles = StyleSheet.create({
 
   },
   search : {
+    position : 'absolute',
     height : 50,
     width : '80%',
     backgroundColor : '#FFF',
-    top :  - 60,
+    top :  40,
     justifyContent : 'space-between',
     alignItems : 'center',
     marginHorizontal : '10%',

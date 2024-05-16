@@ -1,8 +1,9 @@
-import { View, Text, Platform } from 'react-native';
+import { View, Text, Platform, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { COLORS } from '../constants';
-
-const CenterControl = ({ focused }) => {
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+const CenterControl = ({ focused ,navigation  }) => {
   return (
     <View
       style={{
@@ -20,7 +21,7 @@ const CenterControl = ({ focused }) => {
       {focused && (
         <>
           {/* Three circles positioned above the center */}
-          <View
+          <TouchableOpacity
             style={{
               position: 'absolute',
               backgroundColor: COLORS.primary,
@@ -30,9 +31,14 @@ const CenterControl = ({ focused }) => {
               top: -50, // Adjust as needed
               left: '-50%', // Center horizontally
               transform: [{ translateX: -45 }], // Adjust position to center
+              justifyContent : 'center',
+              alignItems: 'center'
             }}
-          />
-          <View
+           
+         >
+         <MaterialIcons name="directions-run" size={36} color="white" />
+         </TouchableOpacity>
+          <TouchableOpacity
             style={{
               position: 'absolute',
               backgroundColor: COLORS.primary,
@@ -42,9 +48,13 @@ const CenterControl = ({ focused }) => {
               top: -75, // Adjust as needed
               left: '20%', // Center horizontally
               transform: [{ translateX: -15 }], // Adjust position to center
+              justifyContent : 'center',
+              alignItems: 'center'
             }}
-          />
-          <View
+          >
+          <MaterialCommunityIcons name="silverware-fork-knife" size={36} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity
             style={{
               position: 'absolute',
 
@@ -55,8 +65,12 @@ const CenterControl = ({ focused }) => {
               left: '100%', // Center horizontally
               transform: [{ translateX: 15 }], // Adjust position to center
               backgroundColor: COLORS.primary,
+              justifyContent : 'center',
+              alignItems: 'center'
             }}
-          />
+          > 
+          <MaterialCommunityIcons name="barcode-scan" size={36} color="white" />
+          </TouchableOpacity>
         </>
       )}
     </View>
