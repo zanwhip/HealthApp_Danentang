@@ -6,12 +6,36 @@ import {
   TextInput,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import React from 'react';
 import { COLORS } from '../constants';
+import supabase from "../config/database";
+import React, { useState } from 'react'; // Import useState from 'react'
 
 const LoginScreen2 = ({ navigation }) => {
-  const handleLogin = () => {
-    // Handle login action
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const handleLogin = async () => {
+    try {
+      setLoading(true);
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email : email,
+        password : password,
+      });
+      if (error) {
+        throw error;
+      }
+      if (data != null) {
+        navigation.navigate('BottomTabNavigation');
+      } else {
+        showNotification('error', 'Log in failed. Please try again.'); 
+      }
+    } catch (error) {
+      console.error('Error Loging in:', error.message);
+      showNotification('error', 'Log in failed. Please try again.');
+    }finally {
+      setLoading(false);
+    }
   };
   return (
     <View>
@@ -27,26 +51,26 @@ const LoginScreen2 = ({ navigation }) => {
         <Text style={styles.login}>Log In</Text>
       </View>
       <View style={{ marginTop: 50 }}>
-        <TextInput
+      <TextInput
+          value={email}
+          onChangeText={setEmail}
           style={styles.input}
-          placeholder='Email Address'
-          keyboardType='email-address'
+          placeholder="Email Address"
+          keyboardType="email-address"
         />
         <TextInput
-          secureTextEntry={true}
+          value={password}
+          onChangeText={setPassword}
+         secureTextEntry={true}
           style={styles.input}
-          placeholder='Password'
-          keyboardType='visible-password'
+          placeholder="Password"
         />
       </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('BottomTabNavigation')}
-      >
-        <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-          Log In
-        </Text>
-      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={{ color : 'white', fontSize : 16, fontWeight : 'bold' }}>
+          {loading ? "Loading..." : "Log In"}
+            </Text>
+        </TouchableOpacity>
       <TouchableOpacity
         style={{
           width: '100%',

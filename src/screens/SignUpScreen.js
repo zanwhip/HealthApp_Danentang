@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,13 +7,38 @@ import {
   TextInput,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import React from 'react';
+import  supabase  from '../config/database';
 import { COLORS } from '../constants';
+import  showNotification  from '../components/Notification';
 
 const SignUpScreen = ({ navigation }) => {
-  const handleSignup = () => {
-    navigation.navigate('BottomTabNavigation');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+
+  const handleSignup = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+      if (error) throw error;
+      if (data) {
+        navigation.navigate('LoginScreen2');
+      } else {
+        showNotification('error', 'Sign up failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error signing up:', error.message);
+      showNotification('error', 'Sign up failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
+
+
   return (
     <View>
       <View style={styles.container}>
@@ -26,98 +52,57 @@ const SignUpScreen = ({ navigation }) => {
         </TouchableOpacity>
         <Text style={styles.signup}>Sign Up</Text>
       </View>
-      <View
-        style={{
-          marginHorizontal: 40,
-          marginTop: 20,
-          width: '80%',
-          alignContent: 'çenter',
-        }}
-      >
+      <View style={{ marginHorizontal: 40, marginTop: 20, width: '80%', alignContent: 'center' }}>
         <Text style={{ fontSize: 18, fontWeight: '700' }}>
           Let’s get started! Create your account.
         </Text>
       </View>
       <View style={{ marginTop: 25 }}>
         <TextInput
+          value={email}
+          onChangeText={setEmail}
           style={styles.input}
           placeholder='Email Address'
           keyboardType='email-address'
         />
         <TextInput
+          value={password}
+          onChangeText={setPassword}
           secureTextEntry={true}
           style={styles.input}
           placeholder='Password'
-          keyboardType='visible-password'
         />
         <Text style={{ marginLeft: 29, color: '#ADADAD', top: -10 }}>
           10 characters minimum
         </Text>
       </View>
-      <View
-        style={{
-          width: '100%',
-          height: 100,
-          alignItems: 'center',
-          paddingHorizontal: '7.5%',
-        }}
-      >
+      <View style={{ width: '100%', height: 100, alignItems: 'center', paddingHorizontal: '7.5%' }}>
         <Text style={{ color: '#ADADAD', marginTop: 30, textAlign: 'center' }}>
           By signing up for MyFitnessPal, you are agreeing to our{' '}
           <Text style={{ color: COLORS.primary }}>Privacy Policy</Text> and{' '}
           <Text style={{ color: COLORS.primary }}>Terms</Text>.
         </Text>
       </View>
-
       <TouchableOpacity style={styles.button} onPress={handleSignup}>
         <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-          Next
+          {loading ? 'Loading...' : 'Next'}
         </Text>
       </TouchableOpacity>
-
       <View style={{ marginTop: 82 }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            height: 60,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <View
-            style={{
-              width: 120,
-              height: 2,
-              backgroundColor: '#888888',
-              marginHorizontal: 20,
-            }}
-          ></View>
+        <View style={{ flexDirection: 'row', height: 60, alignItems: 'center', justifyContent: 'center' }}>
+          <View style={{ width: 120, height: 2, backgroundColor: '#888888', marginHorizontal: 20 }}></View>
           <Text style={{ color: '#888888' }}>OR</Text>
-          <View
-            style={{
-              width: 120,
-              height: 2,
-              backgroundColor: '#888888',
-              marginHorizontal: 20,
-            }}
-          ></View>
+          <View style={{ width: 120, height: 2, backgroundColor: '#888888', marginHorizontal: 20 }}></View>
         </View>
       </View>
       <View style={{ marginTop: -20 }}>
-        <TouchableOpacity style={styles.button1}>
+      <TouchableOpacity style={styles.button1}>
           <Text style={{ color: '#ADADAD' }}>Continue with Apple</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button1}>
           <Text style={{ color: '#ADADAD' }}>Continue with Facebook</Text>
         </TouchableOpacity>
-        <View
-          style={{
-            width: '60%',
-            marginHorizontal: '20%',
-            alignItems: 'center',
-            marginTop: 20,
-          }}
-        >
+        <View style={{ width: '60%', marginHorizontal: '20%', alignItems: 'center', marginTop: 20 }}>
           <Text style={{ color: '#ADADAD', textAlign: 'center' }}>
             We will never post anything without your permission.
           </Text>
@@ -129,13 +114,13 @@ const SignUpScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row', // Arrange children horizontally
-    alignItems: 'center', // Center items vertically
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 60,
     marginHorizontal: 20,
   },
   icon: {
-    marginRight: 10, // Add space between icon and text
+    marginRight: 10,
   },
   signup: {
     fontSize: 24,
@@ -172,4 +157,5 @@ const styles = StyleSheet.create({
     borderWidth: 0.2,
   },
 });
+
 export default SignUpScreen;
