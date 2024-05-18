@@ -58,7 +58,6 @@ function AppNavigation() {
           <Stack.Screen name='WelcomeChat' component={WelcomeChatScreen} options={{ headerShown: false }} />
           <Stack.Screen name='APIcodeFood' component={APIcodeFood} />
           <Stack.Screen name='SearchFood' component={SearchFoodScreen} />
-          <Stack.Screen name='APIcodeFood' component={APIcodeFood} />
           <Stack.Screen name='LoginScreen' component={LoginScreen} />
           
           {/* <Stack.Screen name='LoginScreen1' component={LoginScreen1} /> */}

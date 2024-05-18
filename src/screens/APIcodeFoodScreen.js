@@ -28,10 +28,6 @@ const query = gql`
     }
   }
 `;
-<<<<<<< HEAD
-=======
-
->>>>>>> 66c9980aa5ae5d78cce94b146f7137ae4cae3e05
 const APIcodeFood = ({ navigation }) => {
   const user_id = 'vadim';
   const { data, loading, error } = useQuery(query, {
