@@ -8,12 +8,19 @@ import {
 import { AntDesign } from '@expo/vector-icons';
 import { COLORS } from '../constants';
 import supabase from '../config/database';
-import React, { useState } from 'react'; // Import useState from 'react'
+import React, { useEffect, useState } from 'react'; // Import useState from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { getSessionId } from '../redux/actions/Actions';
 
 const LoginScreen2 = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const sessionID = useSelector((state) => state);
+  useEffect(() => {
+    console.log(sessionID)
+  }, [sessionID]);
   const handleLogin = async () => {
     try {
       setLoading(true);
@@ -26,6 +33,8 @@ const LoginScreen2 = ({ navigation }) => {
         throw error;
       }
       if (data != null) {
+        
+        dispatch(getSessionId(data.session.access_token));
         navigation.navigate('BottomTabNavigation');
       } else {
         showNotification('error', 'Log in failed. Please try again.');
