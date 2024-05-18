@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { COLORS } from '../constants';
 import React from 'react';
 
@@ -7,9 +7,10 @@ const SwitchButton = ({ switchBtnContent }) => {
     <View style={styles.type}>
       {switchBtnContent ? (
         switchBtnContent.map((data, index) => (
-          <View
+          <TouchableOpacity
             key={index}
             style={data.onChecked ? styles.onCheckTrue : styles.onCheckFalse}
+            onPress={data.onPress}
           >
             <Text
               style={
@@ -18,7 +19,7 @@ const SwitchButton = ({ switchBtnContent }) => {
             >
               {data.text}
             </Text>
-          </View>
+          </TouchableOpacity>
         ))
       ) : (
         <></>
@@ -30,14 +31,13 @@ const styles = StyleSheet.create({
   type: {
     width: '50%',
     height: 30,
-    margin: 20,
     alignItems: 'center',
     backgroundColor: COLORS.white,
     borderRadius: 15,
     flexDirection: 'row',
   },
   onCheckTrue: {
-    flex: 1,
+    flex: 1.2,
     justifyContent: 'center',
     alignItems: 'center',
     height: 30,

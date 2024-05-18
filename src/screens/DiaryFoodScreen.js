@@ -15,7 +15,7 @@ import { COLORS } from '../constants';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { Divider, Button } from '@rneui/themed';
 
-const DiaryFoodScreen = ({navigation}) => {
+const DiaryFoodScreen = ({ navigation }) => {
   const switchBtnContent = [
     {
       id: 1,
@@ -33,7 +33,10 @@ const DiaryFoodScreen = ({navigation}) => {
     <View style={styles.container}>
       <HeaderToday />
       <ScrollView style={{ paddingHorizontal: 20 }}>
-        <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => navigation.navigate('ExerciseDailyDiary')}>
+        <TouchableOpacity
+          style={{ alignItems: 'center', margin: 10 }}
+          onPress={() => navigation.navigate('ExerciseDailyDiary')}
+        >
           <SwitchButton switchBtnContent={switchBtnContent} />
         </TouchableOpacity>
 

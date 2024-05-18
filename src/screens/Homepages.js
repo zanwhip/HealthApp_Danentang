@@ -49,7 +49,7 @@ const Homepages = ({ navigation }) => {
       </View>
       <ScrollView
         style={[styles.flex1, styles.container]}
-        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
       >
         <View style={styles.flex1}>
           <Box
