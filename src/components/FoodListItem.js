@@ -5,7 +5,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { gql, useMutation } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
 
-const mutation = gql`
+const INSERT_FOOD_LOG_MUTATION = gql`
   mutation MyMutation(
     $food_id: String!
     $kcal: Int!
@@ -29,7 +29,7 @@ const mutation = gql`
 `;
 
 const FoodListItem = ({ item }) => {
-  const [logFood] = useMutation(mutation, {
+  const [logFood] = useMutation(INSERT_FOOD_LOG_MUTATION, {
     refetchQueries: ['foodLogsForDate'],
   });
   const navigation = useNavigation();

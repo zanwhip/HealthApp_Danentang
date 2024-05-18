@@ -18,8 +18,7 @@ const query = gql`
     }
   }
 `;
-
-const APIcodeFood = ({navigation}) => {
+const APIcodeFood = ({ navigation }) => {
   const user_id = 'vadim';
   const { data, loading, error } = useQuery(query, {
     variables: {

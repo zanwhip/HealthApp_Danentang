@@ -1,12 +1,13 @@
-import { ScrollView, StyleSheet, Text, View,Image, TouchableOpacity  } from 'react-native'
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { COLORS } from '../constants';
-import { ProgressChart} from "react-native-chart-kit";
+import { ProgressChart } from 'react-native-chart-kit';
 import * as Progress from 'react-native-progress';
-const steps = 60;
+import { Pedometer } from 'expo-sensors';
+
 const cals = 100;
 const exercises = 40;
   
@@ -29,6 +30,27 @@ const chartData = {
    
   
 const ExerciseDailyDiaryScreen = ({navigation}) => {
+
+  const [steps, setSteps] = useState(0);
+
+  useEffect(() => {
+    Pedometer.isAvailableAsync().then(
+      (result) => {
+        if (result) {
+          const subscription = Pedometer.watchStepCount((result) => {
+            setSteps(result.steps);
+          });
+
+          return () => {
+            subscription && subscription.remove();
+          };
+        }
+      },
+      (error) => {
+        console.error('Could not get Pedometer availability:', error);
+      }
+    );
+  }, []);
 
     
   return (
@@ -77,10 +99,10 @@ const ExerciseDailyDiaryScreen = ({navigation}) => {
                 <Text style={{ marginLeft : 80, fontWeight : 'bold' }}>Daily Goals</Text>
             <View style={{ justifyContent :'center', alignContent :'center', alignItems :'center' , paddingHorizontal : 10}}>
             <Text style={{ marginTop : 10, fontSize : 20, fontWeight :"400" , marginLeft : -100,}}>Steps</Text>
-            <Text style={{ color : '#737373', fontSize : 12,  marginLeft : 30}}>6,459/10,000 </Text>
+            <Text style={{ color : '#737373', fontSize : 12,  marginLeft : 30}}>{steps} </Text>
             <View style={{ flexDirection :'row', height : 30, width : '100%'}}>  
             <Image source={require('../assets/icon/step.png')} style={{ height : 30, width : 30, marginRight : 6 }} />          
-            <Progress.Bar progress={steps / 100} width={120} height={18} borderRadius={7} color='#5BB6AF' style={{margin : 6}}/>
+            <Progress.Bar progress={steps / 200} width={120} height={18} borderRadius={7} color='#5BB6AF' style={{margin : 6}}/>
             </View>
             </View>
 

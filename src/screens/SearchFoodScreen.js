@@ -1,11 +1,12 @@
-// screens/SearchScreen.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TextInput, Button, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TextInput, Button, ActivityIndicator, StyleSheet, Alert } from 'react-native';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import { Camera } from 'expo-camera';
 import FoodListItem from '../components/FoodListItem';
 import { gql, useLazyQuery } from '@apollo/client';
 import { Ionicons } from '@expo/vector-icons';
-import { Camera } from 'expo-camera';
-
+import { CameraOrientation } from 'expo-camera/build/legacy/Camera.types';
+import { RNCamera } from 'react-native-camera';
 const query = gql`
   query search($ingr: String, $upc: String) {
     search(ingr: $ingr, upc: $upc) {
@@ -27,26 +28,28 @@ const query = gql`
 const SearchFoodScreen = ({ navigation }) => {
   const [search, setSearch] = useState('');
   const [scannerEnabled, setScannerEnabled] = useState(false);
-
+  const [permission, requestPermission] = useCameraPermissions();
   const [runSearch, { data, loading, error }] = useLazyQuery(query);
 
-  const [permission, setPermission] = useState(null);
-
   useEffect(() => {
-    const requestPermission = async () => {
-      const { status } = await Camera.requestPermissionsAsync();
-      setPermission(status === 'granted');
+    const getPermission = async () => {
+      if (Constants.platform.ios) {
+        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        if (status !== "granted") {
+          alert("Sorry, we need camera roll permissions to make this work!");
+        }
+      }
     };
-
-    requestPermission();
+    getPermission();
   }, []);
-
-  // Request only if permission is not granted, and we can ask again
-
 
   const performSearch = () => {
     runSearch({ variables: { ingr: search } });
-    // setSearch('');
+  };
+
+  const handleBarCodeScanned = ({ data }) => {
+    runSearch({ variables: { upc: data } });
+    setScannerEnabled(false);
   };
 
   if (error) {
@@ -54,9 +57,16 @@ const SearchFoodScreen = ({ navigation }) => {
   }
 
   if (scannerEnabled) {
+    if (!permission) {
+      return <Text>Requesting camera permission...</Text>;
+    }
+
     return (
-      <View>
-        <Camera
+      <View style={{ flex: 1 }}>
+        <CameraView
+          // type={RNCamera.Constants.Type.back}
+          // flashMode={RNCamera.Constants.FlashMode.on}
+          // captureAudio={false}
           style={{ width: '100%', height: '100%' }}
           onBarCodeScanned={(data) => {
             console.log(data);
@@ -79,7 +89,7 @@ const SearchFoodScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
         <TextInput
           value={search}
           onChangeText={setSearch}
@@ -100,7 +110,7 @@ const SearchFoodScreen = ({ navigation }) => {
         data={items}
         renderItem={({ item }) => <FoodListItem item={item} />}
         ListEmptyComponent={() => <Text>Search a food</Text>}
-        contentContainerStyle={{ gap: 5 }}
+        contentContainerStyle={{ marginTop: 5 }}
       />
     </View>
   );
@@ -111,8 +121,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 10,
-    paddingVertical : 40,
-    gap: 10,
+    paddingTop: 40,
+    paddingBottom: 40,
   },
   input: {
     backgroundColor: '#f2f2f2',

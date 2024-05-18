@@ -51,14 +51,16 @@ function AppNavigation() {
             headerShown: false, // Bỏ hiển thị header
           }}
         >
-          <Stack.Screen name='LoginScreen1' component={LoginScreen1} />
+          {/* <Stack.Screen name='LoginScreen1' component={LoginScreen1} /> */}
           <Stack.Screen name='BottomTabNavigation' component={BottomTabNavigation} options={{ headerShown: false,}}
           />
           <Stack.Screen name='chat' component={ChatScreen} />
           <Stack.Screen name='WelcomeChat' component={WelcomeChatScreen} options={{ headerShown: false }} />
-          <Stack.Screen name='APIcodeFood' component={APIcodeFood} />
+         
           <Stack.Screen name='SearchFood' component={SearchFoodScreen} />
+          <Stack.Screen name='APIcodeFood' component={APIcodeFood} />
           <Stack.Screen name='LoginScreen' component={LoginScreen} />
+          
           {/* <Stack.Screen name='LoginScreen1' component={LoginScreen1} /> */}
           <Stack.Screen name='LoginScreen2' component={LoginScreen2} />
           <Stack.Screen name='SignUpScreen' component={SignUpScreen} />
