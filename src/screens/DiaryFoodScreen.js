@@ -41,6 +41,7 @@ const DiaryFoodScreen = ({ navigation }) => {
         </TouchableOpacity>
 
         <Box
+          disabled={true}
           content={
             <View style={styles.boxContentContainer}>
               <View
@@ -123,6 +124,7 @@ const DiaryFoodScreen = ({ navigation }) => {
           }
         />
         <Box
+          disabled={true}
           styleBox={{ marginTop: 10 }}
           content={
             <View style={styles.boxContentContainer}>
@@ -190,6 +192,7 @@ const DiaryFoodScreen = ({ navigation }) => {
           }
         />
         <Box
+          disabled={true}
           styleBox={{ marginTop: 10 }}
           content={
             <View style={styles.boxContentContainer}>
@@ -229,6 +232,7 @@ const DiaryFoodScreen = ({ navigation }) => {
           }
         />
         <Box
+          disabled={true}
           styleBox={{ marginTop: 10 }}
           content={
             <View style={styles.boxContentContainer}>
@@ -268,6 +272,7 @@ const DiaryFoodScreen = ({ navigation }) => {
           }
         />
         <Box
+          disabled={true}
           styleBox={{ marginTop: 10 }}
           content={
             <View style={styles.boxContentContainer}>

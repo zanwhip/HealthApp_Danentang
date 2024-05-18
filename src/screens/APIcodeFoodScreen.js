@@ -1,5 +1,5 @@
 // screens/HomeScreen.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,11 +10,11 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import { gql, useQuery } from '@apollo/client';
+import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import dayjs from 'dayjs';
 import FoodLogListItem from '../components/FoodLogListItem';
 import { COLORS } from '../constants';
-import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
+import { AntDesign, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 
 const query = gql`
   query foodLogsForDate($date: Date!, $user_id: String!) {
@@ -30,6 +30,7 @@ const query = gql`
 `;
 const APIcodeFood = ({ navigation }) => {
   const user_id = 'vadim';
+
   const { data, loading, error } = useQuery(query, {
     variables: {
       date: dayjs().format('YYYY-MM-DD'),
@@ -44,6 +45,11 @@ const APIcodeFood = ({ navigation }) => {
   if (error) {
     return <Text>Failed to fetch data</Text>;
   }
+
+  const totalCalories = data.foodLogsForDate.reduce(
+    (total, item) => total + item.kcal,
+    0
+  );
 
   return (
     <View style={styles.container}>
@@ -65,34 +71,18 @@ const APIcodeFood = ({ navigation }) => {
         >
           <Text style={styles.Text}>Add Food</Text>
         </View>
-        {/* <View style={styles.search}>
-          <View style={{ flexDirection: 'row', marginHorizontal: 10 }}>
-            <FontAwesome5
-              name='search'
-              size={20}
-              color='black'
-              style={{ marginTop: 13, marginRight: 2 }}
-            />
-            <TextInput style={styles.input} placeholder='Search...' />
-            <AntDesign
-              name='qrcode'
-              size={24}
-              color='black'
-              style={{ marginTop: 10 }}
-            />
-          </View>
-        </View> */}
+        <TouchableOpacity onPress={() => navigation.navigate('SearchFood')}>
+          <FontAwesome5 name='search' size={25} color={COLORS.white} />
+        </TouchableOpacity>
       </View>
+
       <View style={styles.headerRow}>
+        <Text></Text>
         <Text style={styles.subtitle}>Calories</Text>
-        <Text style={{ color: 'white' }}> 1770 - 360 = 1692</Text>
-      </View>
-      <View style={styles.headerRow}>
-        <Text style={styles.subtitle}>Today's food</Text>
-        <Button
-          title='ADD FOOD'
-          onPress={() => navigation.navigate('SearchFood')}
-        />
+
+        <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>
+          {totalCalories}
+        </Text>
       </View>
       <View
         style={{
@@ -104,6 +94,7 @@ const APIcodeFood = ({ navigation }) => {
         }}
       >
         <FlatList
+          style={{ marginBottom: 150 }}
           showsVerticalScrollIndicator={false}
           data={data.foodLogsForDate}
           contentContainerStyle={{ gap: 5 }}
@@ -127,7 +118,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: 25,
     fontWeight: '500',
     flex: 1,
     color: 'white',
@@ -137,7 +128,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    padding: 10,
+    padding: 30,
   },
   Text: {
     fontSize: 24,
@@ -157,13 +148,11 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   search: {
-    height: 50,
     width: '90%',
     backgroundColor: '#FFF',
     justifyContent: 'center',
     marginTop: 15,
     alignItems: 'center',
-    marginHorizontal: '5%',
     borderRadius: 250,
   },
 });

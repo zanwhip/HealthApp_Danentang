@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TextInput, Button, ActivityIndicator, StyleSheet, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TextInput,
+  Button,
+  ActivityIndicator,
+  StyleSheet,
+  Alert,
+} from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { Camera } from 'expo-camera';
+
 import FoodListItem from '../components/FoodListItem';
 import { gql, useLazyQuery } from '@apollo/client';
 import { Ionicons } from '@expo/vector-icons';
@@ -35,8 +44,8 @@ const SearchFoodScreen = ({ navigation }) => {
     const getPermission = async () => {
       if (Constants.platform.ios) {
         const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-        if (status !== "granted") {
-          alert("Sorry, we need camera roll permissions to make this work!");
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!');
         }
       }
     };
@@ -76,9 +85,9 @@ const SearchFoodScreen = ({ navigation }) => {
         />
         <Ionicons
           onPress={() => setScannerEnabled(false)}
-          name="close"
+          name='close'
           size={30}
-          color="dimgray"
+          color='dimgray'
           style={{ position: 'absolute', right: 10, top: 10 }}
         />
       </View>
@@ -89,28 +98,34 @@ const SearchFoodScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+      <View
+        style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}
+      >
         <TextInput
           value={search}
           onChangeText={setSearch}
-          placeholder="Search..."
+          placeholder='Search...'
           style={styles.input}
         />
         <Ionicons
           onPress={() => setScannerEnabled(true)}
-          name="barcode-outline"
+          name='barcode-outline'
           size={32}
-          color="dimgray"
+          color='dimgray'
         />
       </View>
-      {search && <Button title="Search" onPress={performSearch} />}
+      {search && <Button title='Search' onPress={performSearch} />}
 
       {loading && <ActivityIndicator />}
       <FlatList
         data={items}
         renderItem={({ item }) => <FoodListItem item={item} />}
-        ListEmptyComponent={() => <Text>Search a food</Text>}
-        contentContainerStyle={{ marginTop: 5 }}
+        ListEmptyComponent={() => (
+          <View style={{ alignItems: 'center' }}>
+            <Text>Search a food</Text>
+          </View>
+        )}
+        contentContainerStyle={{ gap: 5 }}
       />
     </View>
   );
@@ -121,8 +136,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 10,
-    paddingTop: 40,
-    paddingBottom: 40,
+    paddingVertical: 40,
+    gap: 10,
   },
   input: {
     backgroundColor: '#f2f2f2',
