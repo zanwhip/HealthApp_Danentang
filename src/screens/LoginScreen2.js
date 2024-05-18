@@ -7,33 +7,42 @@ import {
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { COLORS } from '../constants';
-import supabase from "../config/database";
-import React, { useState } from 'react'; // Import useState from 'react'
+import supabase from '../config/database';
+import React, { useEffect, useState } from 'react'; // Import useState from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { getSessionId } from '../redux/actions/Actions';
 
 const LoginScreen2 = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const sessionID = useSelector((state) => state);
+  useEffect(() => {
+    console.log(sessionID)
+  }, [sessionID]);
   const handleLogin = async () => {
     try {
       setLoading(true);
 
       const { data, error } = await supabase.auth.signInWithPassword({
-        email : email,
-        password : password,
+        email: email,
+        password: password,
       });
       if (error) {
         throw error;
       }
       if (data != null) {
+        
+        dispatch(getSessionId(data.session.access_token));
         navigation.navigate('BottomTabNavigation');
       } else {
-        showNotification('error', 'Log in failed. Please try again.'); 
+        showNotification('error', 'Log in failed. Please try again.');
       }
     } catch (error) {
       console.error('Error Loging in:', error.message);
       showNotification('error', 'Log in failed. Please try again.');
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -51,26 +60,26 @@ const LoginScreen2 = ({ navigation }) => {
         <Text style={styles.login}>Log In</Text>
       </View>
       <View style={{ marginTop: 50 }}>
-      <TextInput
+        <TextInput
           value={email}
           onChangeText={setEmail}
           style={styles.input}
-          placeholder="Email Address"
-          keyboardType="email-address"
+          placeholder='Email Address'
+          keyboardType='email-address'
         />
         <TextInput
           value={password}
           onChangeText={setPassword}
-         secureTextEntry={true}
+          secureTextEntry={true}
           style={styles.input}
-          placeholder="Password"
+          placeholder='Password'
         />
       </View>
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={{ color : 'white', fontSize : 16, fontWeight : 'bold' }}>
-          {loading ? "Loading..." : "Log In"}
-            </Text>
-        </TouchableOpacity>
+        <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
+          {loading ? 'Loading...' : 'Log In'}
+        </Text>
+      </TouchableOpacity>
       <TouchableOpacity
         style={{
           width: '100%',

@@ -1,7 +1,6 @@
-import { View, Text, Platform, Image } from 'react-native';
+import { View } from 'react-native';
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { COLORS } from '../constants';
 import { useTheme } from '../themes/ThemeProvider';
@@ -46,8 +45,8 @@ const BottomTabNavigation = ({ navigation }) => {
           },
           tabBarIcon: ({ focused }) => {
             return (
-              <MaterialCommunityIcons 
-              name="view-dashboard"                
+              <MaterialCommunityIcons
+                name='view-dashboard'
                 size={32}
                 color={focused ? COLORS.focus : COLORS.unfocus}
               />
@@ -61,13 +60,11 @@ const BottomTabNavigation = ({ navigation }) => {
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-              <MaterialIcons name="explore" size={36}
-                                color={
-                                    focused
-                                    ? COLORS.focus
-                                    : COLORS.unfocus
-                                }
-                            />
+              <MaterialIcons
+                name='explore'
+                size={36}
+                color={focused ? COLORS.focus : COLORS.unfocus}
+              />
             );
           },
         }}
@@ -89,13 +86,11 @@ const BottomTabNavigation = ({ navigation }) => {
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-              <MaterialIcons name="history" size={36} 
-              color={
-                  focused
-                  ? COLORS.focus
-                  : COLORS.unfocus
-              }
-          />
+              <MaterialIcons
+                name='history'
+                size={36}
+                color={focused ? COLORS.focus : COLORS.unfocus}
+              />
             );
           },
         }}
@@ -107,13 +102,11 @@ const BottomTabNavigation = ({ navigation }) => {
           tabBarIcon: ({ focused }) => {
             return (
               <View>
-                 <AntDesign name="user" size={32}
-                                color={
-                                    focused
-                                    ? COLORS.focus
-                                    : COLORS.unfocus
-                                }
-                            />
+                <AntDesign
+                  name='user'
+                  size={32}
+                  color={focused ? COLORS.focus : COLORS.unfocus}
+                />
               </View>
             );
           },

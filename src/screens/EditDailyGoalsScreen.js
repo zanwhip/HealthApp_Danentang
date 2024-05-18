@@ -1,19 +1,25 @@
-import { ScrollView, StyleSheet, Text, View,Image  } from 'react-native'
-import React from 'react'
+import { ScrollView, StyleSheet, Text, View,Image , TextInput } from 'react-native'
+import React, {useState} from 'react'
 import { ImageBackground } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../constants';
+import { useRoute } from '@react-navigation/native';
 import { ProgressChart} from "react-native-chart-kit";
 import * as Progress from 'react-native-progress';
 
-const steps = 60;
+const aimsteps = 60;
+
+
+
 const cals = 100;
 const exercises = 40;
   
 const EditDailyGoalsScreen = ({navigation}) => {
-
-    
+    const [aimSteps, setAimSteps] = useState("");
+    const route = useRoute();
+    const { steps } = route.params;
+    const percent_steps = (steps / aimsteps) * 100;
   return (
     <View>
       <View style={styles.header}>
@@ -32,9 +38,17 @@ const EditDailyGoalsScreen = ({navigation}) => {
 
         <View style={{ flexDirection : 'row', justifyContent :"space-between", padding : 20, alignItems :"center" }}>
             <Text style={{ fontSize: 18 }}>Steps per day</Text>
-            <View style={{ width : '35%', height : 35, borderRadius : 5, borderColor : '#000', borderWidth : 1 , justifyContent :'space-evenly', alignItems:"flex-end", padding : 5 }}>
-                <Text style={{ color: COLORS.primary }}>10,000 steps</Text>
-            </View>
+            <View style={{ width: '35%', height: 35, borderRadius: 5, borderColor: '#000', borderWidth: 1, justifyContent: 'space-evenly', alignItems: "flex-end", padding: 5 }}>
+    <View>
+    <TextInput
+        style={{ color: COLORS.primary }}
+        onChangeText={text => setAimSteps(parseInt(text))}
+        keyboardType="numeric"
+        value={aimSteps.toString()}
+    />
+    </View>
+    
+</View>
         </View>
 
         <View style={{ flexDirection : 'row', justifyContent :"space-between", padding : 20, alignItems :"center" }}>
@@ -57,7 +71,7 @@ const EditDailyGoalsScreen = ({navigation}) => {
         <View style={{ flexDirection : 'row', paddingVertical : 20,  }}>
             <View style={{ justifyContent :'center', alignContent :'center', alignItems :'center' , paddingHorizontal : 10}}>
             <Progress.Bar progress={steps / 100} width={100} color='#5BB6AF' style={{marginBottom : 20}}/>
-            <Text>{steps}%</Text>
+            <Text>{percent_steps}%</Text>
             <Text style={{ marginTop : 10, fontSize : 20, fontWeight :"700" }}>Steps</Text>
             </View>
 
@@ -69,7 +83,7 @@ const EditDailyGoalsScreen = ({navigation}) => {
 
             <View style={{ justifyContent :'center', alignContent :'center', alignItems :'center' , paddingHorizontal : 10}}>
             <Progress.Bar progress={exercises / 100} width={100} color='#B50036' style={{marginBottom : 20}}/>
-            <Text>{exercises}%</Text>
+            <Text>{percent_steps}%</Text>
             <Text style={{ marginTop : 10, fontSize : 20, fontWeight :"700" }}>Exercises</Text>
             </View> 
         </View>

@@ -75,7 +75,10 @@ const ExerciseDailyDiaryScreen = ({navigation}) => {
     <View style={styles.statistic}>
         <View style={{ flexDirection :'row' }}>
         <Text style={styles.title1}>Daily Goals</Text>
+        <TouchableOpacity  onPress={() => navigation.navigate('EditDailyGoals',   { steps })}>
         <FontAwesome name="pencil" size={26} color={COLORS.primary} style={{ left : 90}} />
+        </TouchableOpacity>
+        
         </View>
        
         <View style={{ flexDirection : 'row'}}>
@@ -102,7 +105,7 @@ const ExerciseDailyDiaryScreen = ({navigation}) => {
             <Text style={{ color : '#737373', fontSize : 12,  marginLeft : 30}}>{steps} </Text>
             <View style={{ flexDirection :'row', height : 30, width : '100%'}}>  
             <Image source={require('../assets/icon/step.png')} style={{ height : 30, width : 30, marginRight : 6 }} />          
-            <Progress.Bar progress={steps / 200} width={120} height={18} borderRadius={7} color='#5BB6AF' style={{margin : 6}}/>
+            <Progress.Bar progress={steps / 100} width={120} height={18} borderRadius={7} color='#5BB6AF' style={{margin : 6}}/>
             </View>
             </View>
 
