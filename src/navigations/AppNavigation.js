@@ -51,7 +51,7 @@ function AppNavigation() {
             headerShown: false, // Bỏ hiển thị header
           }}
         >
-          {/* <Stack.Screen name='LoginScreen1' component={LoginScreen1} /> */}
+          <Stack.Screen name='LoginScreen1' component={LoginScreen1} />
           <Stack.Screen name='BottomTabNavigation' component={BottomTabNavigation} options={{ headerShown: false,}}
           />
           <Stack.Screen name='chat' component={ChatScreen} />
