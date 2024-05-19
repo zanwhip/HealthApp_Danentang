@@ -39,6 +39,7 @@ const CenterControl = ({ focused, navigation }) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}
+            onPress={() => navigation.navigate('AddExercise')}
           >
             <MaterialIcons name='directions-run' size={36} color='white' />
           </TouchableOpacity>
