@@ -31,14 +31,19 @@ const DiaryFoodScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <HeaderToday />
-      <ScrollView style={{ paddingHorizontal: 20 }}>
-        <TouchableOpacity
-          style={{ alignItems: 'center', margin: 10 }}
-          onPress={() => navigation.navigate('ExerciseDailyDiary')}
-        >
-          <SwitchButton switchBtnContent={switchBtnContent} />
+      <HeaderToday navigation={navigation} />
+      <ScrollView style={{ paddingHorizontal: 20 ,}}>
+        <View style={{ justifyContent :'center', alignContent : 'center', alignItems : 'center', width : '100%' }}>
+        <View style={styles.type}>
+        <TouchableOpacity style={{  width : '50%', justifyContent: 'center', height : 30, alignItems :'center', backgroundColor : COLORS.primary , borderRadius : 15}}   >
+            <Text style={{ color: '#fff'}}>Food</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={{ marginHorizontal : 10, width : '40%', justifyContent: 'center', height : 30, alignItems :'center' }} onPress={() => navigation.navigate('ExerciseDailyDiary')}>
+            <Text style={{ color:  COLORS.primary }}>Exercise</Text>
+        </TouchableOpacity>
+    </View>
+        </View>
+     
 
         <Box
           disabled={true}
@@ -366,5 +371,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
+  type :{
+    width : 200, 
+    height : 30, 
+    margin : 20, 
+    backgroundColor : '#fff', 
+    borderRadius : 15, 
+   flexDirection : 'row',
+   
+     },
 });
 export default DiaryFoodScreen;

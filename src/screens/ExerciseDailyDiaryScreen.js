@@ -59,7 +59,10 @@ const ExerciseDailyDiaryScreen = ({navigation}) => {
     <View style={styles.container}>
       <View style={styles.header}>
       <View style={{ flexDirection: 'row', alignItems: 'center',  padding: 20, width: '100%'}}>
-      <Feather name="credit-card" size={30} color="#fff" />
+        <TouchableOpacity onPress={() => navigation.navigate('CalendarScreen')}>
+        <Feather name="credit-card" size={30} color="#fff" />
+        </TouchableOpacity>
+    
     <Text style={styles.title}>Today</Text>
     
   </View>
@@ -219,7 +222,7 @@ const styles = StyleSheet.create({
        paddingTop : 20,
     },
     type :{
-     width :'50%', 
+     width : 200, 
      height : 30, 
      margin : 20, 
      alignItems :'center', 
