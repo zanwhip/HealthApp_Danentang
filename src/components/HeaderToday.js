@@ -1,12 +1,15 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { COLORS } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const HeaderToday = () => {
+const HeaderToday = ({ navigation }) => {
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.navigate('CalendarScreen')} >
       <Image source={require('../../assets/calendar.png')} />
+      </TouchableOpacity>
+      
       <Text style={styles.textTitle}>Today</Text>
       <Image source={require('../../assets/dotMore.png')} />
     </View>

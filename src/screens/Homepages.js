@@ -3,23 +3,75 @@ import {
   Text,
   View,
   Image,
-  SafeAreaView,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '../components/Box';
 import PieChart from 'react-native-pie-chart';
 import { Button, ListItem } from '@rneui/themed';
 import { COLORS } from '../constants';
-import HeaderHomePages from '../components/headerHomePages';
-import AppNavigation from '../navigations/AppNavigation';
+import { Pedometer } from 'expo-sensors';
+import { ProgressChart } from 'react-native-chart-kit';
+
 
 const Homepages = ({ navigation }) => {
-  const widthAndHeight = 130;
-  const series = [30, 50];
-  const sliceColor = ['#EEEEEE', '#F2B455'];
 
+  const chartConfig = {
+    backgroundGradientFrom: "#fff",
+    backgroundGradientTo: "#fff",
+    color: (opacity = 1) => `rgba(252, 180, 85, ${opacity})`, 
+    strokeWidth: 2,
+    barPercentage: 0.5,
+    useShadowColorFromDataset: false,
+    fillShadowGradient: "rgba(0, 255, 0, 0.5)",
+    fillShadowGradientOpacity: 1,
+  };
+  // Set tham số của đếm bước chân
+  const [steps, setSteps] = useState(0);
+      const CaloExercise = steps*0.05 + 0.1;
+
+  useEffect(() => {
+    Pedometer.isAvailableAsync().then(
+      (result) => {
+        if (result) {
+          const subscription = Pedometer.watchStepCount((result) => {
+            setSteps(result.steps);
+          });
+
+          return () => {
+            subscription && subscription.remove();
+          };
+        }
+      },
+      (error) => {
+        console.error('Could not get Pedometer availability:', error);
+      }
+    );
+  }, []);
+
+  
+
+  const aimSteps = 30;
+  const percent_steps = (steps / aimSteps)  ;
+
+
+  const StepsData = {
+    labels: ["Steps"], 
+    data: [,, percent_steps],
+   
+  };
+// Set tham số đêm calo 
+ const goal =  2000;
+ const food =  1000;
+ const exercise =  200;
+const left = goal - food + exercise 
+
+const Calories = {
+  labels: ["Calo"], 
+  data: [,, left/goal],
+ 
+};
   var [numberWater, setNumberWater] = useState(30);
   return (
     <View style={[styles.flex1]}>
@@ -57,15 +109,17 @@ const Homepages = ({ navigation }) => {
             content={
               <View style={styles.boxContentContainer}>
                 <View style={styles.pieChartContainer}>
-                  <PieChart
-                    widthAndHeight={widthAndHeight}
-                    series={series}
-                    sliceColor={sliceColor}
-                    coverRadius={0.7}
-                    coverFill={'#FFF'}
-                  />
+                <ProgressChart
+                data={Calories}
+                width={140}
+                height={140}
+                strokeWidth={26}
+                radius={32}
+                chartConfig={chartConfig}
+                hideLegend={true}
+            />
                   <View style={styles.measureContainer}>
-                    <Text style={styles.numberMeasure}>1124</Text>
+                    <Text style={styles.numberMeasure}>{left}</Text>
                     <Text style={styles.textMeasure}>left</Text>
                   </View>
                 </View>
@@ -74,14 +128,14 @@ const Homepages = ({ navigation }) => {
                     <Image source={require('../../assets/flag.png')} />
                     <View style={styles.resultInforContainer}>
                       <Text style={styles.textResult}>Goal</Text>
-                      <Text style={styles.numberResult}>1,923</Text>
+                      <Text style={styles.numberResult}>{goal}</Text>
                     </View>
                   </View>
                   <View style={styles.resultContainer}>
                     <Image source={require('../../assets/forkknife.png')} />
                     <View style={styles.resultInforContainer}>
                       <Text style={styles.textResult}>Food</Text>
-                      <Text style={styles.numberResult}>941</Text>
+                      <Text style={styles.numberResult}>{food}</Text>
                     </View>
                   </View>
                   <View style={styles.resultContainer}>
@@ -91,7 +145,7 @@ const Homepages = ({ navigation }) => {
                     />
                     <View style={styles.resultInforContainer}>
                       <Text style={styles.textResult}>Exercise</Text>
-                      <Text style={styles.numberResult}>142</Text>
+                      <Text style={styles.numberResult}>{exercise}</Text>
                     </View>
                   </View>
                 </View>
@@ -161,7 +215,7 @@ const Homepages = ({ navigation }) => {
         </View>
         <View style={[styles.flex1, { marginTop: 29, marginBottom: 100 }]}>
           <Box
-            title={'Exercise'}
+            title={'Move during the day'}
             content={
               <View style={styles.exerciseContainer}>
                 <View style={styles.exerciseContentContainer}>
@@ -176,8 +230,8 @@ const Homepages = ({ navigation }) => {
                       <ListItem.Content
                         style={styles.exerciseContentListContainer}
                       >
-                        <ListItem.Title>Run</ListItem.Title>
-                        <ListItem.Subtitle>30 min</ListItem.Subtitle>
+                        <ListItem.Title>Steps</ListItem.Title>
+                        <ListItem.Subtitle>{steps}</ListItem.Subtitle>
                       </ListItem.Content>
                     </ListItem>
                     <ListItem
@@ -187,26 +241,28 @@ const Homepages = ({ navigation }) => {
                       <ListItem.Content
                         style={styles.exerciseContentListContainer}
                       >
-                        <ListItem.Title>Walk</ListItem.Title>
-                        <ListItem.Subtitle>10 min</ListItem.Subtitle>
+                        <ListItem.Title>Kcal</ListItem.Title>
+                        <ListItem.Subtitle>{CaloExercise}</ListItem.Subtitle>
                       </ListItem.Content>
                     </ListItem>
                   </View>
                   <View style={styles.exerciseMeasureContainer}>
-                    <View style={styles.pieChartContainer}>
-                      <PieChart
-                        widthAndHeight={widthAndHeight}
-                        series={series}
-                        sliceColor={sliceColor}
-                        coverRadius={0.7}
-                        coverFill={'#FFF'}
-                      />
+                <View style={styles.pieChartContainer}>
+                    <ProgressChart
+                data={StepsData}
+                width={140}
+                height={140}
+                strokeWidth={26}
+                radius={32}
+                chartConfig={chartConfig}
+                hideLegend={true}
+            />
                       <View style={styles.measureContainer}>
                         <Image
                           style={{ height: 46, width: 42 }}
                           source={require('../../assets/fire.png')}
                         />
-                        <Text style={styles.textMeasure}>250 cals</Text>
+                        <Text style={styles.textMeasure}>{steps}</Text>
                       </View>
                     </View>
                   </View>
@@ -256,6 +312,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+   
   },
   measureContainer: {
     position: 'absolute',
@@ -364,14 +421,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
+    
   },
   exerciseInforContainer: {
     flex: 1,
+   
+    
   },
   exerciseMeasureContainer: {
+    
     flex: 1,
     justifyContent: 'center',
     alignItems: 'flex-end',
+    
+
   },
   addExerciseBtn: {
     width: 18,

@@ -1,11 +1,44 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View , Image, ScrollView} from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Calendar } from "react-native-calendars"; // Correct import statement
 import { COLORS } from "../constants";
-import CustomSwitch from "../components/CustomSwitch";
+import { ProgressChart} from "react-native-chart-kit";
+import * as Progress from 'react-native-progress';
+import ExerciseListItem from "../components/ExerciseListItem";
+const chartData = {
+    labels: ["a", "b", "c"], 
+    data: [0.7, 0.4, 0.7],
+   
+  };
+  const chartConfig = {
+    backgroundGradientFrom: "#fff",
+    backgroundGradientTo: "#fff",
+    color: (opacity = 1, index) => {
+      const colors = ['#F2B455', '#5BB6AF', '#2A64E4'];
+      if (typeof index !== 'undefined' && colors[index]) {
+        return `rgba(${hexToRgb(colors[index])}, ${opacity})`;
+      } else {
+        // Trả về một màu mặc định nếu không có mã hex nào được tìm thấy
+        return `rgba(255, 0, 0, ${opacity})`; // Màu đỏ mặc định
+      }
+    },
+    strokeWidth: 2,
+    barPercentage: 0.5,
+    useShadowColorFromDataset: false,
+    fillShadowGradient: "rgba(0, 255, 0, 0.5)",
+    fillShadowGradientOpacity: 1,
+  };
 
-
+  // Function to convert hex color to RGB
+  function hexToRgb(hex) {
+    // Kiểm tra xem hex có tồn tại không
+    if (!hex) return;
+    // Remove '#' if present
+    hex = hex.replace(/^#/, '');
+    // Convert each 2 characters to base 16 and join them with ','
+    return hex.match(/.{1,2}/g).map(val => parseInt(val, 16)).join(',');
+  }
 const currentDate = new Date();
 // Array of month names
 const monthNames = [
@@ -77,19 +110,67 @@ const CalendarScreen = ({navigation}) => {
         </View>
       </View>
       <View style={{alignItems: 'center', shadowOpacity : 0.2, marginHorizontal : 10, marginBottom : 30, marginTop :20 }}>
-        <CustomSwitch
-          selectionMode={1}
-          roundCorner={true}
-          option1={'Food'}
-          option2={'Exercise'}
-          selectionColor={COLORS.primary}
-        />
+        
       </View>
+    <ScrollView style={{ width : '100%', height : '100%', top : '-4%', paddingVertical : '8%' }}>
       <View style={styles.containerCalender}>
       <MyCalendar /> 
       </View>
-      <Text style={{ color : '#4F9AFE', fontSize : 30, marginTop : 30, marginHorizontal : "8%"  }}>{currentMonth} {currentDay}, {currentYear}</Text>
+      <Text style={{ color : '#4F9AFE', fontSize : 24, marginTop : 30, marginHorizontal : "8%", top : '-3%', fontWeight : 'bold'  }}>{currentMonth} {currentDay}, {currentYear}</Text>
+      <View style={styles.goalcontainer}>
+      <View style={{ justifyContent :'center', flexDirection :'row' }}>
+            <ProgressChart
+                data={chartData}
+                width={180}
+                height={180}
+                strokeWidth={16}
+                radius={32}
+                chartConfig={chartConfig}
+                hideLegend={true}
+            />
+
+            <View>
+            <View style={{ justifyContent :'center', alignContent :'center', alignItems :'center' , paddingHorizontal : 10}}>
+            <Text style={{ marginTop : 10, fontSize : 20, fontWeight :"400" , marginLeft : -100,}}>Steps</Text>
+            <Text style={{ color : '#737373', fontSize : 12,  marginLeft : 30}}>1000 </Text>
+            <View style={{ flexDirection :'row', height : 30, width : '100%'}}>  
+            <Image source={require('../assets/icon/step.png')} style={{ height : 30, width : 30, marginRight : 6 }} />          
+            <Progress.Bar progress={20 / 100} width={100} height={16} borderRadius={7} color='#5BB6AF' style={{margin : 6}}/>
+            </View>
+            </View>
+
+
+            <View style={{ justifyContent :'center', alignContent :'center', alignItems :'center' , paddingHorizontal : 10}}>
+            <Text style={{ marginTop : 10, fontSize : 20, fontWeight :"400" , marginLeft : -100,}}>Calories </Text>
+            <Text style={{ color : '#737373', fontSize : 12,  marginLeft : 30}}>Done </Text>
+            <View style={{ flexDirection :'row', height : 30, width : '100%'}}>  
+            <Image source={require('../assets/icon/calo.png')} style={{ height : 30, width : 30, marginRight : 6 }} />          
+            <Progress.Bar progress={100 / 100} width={100} height={18} borderRadius={7} color='#F2B455' style={{margin : 6}}/>
+            </View>
+            </View>
+            </View>
+            </View>
+
+      </View>
+      <View style={styles.exercisecontainer}>
+      <TouchableOpacity>
+      <ExerciseListItem  item={{name : 'run', label: 'Run',hour:30, cal:150}} />
+      </TouchableOpacity>
+
+      <TouchableOpacity>
+      <ExerciseListItem item={{name : 'bicycle', label: 'Bicycle',hour:1, cal:150}} />
+      </TouchableOpacity>
+
+      <TouchableOpacity>
+      <ExerciseListItem  item={{name : 'walk',label: 'Walk',hour:2, cal:200}} />
+      </TouchableOpacity>
+
+      </View>
+      
+      </ScrollView>
     </View>
+   
+    
   );
 };
 
@@ -117,4 +198,19 @@ const styles = StyleSheet.create({
     marginHorizontal: "30%",
     marginRight : 120
   },
+    goalcontainer : {
+      marginVertical : 10,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor : "#FFFFFF",
+      marginHorizontal : "5%",
+      borderRadius : 30
+    },
+    exercisecontainer : {
+      marginVertical : 10,
+      padding : '2%',
+      backgroundColor : "#FFFFFF",
+      marginHorizontal : "5%",
+      borderRadius : 30
+    }
 });
