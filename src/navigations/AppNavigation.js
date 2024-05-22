@@ -30,6 +30,7 @@ import PlanScreen from '../screens/PlanScreen';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 import DiaryFoodScreen from '../screens/DiaryFoodScreen';
+import UserInformationScreen from '../screens/UserInformationScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -52,7 +53,9 @@ function AppNavigation() {
           }}
         >
           {/* <Stack.Screen name='LoginScreen1' component={LoginScreen1} /> */}
-          
+          <Stack.Screen name='SignUpScreen' component={SignUpScreen} />
+          <Stack.Screen name='UserInformationScreen' component={UserInformationScreen} />
+         
           <Stack.Screen name='BottomTabNavigation' component={BottomTabNavigation} options={{ headerShown: false,}}
           />
           <Stack.Screen name='chat' component={ChatScreen} />
@@ -63,7 +66,6 @@ function AppNavigation() {
           
           <Stack.Screen name='CalendarScreen' component={CalendarScreen} />
           <Stack.Screen name='LoginScreen2' component={LoginScreen2} />
-          <Stack.Screen name='SignUpScreen' component={SignUpScreen} />
          
           <Stack.Screen name='Explore' component={ExploreScreen} />
           <Stack.Screen name='Plan' component={PlanScreen} />

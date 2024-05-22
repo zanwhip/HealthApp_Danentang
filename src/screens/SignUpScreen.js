@@ -26,7 +26,7 @@ const SignUpScreen = ({ navigation }) => {
       });
       if (error) throw error;
       if (data) {
-        navigation.navigate('LoginScreen2');
+        navigation.navigate('UserInformationScreen',data);
       } else {
         showNotification('error', 'Sign up failed. Please try again.');
       }
