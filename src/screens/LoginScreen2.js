@@ -34,7 +34,7 @@ const LoginScreen2 = ({ navigation }) => {
       }
       if (data != null) {
         
-        dispatch(getSessionId(data.session.user));
+        dispatch(getSessionId(data.session.access_token));
         navigation.navigate('BottomTabNavigation');
       } else {
         showNotification('error', 'Log in failed. Please try again.');

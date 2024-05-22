@@ -1,21 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  TextInput,
-  Button,
-  ActivityIndicator,
-  StyleSheet,
-  Alert,
-} from 'react-native';
+import { View, Text, FlatList, TextInput, Button, ActivityIndicator, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-
-import FoodListItem from '../components/FoodListItem';
+import { Camera } from 'expo-camera';
 import { gql, useLazyQuery } from '@apollo/client';
 import { Ionicons } from '@expo/vector-icons';
-import { CameraOrientation } from 'expo-camera/build/legacy/Camera.types';
-import { RNCamera } from 'react-native-camera';
+import FoodListItem from '../components/FoodListItem';
+import { BarCodeScanner } from 'expo-barcode-scanner';
+
 const query = gql`
   query search($ingr: String, $upc: String) {
     search(ingr: $ingr, upc: $upc) {
@@ -37,19 +28,12 @@ const query = gql`
 const SearchFoodScreen = ({ navigation }) => {
   const [search, setSearch] = useState('');
   const [scannerEnabled, setScannerEnabled] = useState(false);
+  const [facing, setFacing] = useState('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [runSearch, { data, loading, error }] = useLazyQuery(query);
 
   useEffect(() => {
-    const getPermission = async () => {
-      if (Constants.platform.ios) {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-        if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!');
-        }
-      }
-    };
-    getPermission();
+    requestPermission();
   }, []);
 
   const performSearch = () => {
@@ -57,32 +41,52 @@ const SearchFoodScreen = ({ navigation }) => {
   };
 
   const handleBarCodeScanned = ({ data }) => {
-    runSearch({ variables: { upc: data } });
+    console.log(data);
+    runSearch({ variables: { upc: data.data } });
     setScannerEnabled(false);
   };
+
+  const toggleCameraFacing = () => {
+    setFacing(current => (current === 'back' ? 'front' : 'back'));
+  };
+
+  if (!permission) {
+    // Camera permissions are still loading.
+    return <View />;
+  }
+
+  if (!permission.granted) {
+    // Camera permissions are not granted yet.
+    return (
+      <View style={styles.container}>
+        <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
+        <Button onPress={requestPermission} title="Grant permission" />
+      </View>
+    );
+  }
 
   if (error) {
     return <Text>Failed to search</Text>;
   }
 
   if (scannerEnabled) {
-    if (!permission) {
-      return <Text>Requesting camera permission...</Text>;
-    }
-
     return (
       <View style={{ flex: 1 }}>
-        <CameraView
-          // type={RNCamera.Constants.Type.back}
-          // flashMode={RNCamera.Constants.FlashMode.on}
-          // captureAudio={false}
+        <BarCodeScanner
           style={{ width: '100%', height: '100%' }}
+          facing={facing}
           onBarCodeScanned={(data) => {
             console.log(data);
             runSearch({ variables: { upc: data.data } });
             setScannerEnabled(false);
           }}
-        />
+        >
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
+              <Text style={styles.text}>Flip Camera</Text>
+            </TouchableOpacity>
+          </View>
+        </BarCodeScanner>
         <Ionicons
           onPress={() => setScannerEnabled(false)}
           name='close'
@@ -98,9 +102,7 @@ const SearchFoodScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View
-        style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}
-      >
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
         <TextInput
           value={search}
           onChangeText={setSearch}
@@ -144,6 +146,22 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 20,
     flex: 1,
+  },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: 'transparent',
+    margin: 64,
+  },
+  button: {
+    flex: 1,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
   },
 });
 
