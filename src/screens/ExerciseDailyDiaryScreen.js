@@ -8,6 +8,8 @@ import { ProgressChart } from 'react-native-chart-kit';
 import * as Progress from 'react-native-progress';
 import { Pedometer } from 'expo-sensors';
 import { useRoute } from '@react-navigation/native';
+import supabase from "../config/database";
+
 
 const cals = 100;
 const exercises = 40;
@@ -30,7 +32,8 @@ const chartData = {
 
    
   
-const ExerciseDailyDiaryScreen = ({navigation}) => {
+const ExerciseDailyDiaryScreen =  ({navigation}) => {
+
 
   const [steps, setSteps] = useState(0);
    const route = useRoute();
