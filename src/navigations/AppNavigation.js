@@ -56,6 +56,7 @@ function AppNavigation() {
           {/* <Stack.Screen name='SignUpScreen' component={SignUpScreen} />
           <Stack.Screen name='UserInformationScreen' component={UserInformationScreen} />
           */}
+           <Stack.Screen name='SearchExercise' component={SearchExercise} />
           <Stack.Screen name='BottomTabNavigation' component={BottomTabNavigation} options={{ headerShown: false,}}
           />
           <Stack.Screen name='chat' component={ChatScreen} />
@@ -83,7 +84,7 @@ function AppNavigation() {
             component={ExerciseDetailsScreen}
           />
           <Stack.Screen name='ProfileFood' component={ProfileFoodScreen} />
-          <Stack.Screen name='SearchExercise' component={SearchExercise} />
+         
           <Stack.Screen
             name='AddFood_AcaiScreen'
             component={EditDailyGoalsScreen}

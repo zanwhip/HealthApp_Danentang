@@ -1,4 +1,4 @@
-import { StyleSheet, Switch, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -14,8 +14,8 @@ const ExerciseListItem = ({ item }) => {
       style={{
         backgroundColor: 'gainsboro',
         padding: 20,
-        margin : 8,
-        gap : 5,
+        margin: 8,
+        gap: 5,
         borderRadius: 20,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -34,7 +34,8 @@ const ExerciseListItem = ({ item }) => {
 
 const SearchExercise = ({ navigation }) => {
   const [exercises, setExercises] = useState([]);
-
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredExercises, setFilteredExercises] = useState([]);
 
   useEffect(() => {
     async function fetchExerciseData() {
@@ -47,17 +48,27 @@ const SearchExercise = ({ navigation }) => {
       } else {
         console.log("Exercise data:", Exercise);
         setExercises(Exercise);
+        setFilteredExercises(Exercise);
       }
     }
 
     fetchExerciseData();
   }, []);
 
+  useEffect(() => {
+    const lowercasedQuery = searchQuery.toLowerCase();
+    const filtered = exercises.filter(exercise => 
+      exercise.typeExercise?.toLowerCase().includes(lowercasedQuery) ||
+      exercise.name?.toLowerCase().includes(lowercasedQuery)
+    );
+    setFilteredExercises(filtered);
+  }, [searchQuery, exercises]);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={{ marginTop: 60, flexDirection: 'row' }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <AntDesign
               name="arrowleft"
               size={30}
@@ -69,15 +80,20 @@ const SearchExercise = ({ navigation }) => {
         </View>
         <View style={styles.search}>
           <View style={{ flexDirection : 'row' }}>
-            <FontAwesome5 name="search" size={20} color="black" style={{ marginTop  : 13, marginRight : 5 }} />
-            <TextInput style={styles.input} placeholder="Search..." />     
+            <FontAwesome5 name="search" size={20} color="black" style={{ marginTop: 13, marginRight: 5 }} />
+            <TextInput
+              style={styles.input}
+              placeholder="Search..."
+              value={searchQuery}
+              onChangeText={text => setSearchQuery(text)}
+            />     
           </View>  
         </View>
       </View>
       <ScrollView>
         <View style={styles.container_1}>
           <View style={{ marginTop: 25, marginBottom: 10, flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={{alignItems: 'center', shadowOpacity : 0.2, marginHorizontal : 10 }}>
+            <View style={{alignItems: 'center', shadowOpacity: 0.2, marginHorizontal: 10 }}>
               <CustomSwitch
                 selectionMode={1}
                 roundCorner={true}
@@ -86,11 +102,11 @@ const SearchExercise = ({ navigation }) => {
                 selectionColor={COLORS.primary}
               />
             </View>
-            <FontAwesome name="filter" size={34} color="black" style={{ marginTop : 5, marginRight : 10 }} />
+            <FontAwesome name="filter" size={34} color="black" style={{ marginTop: 5, marginRight: 10 }} />
           </View>
           
-          {exercises.map((item) => (
-            <TouchableOpacity key={item.id} onPress={() => navigation.navigate('AddExercise')}>
+          {filteredExercises.map((item) => (
+            <TouchableOpacity key={item.id} onPress={() => navigation.navigate('AddExercise', { exercise: item })}>
               <ExerciseListItem item={item} />
             </TouchableOpacity>
           ))}
@@ -105,6 +121,7 @@ export default SearchExercise;
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+
     backgroundColor: COLORS.primary
   },
   header: {
@@ -124,7 +141,9 @@ const styles = StyleSheet.create({
   },
   container_1: {
     backgroundColor: '#EEEEEE',
-    borderRadius: 30
+    borderRadius: 30,
+    width : '100%',
+    height : 800,
   },
   search: {
     height: 50,

@@ -40,9 +40,9 @@ const chartData = {
     return hex.match(/.{1,2}/g).map(val => parseInt(val, 16)).join(',');
   }
   
-const AddExerciseScreen = ({navigation}) => {
+const AddExerciseScreen = ({navigation, route}) => {
 
-    
+  const { exercise } = route.params;
   return (
     <View>
       <View style={styles.header}>
@@ -57,7 +57,7 @@ const AddExerciseScreen = ({navigation}) => {
       </View>
      <View style={styles.Infor}>
         <View style={{ padding : 30,  }}>
-        <Text style={styles.title1}>Running</Text>
+        <Text style={styles.title1}>{exercise.typeExercise}</Text>
        <Text>Cardio</Text>
         </View>
         <View style={{ width: '100%', height : 2, backgroundColor : '#D0D0D0' }}></View>
@@ -65,21 +65,21 @@ const AddExerciseScreen = ({navigation}) => {
         <View style={{ flexDirection : 'row', justifyContent :"space-between", padding : 20, alignItems :"center" }}>
             <Text style={{ fontSize: 18 }}>Exercise Duration</Text>
             <View style={{ width : '35%', height : 35, borderRadius : 5, borderColor : '#000', borderWidth : 1 , justifyContent :'space-evenly', alignItems:"flex-end", padding : 5 }}>
-                <Text style={{ color: COLORS.primary }}>30 min</Text>
+                <Text style={{ color: COLORS.primary }}>{exercise.Time} min</Text>
             </View>
         </View>
 
         <View style={{ flexDirection : 'row', justifyContent :"space-between", padding : 20, alignItems :"center" }}>
             <Text style={{ fontSize: 18 }}>Exercise Intensity</Text>
             <View style={{ width : '35%', height : 35, borderRadius : 5, borderColor : '#000', borderWidth : 1 , justifyContent :'space-evenly', alignItems:"flex-end", padding : 5 }}>
-                <Text style={{ color: '#F2B455'}}>Moderate</Text>
+                <Text style={{ color: '#F2B455'}}>{exercise.Intensity}</Text>
             </View>
         </View>
 
         <View style={{ flexDirection : 'row', justifyContent :"space-between", padding : 20, alignItems :"center" }}>
-            <Text style={{ fontSize: 18 }}>Exercise Start Time</Text>
+            <Text style={{ fontSize: 18 }}>Exercise Calories</Text>
             <View style={{ width : '35%', height : 35, borderRadius : 5, borderColor : '#000', borderWidth : 1 , justifyContent :'space-evenly', alignItems:"flex-end", padding : 5 }}>
-                <Text style={{ color: COLORS.primary }}>8:53 pm</Text>
+                <Text style={{ color: COLORS.primary }}>{exercise.CaloriesExercise} Kcal</Text>
             </View>
         </View>
 
