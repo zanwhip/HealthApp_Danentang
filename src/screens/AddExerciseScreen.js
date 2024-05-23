@@ -29,7 +29,6 @@ const chartData = {
     fillShadowGradient: "rgba(0, 255, 0, 0.5)",
     fillShadowGradientOpacity: 1,
   };
-  
   // Function to convert hex color to RGB
   function hexToRgb(hex) {
     // Kiểm tra xem hex có tồn tại không
@@ -39,9 +38,7 @@ const chartData = {
     // Convert each 2 characters to base 16 and join them with ','
     return hex.match(/.{1,2}/g).map(val => parseInt(val, 16)).join(',');
   }
-  
 const AddExerciseScreen = ({navigation, route}) => {
-
   const { exercise } = route.params;
   return (
     <View>
@@ -52,7 +49,6 @@ const AddExerciseScreen = ({navigation, route}) => {
     <TouchableOpacity onPress={() => navigation.navigate('ExerciseDailyDiary')}>
     <MaterialIcons name="done" size={36} color="#fff" />
     </TouchableOpacity>
-    
   </View>
       </View>
      <View style={styles.Infor}>
@@ -61,14 +57,12 @@ const AddExerciseScreen = ({navigation, route}) => {
        <Text>Cardio</Text>
         </View>
         <View style={{ width: '100%', height : 2, backgroundColor : '#D0D0D0' }}></View>
-
         <View style={{ flexDirection : 'row', justifyContent :"space-between", padding : 20, alignItems :"center" }}>
             <Text style={{ fontSize: 18 }}>Exercise Duration</Text>
             <View style={{ width : '35%', height : 35, borderRadius : 5, borderColor : '#000', borderWidth : 1 , justifyContent :'space-evenly', alignItems:"flex-end", padding : 5 }}>
                 <Text style={{ color: COLORS.primary }}>{exercise.Time} min</Text>
             </View>
         </View>
-
         <View style={{ flexDirection : 'row', justifyContent :"space-between", padding : 20, alignItems :"center" }}>
             <Text style={{ fontSize: 18 }}>Exercise Intensity</Text>
             <View style={{ width : '35%', height : 35, borderRadius : 5, borderColor : '#000', borderWidth : 1 , justifyContent :'space-evenly', alignItems:"flex-end", padding : 5 }}>
@@ -82,7 +76,6 @@ const AddExerciseScreen = ({navigation, route}) => {
                 <Text style={{ color: COLORS.primary }}>{exercise.CaloriesExercise} Kcal</Text>
             </View>
         </View>
-
         {/* HIGHLIGHT */}
       <View style={{ backgroundColor: '#eee', width :'100%', height : '100%', borderRadius : 40, padding : 20, alignItems :'center'  }}>
         <Text style={{ fontSize : 22, color : '#505050' }}>HIGHLIGHT</Text>
@@ -112,29 +105,16 @@ const AddExerciseScreen = ({navigation, route}) => {
                 radius={32}
                 chartConfig={chartConfig}
                 hideLegend={true}
-/>
+            />
             </View>
-            
-
-
-
-        </View>
+      </View>
         <View style={{ width : '100%', height : 40, flexDirection : 'row', alignItems :'center', justifyContent: 'center' }}>
         <Text>You hit a 4 day run streak! </Text>
         <Image source={require('../assets/icon/run_yellow.png')} style={{ height : 60, width : 60 }} />
         </View>
-       
-        
-
-      </View>
-       
-        
     </View>
-   
-
-    
-
-    </View>
+  </View>
+</View>
   )
 }
 

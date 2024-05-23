@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView, Image } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -8,7 +8,21 @@ import CustomSwitch from '../components/CustomSwitch';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import supabase from "../config/database";
 
+
+// Đặt ảnh cho exercise
+const exerciseImages = {
+  run: require('../assets/img/run.png'),
+  swim: require('../assets/img/swim.png'),
+  bicycle: require('../assets/img/bicycle.png'),
+  dance: require('../assets/img/dance.png'),
+  jumprope: require('../assets/img/jump.png'),
+  plank: require('../assets/img/run.png'),
+  // Add more mappings as needed
+};
+
+
 const ExerciseListItem = ({ item }) => {
+  const exerciseImage = exerciseImages[item.typeExercise.toLowerCase()] || require('../assets/img/jump.png');
   return (
     <View
       style={{
@@ -22,12 +36,16 @@ const ExerciseListItem = ({ item }) => {
         alignItems: 'center',
       }}
     >
-      <MaterialCommunityIcons name={item.name} size={45} color="black" style={{ position: 'absolute', left: 15 }} />
+      <Image source={exerciseImage} style={{ width: 45, height: 45, position: 'absolute', left: 15 }} />
       <View style={{ marginLeft: 55 }}>
         <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.typeExercise}</Text>
         <Text style={{ color: 'dimgray' }}>{item.Time} hr</Text>
         <Text style={{ color: 'dimgray' }}>{item.CaloriesExercise} cal</Text>      
       </View>
+      <TouchableOpacity style={{ width: 50, height: 30}}>
+      <Image source={require('../assets/img/add.png')} style={{ width: 30, height: 30}}  />
+      </TouchableOpacity>
+     
     </View>
   );
 };

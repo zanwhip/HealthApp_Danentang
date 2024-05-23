@@ -56,7 +56,7 @@ function AppNavigation() {
           {/* <Stack.Screen name='SignUpScreen' component={SignUpScreen} />
           <Stack.Screen name='UserInformationScreen' component={UserInformationScreen} />
           */}
-           <Stack.Screen name='SearchExercise' component={SearchExercise} />
+          <Stack.Screen name='SearchExercise' component={SearchExercise} />
           <Stack.Screen name='BottomTabNavigation' component={BottomTabNavigation} options={{ headerShown: false,}}
           />
           <Stack.Screen name='chat' component={ChatScreen} />
