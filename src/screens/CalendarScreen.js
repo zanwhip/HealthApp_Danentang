@@ -98,7 +98,7 @@ const CalendarScreen = ({navigation}) => {
     <View>
       <View style={styles.header}>
         <View style={{ marginTop: 50, flexDirection: "row",  }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <AntDesign
               name="arrowleft"
               size={30}

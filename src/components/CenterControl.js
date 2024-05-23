@@ -78,6 +78,7 @@ const CenterControl = ({ focused, navigation }) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}
+            onPress={() => navigation.navigate('SearchFood')}
           >
             <MaterialCommunityIcons
               name='barcode-scan'

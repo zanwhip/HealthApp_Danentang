@@ -52,12 +52,11 @@ function AppNavigation() {
             headerShown: false, // Bỏ hiển thị header
           }}
         >
-          {/* <Stack.Screen name='LoginScreen1' component={LoginScreen1} /> */}
-          {/* <Stack.Screen name='SignUpScreen' component={SignUpScreen} />
+          <Stack.Screen name='LoginScreen1' component={LoginScreen1} />
+          <Stack.Screen name='SignUpScreen' component={SignUpScreen} />
           <Stack.Screen name='UserInformationScreen' component={UserInformationScreen} />
-          */}
-          <Stack.Screen name='ExerciseDailyDiary' component={ExerciseDailyDiaryScreen}/>
-          <Stack.Screen name='SearchExercise' component={SearchExercise} />
+         
+         
           <Stack.Screen name='BottomTabNavigation' component={BottomTabNavigation} options={{ headerShown: false,}}
           />
           <Stack.Screen name='chat' component={ChatScreen} />
@@ -65,10 +64,11 @@ function AppNavigation() {
           <Stack.Screen name='APIcodeFood' component={APIcodeFood} />
           <Stack.Screen name='SearchFood' component={SearchFoodScreen} />
           <Stack.Screen name='LoginScreen' component={LoginScreen} />
-          
+          <Stack.Screen name='ExerciseDailyDiary' component={ExerciseDailyDiaryScreen}/>
+          <Stack.Screen name='SearchExercise' component={SearchExercise} />
           <Stack.Screen name='CalendarScreen' component={CalendarScreen} />
           <Stack.Screen name='LoginScreen2' component={LoginScreen2} />
-         
+        
           <Stack.Screen name='Explore' component={ExploreScreen} />
           <Stack.Screen name='Plan' component={PlanScreen} />
           <Stack.Screen name='AddExercise' component={AddExerciseScreen} />

@@ -54,7 +54,7 @@ const APIcodeFood = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign
             name='arrowleft'
             size={30}

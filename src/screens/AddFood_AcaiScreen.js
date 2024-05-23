@@ -28,7 +28,9 @@ const AddFood_AcaiScreen = ({navigation}) => {
     <View>
     <View style={styles.header}>
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10, width: '100%'}}>
-  <Ionicons name="arrow-back" size={36} color="#fff" />
+    <TouchableOpacity onPress={() => navigation.goBack()}>
+      <Ionicons name="arrow-back" size={36} color="#fff" />
+    </TouchableOpacity>
   <Text style={styles.title}>Food Details</Text>
   <MaterialIcons name="done" size={36} color="#fff" />
 </View>

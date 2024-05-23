@@ -46,7 +46,9 @@ const EditDailyGoalsScreen = ({ navigation }) => {
             <View>
                 <View style={styles.header}>
                     <View style={styles.headerContent}>
-                        <Ionicons name="arrow-back" size={36} color="#fff" />
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                     <Ionicons name="arrow-back" size={36} color="#fff" />
+                    </TouchableOpacity>
                         <Text style={styles.title}>Daily Goals Details</Text>
                         <MaterialIcons name="done" size={36} color="#fff" onPress={handleDonePress} />
                     </View>

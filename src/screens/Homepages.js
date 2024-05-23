@@ -13,9 +13,74 @@ import { Button, ListItem } from '@rneui/themed';
 import { COLORS } from '../constants';
 import { Pedometer } from 'expo-sensors';
 import { ProgressChart } from 'react-native-chart-kit';
-
+import supabase from "../config/database";
+import { useSelector } from 'react-redux';
 
 const Homepages = ({ navigation }) => {
+
+ // Khai báo state để lưu trữ số liệu water và số lần nhấn nút plus
+ const [numberWater, setNumberWater] = useState(0);
+
+ const sessionId = useSelector((state) => state);
+
+ const IdUser =sessionId.reducers[0]
+
+//  console.log('dfygsdfdjhfdsfhds              ',IdUser);
+
+ const fetchWaterData = () => {
+  supabase
+    .from('Water')
+    .select('numberWater')
+    .eq('idUser', IdUser) // Lọc theo IdUser hiện tại
+    .then(response => {
+      // Kiểm tra nếu có kết quả trả về
+      if (response.data.length > 0) {
+        // Lấy số liệu nước từ kết quả trả về và cập nhật giá trị numberWater
+        setNumberWater(response.data[0].numberWater);
+      } else {
+        // Nếu không có kết quả, giữ nguyên giá trị hiện tại của numberWater
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching water data:', error);
+    });
+};
+
+// Gọi hàm fetchWaterData trong useEffect để lấy dữ liệu khi component được tạo ra
+useEffect(() => {
+  fetchWaterData();
+}, []);
+
+ // Function to handle button press
+const handlePlusButtonPress = () => {
+  supabase
+    .from('Water')
+    .delete()
+    .eq('idUser', IdUser)
+    .then(deleteResponse => {
+      console.log('Rows deleted successfully:', deleteResponse);
+      // Sau khi xóa thành công, thêm một bản ghi mới
+      supabase
+        .from('Water')
+        .insert([
+          { 
+            idUser: IdUser, 
+            numberWater: numberWater,
+          }
+        ])
+        .then(insertResponse => {
+          console.log('New row added successfully:', insertResponse);
+          // Cập nhật giá trị numberWater
+          setNumberWater(numberWater => numberWater + 100);
+        })
+        .catch(insertError => {
+          console.error('Error adding new row:', insertError);
+        });
+    })
+    .catch(deleteError => {
+      console.error('Error deleting rows:', deleteError);
+    });
+};
 
   const chartConfig = {
     backgroundGradientFrom: "#fff",
@@ -52,7 +117,7 @@ const Homepages = ({ navigation }) => {
 
   
 
-  const aimSteps = 30;
+  const aimSteps = 20;
   const percent_steps = (steps / aimSteps)  ;
 
 
@@ -72,7 +137,7 @@ const Calories = {
   data: [,, left/goal],
  
 };
-  var [numberWater, setNumberWater] = useState(30);
+
   return (
     <View style={[styles.flex1]}>
       <View
@@ -166,7 +231,8 @@ const Calories = {
                     />
                     <View style={styles.infoWaterContainer}>
                       <Text style={styles.numberWater}>{numberWater}</Text>
-                      <Text style={styles.unitWater}>fl oz</Text>
+                      
+                      <Text style={styles.unitWater}>milliliter</Text>
                     </View>
                   </View>
                   <View style={styles.buttonContainer}>
@@ -179,16 +245,14 @@ const Calories = {
                       }
                       buttonStyle={styles.controlWaterBtn}
                       onPress={() => {
-                        setNumberWater(--numberWater);
+                        setNumberWater(numberWater => numberWater - 100);
                       }}
                     />
                     <Button
-                      icon={<Image source={require('../../assets/plus.png')} />}
-                      buttonStyle={styles.controlWaterBtn}
-                      onPress={() => {
-                        setNumberWater(++numberWater);
-                      }}
-                    />
+  icon={<Image source={require('../../assets/plus.png')} />}
+  buttonStyle={styles.controlWaterBtn}
+  onPress={handlePlusButtonPress} // Gọi hàm xử lý sự kiện khi nút được nhấn
+/>
                   </View>
                 </View>
               </View>

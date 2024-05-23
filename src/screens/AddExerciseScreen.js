@@ -44,7 +44,9 @@ const AddExerciseScreen = ({navigation, route}) => {
     <View>
       <View style={styles.header}>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10, width: '100%'}}>
-    <Ionicons name="arrow-back" size={36} color="#fff" />
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+      <Ionicons name="arrow-back" size={36} color="#fff" />
+    </TouchableOpacity>
     <Text style={styles.title}>Add Exercise</Text>
     <TouchableOpacity onPress={() => navigation.navigate('ExerciseDailyDiary')}>
     <MaterialIcons name="done" size={36} color="#fff" />

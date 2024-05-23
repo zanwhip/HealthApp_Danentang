@@ -10,7 +10,9 @@ const PlanScreen = ({navigation}) => {
      <ImageBackground source={require('../assets/img/exercise.png')} style={styles.picture}>
      <View style={styles.Infor}>
         <View style={{ flexDirection :'row' ,padding : 20,  }}>
-        <Ionicons name="arrow-back" size={30} color="black" />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+      <Ionicons name="arrow-back" size={36} color="#fff" />
+    </TouchableOpacity>
             <Text style={styles.title}>Strong Glutes & Thighss</Text>
         </View>
         <ScrollView style={{ marginBottom : 600 }}>
