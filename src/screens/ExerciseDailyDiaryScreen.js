@@ -9,11 +9,12 @@ import * as Progress from 'react-native-progress';
 import { Pedometer } from 'expo-sensors';
 import { useRoute } from '@react-navigation/native';
 import supabase from "../config/database";
+import TimeCount from '../components/TimeCount';
 
 
 const cals = 100;
 const exercises = 40;
-  
+const TimeExercise = 10;
 const chartData = {
     labels: ["", "", "c"], 
     data: [,, 0.7],
@@ -158,18 +159,8 @@ const ExerciseDailyDiaryScreen =  ({navigation}) => {
             <Text style={{ fontSize : 18,  }}>Dance</Text>
             <Text style={{ color : '#737373' }}>1 hr</Text>
         </View>
-        <Image source={require('../assets/icon/start.png')} style={{ height : 50, width : 50, marginRight : 6 }} />     
-        </View>
-        
-        <View style={{ height : 70, width : '100%', marginHorizontal : 20, backgroundColor : '#F6F5F5', borderRadius : 10, flexDirection : 'row', marginTop : 12, justifyContent : 'space-between', paddingHorizontal : 20, alignItems:'center'}}>
-        <Image source={require('../assets/icon/run.png')} style={{ height : 50, width : 50, marginRight : 6 }} />     
-        <View style={{ left : -40 }}>
-            <Text style={{ fontSize : 18,  }}>Dance</Text>
-            <Text style={{ color : '#737373' }}>1 hr</Text>
-        </View>
-        <View style={{  }}>
-            <Text style={{ fontSize : 32,  }}>25%</Text>
-            <Text style={{ color : '#737373' }}>of daily goal</Text>
+        <View>
+           <TimeCount duration={TimeExercise} />
         </View>
         </View>
         
@@ -179,9 +170,19 @@ const ExerciseDailyDiaryScreen =  ({navigation}) => {
             <Text style={{ fontSize : 18,  }}>Dance</Text>
             <Text style={{ color : '#737373' }}>1 hr</Text>
         </View>
-        <View style={{  }}>
-            <Text style={{ fontSize : 32,  }}>25%</Text>
-            <Text style={{ color : '#737373' }}>of daily goal</Text>
+        <View>
+           <TimeCount duration={TimeExercise} />
+        </View>
+        </View>
+        
+        <View style={{ height : 70, width : '100%', marginHorizontal : 20, backgroundColor : '#F6F5F5', borderRadius : 10, flexDirection : 'row', marginTop : 12, justifyContent : 'space-between', paddingHorizontal : 20, alignItems:'center'}}>
+        <Image source={require('../assets/icon/run.png')} style={{ height : 50, width : 50, marginRight : 6 }} />     
+        <View style={{ left : -40 }}>
+            <Text style={{ fontSize : 18,  }}>Dance</Text>
+            <Text style={{ color : '#737373' }}>1 hr</Text>
+        </View>
+        <View>
+           <TimeCount duration={TimeExercise} />
         </View>
         </View>
     </View>

@@ -56,6 +56,7 @@ function AppNavigation() {
           {/* <Stack.Screen name='SignUpScreen' component={SignUpScreen} />
           <Stack.Screen name='UserInformationScreen' component={UserInformationScreen} />
           */}
+          <Stack.Screen name='ExerciseDailyDiary' component={ExerciseDailyDiaryScreen}/>
           <Stack.Screen name='SearchExercise' component={SearchExercise} />
           <Stack.Screen name='BottomTabNavigation' component={BottomTabNavigation} options={{ headerShown: false,}}
           />
@@ -75,10 +76,7 @@ function AppNavigation() {
             name='EditDailyGoals'
             component={EditDailyGoalsScreen}
           />
-          <Stack.Screen
-            name='ExerciseDailyDiary'
-            component={ExerciseDailyDiaryScreen}
-          />
+          
           <Stack.Screen
             name='ExerciseDetails'
             component={ExerciseDetailsScreen}
