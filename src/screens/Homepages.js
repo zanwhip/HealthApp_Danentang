@@ -19,73 +19,65 @@ import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 
 const Homepages = ({ navigation }) => {
-  useEffect(() => {
-    fetchWaterData();
-  }, []);
-
-  const sendNotification = async () => {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: 'Water Reminder',
-        body: 'Please drink some water. Your water intake is less than 2000ml.',
-        sound: 'default',
-      },
-      trigger: null, // Send immediately
-    });
-  };
-
   // Khai báo state để lưu trữ số liệu water và số lần nhấn nút plus
   const [numberWater, setNumberWater] = useState(0);
-  const sessionId = useSelector((state) => state.uid);
-  const IdUser = sessionId;
 
-  const fetchWaterData = async () => {
-    await supabase.from('Water').select('numberWater').eq('idUser', IdUser);
-    // .then((response) => {
-    //   if (response.data.length > 0) {
-    //     setNumberWater(response.data[0].numberWater);
-    //   } else {
-    //   }
-    // })
-    // .catch((error) => {
-    //   console.error('Error fetching water data:', error);
-    // });
+  const sessionId = useSelector((state) => state.reducers);
+  const IdUser = sessionId[sessionId.length - 1].uid;
+
+  const fetchWaterData = () => {
+    supabase
+      .from('Water')
+      .select('numberWater')
+      .eq('idUser', IdUser)
+      .then((response) => {
+        if (response.data.length > 0) {
+          setNumberWater(response.data[0].numberWater);
+        } else {
+          setNumberWater(0);
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching water data:', error);
+      });
   };
 
   useEffect(() => {
     fetchWaterData();
   }, []);
 
-  const handlePlusButtonPress = async () => {
-    await supabase.from('Water').delete().eq('idUser', IdUser);
-    // .then(async (deleteResponse) => {
-    //   console.log('Rows deleted successfully:', deleteResponse);
-    //   await supabase
-    //     .from('Water')
-    //     .insert([
-    //       {
-    //         idUser: IdUser,
-    //         numberWater: numberWater,
-    //       },
-    //     ])
-    //     .then((insertResponse) => {
-    //       console.log('New row added successfully:', insertResponse);
-    //       // Cập nhật giá trị numberWater
-    //       setNumberWater((numberWater) => {
-    //         const newNumberWater = numberWater + 100;
-    //         if (newNumberWater < 2000) {
-    //           sendNotification();
-    //         }
-    //         return newNumberWater;
-    //       });
-    //     })
-    //     .catch((insertError) => {
-    //       console.error('Error adding new row:', insertError);
-    //     });
-    // })
-    // .catch((deleteError) => {
-    //   console.error('Error deleting rows:', deleteError);
-    // });
+  const handlePlusButtonPress = () => {
+    supabase
+      .from('Water')
+      .delete()
+      .eq('idUser', IdUser)
+      .then((deleteResponse) => {
+        console.log('Rows deleted successfully:', deleteResponse);
+        supabase
+          .from('Water')
+          .insert([
+            {
+              idUser: IdUser,
+              numberWater: numberWater,
+            },
+          ])
+          .then((insertResponse) => {
+            console.log('New row added successfully:', insertResponse);
+            // Cập nhật giá trị numberWater
+            setNumberWater((numberWater) => {
+              const newNumberWater = numberWater + 100;
+              if (newNumberWater < 2000) {
+              }
+              return newNumberWater;
+            });
+          })
+          .catch((insertError) => {
+            console.error('Error adding new row:', insertError);
+          });
+      })
+      .catch((deleteError) => {
+        console.error('Error deleting rows:', deleteError);
+      });
   };
 
   // const sendNotification = async () => {

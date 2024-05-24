@@ -6,27 +6,42 @@ import {
   TextInput,
   Keyboard,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../constants';
 import { useRoute } from '@react-navigation/native';
 import * as Progress from 'react-native-progress';
 import supabase from '../config/database';
+import { useSelector } from 'react-redux';
 
 const EditDailyGoalsScreen = ({ navigation }) => {
   const [aimSteps, setAimSteps] = useState('');
   const [aimCals, setAimCals] = useState('');
   const [aimExercises, setAimExercises] = useState('');
   const [caloriesPerStep, setCaloriesPerStep] = useState('');
+  const [totalFoodCalo, setTotalFoodCalo] = useState(0);
+  const [totalExerciseCalo, setTotalExerciseCalo] = useState(0);
+  const [userIdDB, setUserIdDB] = useState('');
+  const [dateDB, setDateDB] = useState('');
 
   const route = useRoute();
   const { steps } = route.params;
+  const CaloExercises = route.params.CaloExercise;
+
   const CaloExercise = aimSteps * 0.05;
   const percent_steps = (steps / (aimSteps || 1)) * 100;
   const percent_cals = (100 / (aimCals || 1)) * 100;
   const percent_exercises = (5 / (aimExercises || 1)) * 100;
+
+  var currentDate = new Date();
+  var day = currentDate.getDate();
+  var month = currentDate.getMonth() + 1;
+  var year = currentDate.getFullYear();
+
+  var date = `${year}-${month < 10 ? '0' + month : month}-${day}`;
   const handleStepsChange = (text) => {
     const parsedNumber = parseInt(text);
     setAimSteps(isNaN(parsedNumber) ? '' : parsedNumber);
@@ -52,18 +67,92 @@ const EditDailyGoalsScreen = ({ navigation }) => {
     Keyboard.dismiss();
     onAddDailyGoal();
   };
+  const userId = useSelector((state) => state.reducers);
 
-  const onAddDailyGoal = async () => {
-    const { error } = await supabase.from('DailyGoal').insert({
-      StepPerDay: aimSteps,
-      CaloriesPerDay: CaloExercise,
-      ExercisePerDay: aimExercises,
-    });
+  useEffect(() => {
+    getTotalFoodCalo();
+    getUserId();
+    getTotalExerciseCalo();
+  }, []);
+
+  const getTotalFoodCalo = async () => {
+    const { data, error } = await supabase
+      .from('Food')
+      .select('cal')
+      .eq('idUser', userId[userId.length - 1].uid);
 
     if (error) {
       console.log(error);
     } else {
-      navigation.navigate('ExerciseDailyDiary', { aimSteps });
+      const total = data.reduce((sum, item) => sum + item.cal, 0);
+      setTotalFoodCalo(total);
+    }
+  };
+
+  const getTotalExerciseCalo = async () => {
+    const { data, error } = await supabase
+      .from('ExProcess')
+      .select('calory, created_at')
+      .eq('IdUser', userId[userId.length - 1].uid);
+
+    if (error) {
+      console.log(error);
+    } else {
+      data.map((item) => {
+        if (item.created_at.substring(0, 10) == date) {
+          const totalExercise = data.reduce(
+            (sum, item) => sum + item.calory,
+            0
+          );
+          setTotalExerciseCalo(totalExercise);
+        }
+      });
+    }
+  };
+
+  const getUserId = async () => {
+    const { data, error } = await supabase
+      .from('DailyGoal')
+      .select('idUser')
+      .eq('idUser', userId[userId.length - 1].uid);
+
+    if (error) {
+      console.log(error);
+    } else {
+      setUserIdDB(data[0].idUser);
+    }
+  };
+
+  const onAddDailyGoal = async () => {
+    if (userId === userIdDB) {
+      const { error } = await supabase.from('DailyGoal').insert({
+        StepPerDay: aimSteps,
+        CalPerDay: CaloExercise,
+        ExPerDay: aimExercises,
+        TotalFoodCal: totalFoodCalo,
+        TotalExerciseCal: totalExerciseCalo,
+      });
+
+      if (error) {
+        console.log(error);
+      } else {
+        navigation.navigate('ExerciseDailyDiary', { aimSteps });
+      }
+    } else {
+      const { error } = await supabase
+        .from('DailyGoal')
+        .update({
+          StepPerDay: aimSteps,
+          CalPerDay: CaloExercise,
+          ExPerDay: aimExercises,
+          TotalExerciseCal: totalExerciseCalo,
+        })
+        .eq('idUser', userId[userId.length - 1].uid);
+      if (error) {
+        console.log(error);
+      } else {
+        navigation.navigate('ExerciseDailyDiary', { aimSteps });
+      }
     }
   };
 
@@ -87,7 +176,7 @@ const EditDailyGoalsScreen = ({ navigation }) => {
         <View style={styles.infor}>
           <View style={styles.section}>
             <Text style={styles.title1}>Edit Goals</Text>
-            <Text>Steps, Cals, Exercises</Text>
+            <Text>Steps, Cals</Text>
           </View>
           <View style={styles.divider}></View>
 
@@ -112,20 +201,6 @@ const EditDailyGoalsScreen = ({ navigation }) => {
             </View>
           </View>
 
-          <View style={styles.inputRow}>
-            <Text style={styles.label}>Exercises per day</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                onChangeText={handleExercisesChange}
-                keyboardType='numeric'
-                value={aimExercises.toString()}
-                placeholder='Enter exercises'
-                placeholderTextColor={COLORS.placeholder}
-              />
-            </View>
-          </View>
-
           <View style={styles.divider}></View>
 
           <View style={styles.section}>
@@ -133,35 +208,26 @@ const EditDailyGoalsScreen = ({ navigation }) => {
             <View style={styles.progressContainer}>
               <View style={styles.progressItem}>
                 <Progress.Bar
-                  progress={steps / (aimSteps || 1)}
-                  width={100}
+                  progress={percent_steps * 0.01}
+                  width={150}
                   color='#5BB6AF'
                   style={styles.progressBar}
                 />
-                <Text>{percent_steps.toFixed(2)}%</Text>
+                <Text>{percent_steps.toFixed(0)}%</Text>
                 <Text style={styles.progressLabel}>Steps</Text>
               </View>
 
               <View style={styles.progressItem}>
                 <Progress.Bar
-                  progress={100 / (aimCals || 1)}
-                  width={100}
+                  progress={CaloExercises / CaloExercise}
+                  width={150}
                   color='#F2B455'
                   style={styles.progressBar}
                 />
-                <Text>{percent_cals.toFixed(2)}%</Text>
+                <Text>
+                  {((CaloExercises / CaloExercise) * 100).toFixed(0)}%
+                </Text>
                 <Text style={styles.progressLabel}>Cals</Text>
-              </View>
-
-              <View style={styles.progressItem}>
-                <Progress.Bar
-                  progress={5 / (aimExercises || 1)}
-                  width={100}
-                  color='#B50036'
-                  style={styles.progressBar}
-                />
-                <Text>{percent_exercises.toFixed(2)}%</Text>
-                <Text style={styles.progressLabel}>Exercises</Text>
               </View>
             </View>
           </View>
@@ -214,6 +280,8 @@ const styles = StyleSheet.create({
   },
   section: {
     padding: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   divider: {
     width: '100%',

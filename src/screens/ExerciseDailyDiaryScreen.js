@@ -17,11 +17,8 @@ import { Pedometer } from 'expo-sensors';
 import { useRoute } from '@react-navigation/native';
 import supabase from '../config/database';
 import TimeCount from '../components/TimeCount';
+import { useSelector } from 'react-redux';
 
-const chartData = {
-  labels: ['', '', 'c'],
-  data: [, , 0.7],
-};
 const chartConfig = {
   backgroundGradientFrom: '#fff',
   backgroundGradientTo: '#fff',
@@ -36,11 +33,30 @@ const chartConfig = {
 const ExerciseDailyDiaryScreen = ({ navigation }) => {
   const [filteredExercises, setFilteredExercises] = useState([]);
   const [steps, setSteps] = useState(0);
+  const [DataDaily, setDataDaily] = useState([]);
+
   const CaloExercise = steps * 0.05 + 0.1;
 
   const route = useRoute();
-  const IdUser = route.params;
-  console.log('>>>> User Id : ', IdUser);
+  const userId = useSelector((state) => state.reducers);
+  const IdUser = userId[userId.length - 1].uid;
+
+  const dailyGoalStep = DataDaily.length > 0 ? DataDaily[0].StepPerDay : 0;
+  const dailyGoalCalories = DataDaily.length > 0 ? DataDaily[0].CalPerDay : 0;
+
+  const stepProgress = dailyGoalStep > 0 ? steps / dailyGoalStep : 0;
+  const calorieProgress =
+    dailyGoalCalories > 0 ? CaloExercise / dailyGoalCalories : 0;
+
+  // Ensure progress values are between 0 and 1
+  const validStepProgress = Math.min(Math.max(stepProgress, 0), 1);
+  const validCalorieProgress = Math.min(Math.max(calorieProgress, 0), 1);
+
+  const chartData = {
+    labels: ['', '', 'c'],
+    data: [, , validCalorieProgress],
+  };
+
   async function fetchExerciseProcessData() {
     let { data: ExerciseProcess, error } = await supabase
       .from('ExProcess')
@@ -55,8 +71,23 @@ const ExerciseDailyDiaryScreen = ({ navigation }) => {
     }
   }
 
+  async function fetchDailyGoalData() {
+    let { data, error } = await supabase
+      .from('DailyGoal')
+      .select('*')
+      .eq('idUser', IdUser);
+
+    if (error) {
+      console.error('Error fetching data:', error);
+    } else {
+      console.log('check data Daily Goal : ', data);
+      setDataDaily(data);
+    }
+  }
+
   useEffect(() => {
     fetchExerciseProcessData();
+    fetchDailyGoalData();
   }, []);
 
   useEffect(() => {
@@ -143,7 +174,9 @@ const ExerciseDailyDiaryScreen = ({ navigation }) => {
             <View style={{ flexDirection: 'row' }}>
               <Text style={styles.title1}>Daily Goals</Text>
               <TouchableOpacity
-                onPress={() => navigation.navigate('EditDailyGoals', { steps })}
+                onPress={() =>
+                  navigation.navigate('EditDailyGoals', { steps, CaloExercise })
+                }
               >
                 <FontAwesome
                   name='pencil'
@@ -167,7 +200,9 @@ const ExerciseDailyDiaryScreen = ({ navigation }) => {
                 />
                 <View style={{ bottom: 120, alignItems: 'center' }}>
                   <Text style={{ fontSize: 16 }}>Total : </Text>
-                  <Text style={{ fontSize: 26, fontWeight: 'bold' }}>50%</Text>
+                  <Text style={{ fontSize: 26, fontWeight: 'bold' }}>
+                    {(validCalorieProgress * 100).toFixed(0)} %
+                  </Text>
                 </View>
               </View>
               <View style={{ right: -10 }}>
@@ -195,7 +230,7 @@ const ExerciseDailyDiaryScreen = ({ navigation }) => {
                   <Text
                     style={{ color: '#737373', fontSize: 12, marginLeft: 30 }}
                   >
-                    {steps}{' '}
+                    {steps}/ {dailyGoalStep}
                   </Text>
                   <View
                     style={{ flexDirection: 'row', height: 30, width: '100%' }}
@@ -205,7 +240,7 @@ const ExerciseDailyDiaryScreen = ({ navigation }) => {
                       style={{ height: 30, width: 30, marginRight: 6 }}
                     />
                     <Progress.Bar
-                      progress={steps / 100}
+                      progress={validStepProgress}
                       width={120}
                       height={18}
                       borderRadius={7}
@@ -231,12 +266,12 @@ const ExerciseDailyDiaryScreen = ({ navigation }) => {
                       marginLeft: -100,
                     }}
                   >
-                    Calories{' '}
+                    Calories
                   </Text>
                   <Text
                     style={{ color: '#737373', fontSize: 12, marginLeft: 30 }}
                   >
-                    {CaloExercise.toFixed(2)}{' '}
+                    {CaloExercise.toFixed(2)} / {dailyGoalCalories}
                   </Text>
                   <View
                     style={{ flexDirection: 'row', height: 30, width: '100%' }}
@@ -246,7 +281,7 @@ const ExerciseDailyDiaryScreen = ({ navigation }) => {
                       style={{ height: 30, width: 30, marginRight: 6 }}
                     />
                     <Progress.Bar
-                      progress={CaloExercise / 100}
+                      progress={validCalorieProgress}
                       width={120}
                       height={18}
                       borderRadius={7}

@@ -13,6 +13,7 @@ import supabase from '../config/database';
 import FoodLogListItem from '../components/FoodLogListItem';
 import { COLORS } from '../constants';
 import { useFocusEffect } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 const APIcodeFood = ({ navigation }) => {
   const user_id = 'vadim';
@@ -20,12 +21,15 @@ const APIcodeFood = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const userId = useSelector((state) => state.reducers);
+
   const fetchFoodLogs = async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
         .from('Food')
-        .select()
+        .select('*')
+        .eq('idUser', userId[userId.length - 1].uid)
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -66,6 +70,7 @@ const APIcodeFood = ({ navigation }) => {
   }
 
   const totalCalories = foodData.reduce((total, item) => total + item.cal, 0);
+
   const foodList = foodData.map((item) => item.nameFood);
 
   const handleDeleteFood = (idFood) => {

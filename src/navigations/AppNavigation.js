@@ -27,6 +27,7 @@ import DiaryFoodScreen from '../screens/DiaryFoodScreen';
 import UserInformationScreen from '../screens/UserInformationScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen ';
 import { Linking } from 'react-native';
+import ResetPasswordScreen from '../screens/ResetPasswordScreen';
 
 const linking = {
   prefixes: ['exp://192.168.100.8:8081'], // Thay bằng URL thực tế của bạn
@@ -62,6 +63,11 @@ function AppNavigation() {
           }}
         >
           <Stack.Screen name='LoginScreen1' component={LoginScreen1} />
+          <Stack.Screen name='ResetPassword' component={ResetPasswordScreen} />
+          <Stack.Screen
+            name='ForgotPassword'
+            component={ForgotPasswordScreen}
+          />
           <Stack.Screen name='SignUpScreen' component={SignUpScreen} />
           <Stack.Screen
             name='UserInformationScreen'

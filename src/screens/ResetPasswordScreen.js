@@ -1,60 +1,64 @@
-import React, { useState } from 'react';
 import {
-  StyleSheet,
-  Text,
   View,
-  TouchableOpacity,
+  Text,
+  StyleSheet,
   TextInput,
+  TouchableOpacity,
 } from 'react-native';
-import { COLORS } from '../constants';
+import React, { useEffect, useState } from 'react';
 import supabase from '../config/database';
 
-const ForgotPasswordScreen = ({ navigation }) => {
-  const [email, setEmail] = useState('');
+const ResetPasswordScreen = () => {
+  const [password, setPassword] = useState('');
+  const [retypePassword, setRetypePassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [userSession, setUserSession] = useState(null);
 
+  useEffect(() => {
+    resetPassword();
+  }, []);
   const resetPassword = async () => {
-    const { data, error } = await supabase.auth.resetPasswordForEmail(email);
-    if (error) {
-      console.log(error);
-    } else {
-      // console.log(data);
-      // navigation.navigate('ResetPassword');
-      supabase.auth.onAuthStateChange(async (event, session) => {
-        setUserSession(session);
-        if (!userSession?.user) navigation.navigate('ResetPassword');
+    if (password === retypePassword) {
+      const { data, error } = await supabase.auth.updateUser({
+        password: password,
       });
-    }
-    console.log(data);
-    if (!data) {
-      Alert.alert('Please check your inbox for email verification!');
+
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('ok');
+      }
     }
   };
 
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Text style={styles.title}>Forgot Password</Text>
+        <Text style={styles.title}>Reset Password</Text>
       </View>
       <View style={{ marginTop: 50 }}>
         <TextInput
-          value={email}
-          onChangeText={setEmail}
+          value={password}
+          onChangeText={setPassword}
           style={styles.input}
-          placeholder='Email Address'
-          keyboardType='email-address'
+          placeholder='Enter your new password'
+          secureTextEntry={true}
+        />
+        <TextInput
+          value={retypePassword}
+          onChangeText={setRetypePassword}
+          style={styles.input}
+          placeholder='Retype your new password'
+          secureTextEntry={true}
         />
       </View>
       <TouchableOpacity style={styles.button} onPress={resetPassword}>
         <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-          {loading ? 'Sending...' : 'Countinue '}
+          {loading ? 'Sending...' : 'Reset '}
         </Text>
       </TouchableOpacity>
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -88,4 +92,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ForgotPasswordScreen;
+export default ResetPasswordScreen;
