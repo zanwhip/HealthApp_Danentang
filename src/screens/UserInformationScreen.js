@@ -37,7 +37,7 @@ const UserInformationScreen = ({ navigation }) => {
         Height: height,
         Weight: weight,
         DateOfBirth: date,
-        BMI: weight / (height * height),
+        BMI: (weight*1000) / (height * height),
       });
       if (error == null) {
         navigation.navigate("BottomTabNavigation");

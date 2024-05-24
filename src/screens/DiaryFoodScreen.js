@@ -1,413 +1,311 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  ScrollView,
-  SafeAreaView,
-  TouchableOpacity,
-} from 'react-native';
-import React from 'react';
-import HeaderToday from '../components/HeaderToday';
-import Box from '../components/Box';
-import SwitchButton from '../components/SwitchButton';
-import { COLORS } from '../constants';
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import { Divider, Button } from '@rneui/themed';
-import { useSelector } from 'react-redux';
+    import {
+      View,
+      Text,
+      StyleSheet,
+      Image,
+      FlatList,
+      ActivityIndicator,
+      TouchableOpacity,
+    } from 'react-native';
+    import React, { useEffect, useState, useCallback } from 'react';
+    import HeaderToday from '../components/HeaderToday';
+    import Box from '../components/Box';
+    import { COLORS } from '../constants';
+    import { AnimatedCircularProgress } from 'react-native-circular-progress';
+    import { Divider, Button } from '@rneui/themed';
+    import { useSelector } from 'react-redux';
+    import { useFocusEffect } from '@react-navigation/native';
+    import supabase from '../config/database';
+    import FoodLogListItem from '../components/FoodLogListItem';
 
-const DiaryFoodScreen = ({ navigation }) => {
-  const switchBtnContent = [
-    {
-      id: 1,
-      text: 'Food',
-      onChecked: true,
-    },
-    {
-      id: 2,
-      text: 'Exercise',
-      onChecked: false,
-    },
-  ];
-  const sessionID = useSelector((state) => state.reducers);
+    const DiaryFoodScreen = ({ navigation }) => {
+      const [foodData, setFoodData] = useState([]);
+      const [loading, setLoading] = useState(true);
+      const [error, setError] = useState(null);
+      const [userData, setUserData] = useState(null);
+      const [bmr, setBmr] = useState(null);
 
-  console.log(sessionID[sessionID.length - 1].uid);
-  return (
-    <View style={styles.container}>
-      <HeaderToday navigation={navigation} />
-      <ScrollView style={{ paddingHorizontal: 20 }}>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-          }}
-        >
-          <View style={styles.type}>
-            <TouchableOpacity
-              style={{
-                width: '50%',
-                justifyContent: 'center',
-                height: 30,
-                alignItems: 'center',
-                backgroundColor: COLORS.primary,
-                borderRadius: 15,
-              }}
-            >
-              <Text style={{ color: '#fff' }}>Food</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                marginHorizontal: 10,
-                width: '40%',
-                justifyContent: 'center',
-                height: 30,
-                alignItems: 'center',
-              }}
-              onPress={() =>
-                navigation.navigate(
-                  'ExerciseDailyDiary',
-                  sessionID[sessionID.length - 1].uid
-                )
-              }
-            >
-              <Text style={{ color: COLORS.primary }}>Exercise</Text>
-            </TouchableOpacity>
+      const fetchFoodLogs = async () => {
+        try {
+          setLoading(true);
+          const { data, error } = await supabase
+            .from('Food')
+            .select()
+            .order('created_at', { ascending: false });
+    
+          if (error) {
+            setError(error.message);
+          } else {
+            setFoodData(data);
+            console.log('Fetched data:', data);
+          }
+        } catch (error) {
+          setError(error.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+
+
+      
+      const calculateAge = (DateOfBirth) => {
+        const dob = new Date(DateOfBirth);
+        const today = new Date();
+        let age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+          age--;
+        }
+        return age;
+      };
+    
+      const calculateBMR = (weight, height, age, gender) => {
+        // Chuyển đổi cân nặng từ kilograms sang pounds (1 kilogram ≈ 2.20462 pounds)
+        const weightInPounds = weight * 2.20462;
+    
+        // Chuyển đổi chiều cao từ centimeters sang inches (1 centimeter ≈ 0.393701 inches)
+        const heightInInches = height * 0.393701;
+        
+        let bmr = 0;
+        if (gender === 'male') {
+          // Công thức tính BMR cho nam giới
+        
+          bmr = 10 * weightInPounds + 6.25 * heightInInches - 5 * age + 5;
+        } else if (gender === 'female') {
+          // Công thức tính BMR cho nữ giới
+          bmr = 10 * weightInPounds + 6.25 * heightInInches - 5 * age - 161;
+        }
+        return bmr;
+      };
+    
+    
+      const fetchUserData = async () => {
+        try {
+          const { data, error } = await supabase
+            .from('User')
+            .select()
+            .eq('IdUser', sessionID[sessionID.length - 1].uid);
+    
+          if (error) {
+            setError(error.message);
+          } else {
+            const user = data[0];
+            setUserData(user);
+            console.log('Fetched user data:', user);
+    
+            // Tính toán BMR
+             const bmr = calculateBMR(user.Weight, user.Height, calculateAge(user.DateOfBirth), user.Gender);
+          
+            console.log('cao',user.Height,)
+            console.log('nặng',user.Weight,)
+            console.log('cao', calculateAge(user.DateOfBirth))
+            console.log('cao', user.Gender,)
+            console.log('BMR:', bmr.toFixed(0));
+            setBmr(bmr.toFixed(0))
+          }
+        } catch (error) {
+          setError(error.message);
+          console.log('Error fetching user data:', error);
+        }
+      };
+    
+      useFocusEffect(
+        useCallback(() => {
+          fetchFoodLogs();
+          fetchUserData();
+        }, [])
+      );
+    
+      const totalCalories = foodData.reduce((total, item) => total + item.cal, 0);
+    
+      const sessionID = useSelector((state) => state.reducers);
+      const remainingCalories = bmr - totalCalories;
+      const chartpercent = (totalCalories/bmr)*100
+      
+      const renderHeader = () => (
+        <View>
+          <HeaderToday navigation={navigation} />
+          <View style={{ justifyContent: 'center', alignContent: 'center', alignItems: 'center', width: '100%' }}>
+            <View style={styles.type}>
+              <TouchableOpacity
+                style={{
+                  width: '50%',
+                  justifyContent: 'center',
+                  height: 30,
+                  alignItems: 'center',
+                  backgroundColor: COLORS.primary,
+                  borderRadius: 15,
+                }}
+              >
+                <Text style={{ color: '#fff' }}>Food</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  marginHorizontal: 10,
+                  width: '40%',
+                  justifyContent: 'center',
+                  height: 30,
+                  alignItems: 'center',
+                }}
+                onPress={() =>
+                  navigation.navigate(
+                    'ExerciseDailyDiary',
+                    sessionID[sessionID.length - 1].uid
+                  )
+                }
+              >
+                <Text style={{ color: COLORS.primary }}>Exercise</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
 
-        <Box
-          disabled={true}
-          content={
-            <View style={styles.boxContentContainer}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Text style={styles.title}>Calories</Text>
-                <Image source={require('../../assets/pencil.png')} />
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <View style={styles.resultContainer}>
-                  <Text style={{ fontSize: 18, fontWeight: '400' }}>0</Text>
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      fontWeight: '400',
-                      color: '#797979',
-                    }}
-                  >
-                    burned
-                  </Text>
+          <Box
+          
+            disabled={true}
+            content={
+              <View style={styles.boxContentContainer}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <Text style={styles.title}>Calories</Text>
+                  <Image source={require('../../assets/pencil.png')} />
                 </View>
-                <View style={styles.resultContainer}>
-                  <AnimatedCircularProgress
-                    size={150}
-                    width={18}
-                    fill={20}
-                    arcSweepAngle={200}
-                    lineCap={'round'}
-                    rotation={260}
-                    tintColor='orange'
-                    onAnimationComplete={() =>
-                      console.log('onAnimationComplete')
-                    }
-                    backgroundColor={COLORS.background}
-                  />
-                  <View
-                    style={{
-                      position: 'absolute',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Text style={{ fontSize: 18, fontWeight: '400' }}>
-                      1486
+                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <View style={styles.resultContainer}>
+                    <Text style={{ fontSize: 18, fontWeight: '400' }}>0</Text>
+                    <Text style={{ fontSize: 15, fontWeight: '400', color: '#797979' }}>
+                      burned
                     </Text>
-                    <Text
-                      style={{
-                        fontSize: 15,
-                        fontWeight: '400',
-                        color: '#797979',
-                      }}
-                    >
-                      remaining
+                  </View>
+                  <View style={styles.resultContainer}>
+                    <AnimatedCircularProgress
+                      size={150}
+                      width={18}
+                      fill={chartpercent}
+                      arcSweepAngle={360}
+                      lineCap={'round'}
+                      rotation={260}
+                      tintColor='orange'
+                      onAnimationComplete={() =>
+                        console.log('onAnimationComplete')
+                      }
+                      backgroundColor={COLORS.background}
+                    />
+                    <View style={{ position: 'absolute', justifyContent: 'center', alignItems: 'center' }}>
+                      <Text style={{ fontSize: 18, fontWeight: '400' }}>
+                      {bmr}
+                      </Text>
+                      <Text style={{ fontSize: 15, fontWeight: '400', color: '#797979' }}>
+                      necessary
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.resultContainer}>
+                    <Text style={{ fontSize: 18, fontWeight: '400' }}>{totalCalories}</Text>
+                    <Text style={{ fontSize: 15, fontWeight: '400', color: '#797979' }}>
+                      eaten
                     </Text>
                   </View>
                 </View>
-                <View style={styles.resultContainer}>
-                  <Text style={{ fontSize: 18, fontWeight: '400' }}>232</Text>
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      fontWeight: '400',
-                      color: '#797979',
-                    }}
-                  >
-                    eaten
-                  </Text>
+                <View style={{ flexDirection : 'row',  }}>
+                <Text style={{ fontSize : 20, fontWeight : 'bold',  }}>Calorie deficit : </Text>
+                <Text style={{ fontSize : 20, fontWeight : 'bold',  }}>{remainingCalories}</Text>
                 </View>
               </View>
-            </View>
-          }
-        />
-        <Box
-          disabled={true}
-          styleBox={{ marginTop: 10 }}
-          content={
-            <View style={styles.boxContentContainer}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Text style={styles.title}>Breakfast</Text>
-                <Text style={styles.title}>282</Text>
-              </View>
-              <Divider width={1} />
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginVertical: 10,
-                }}
-              >
-                <View style={{ flexDirection: 'column' }}>
-                  <Text style={styles.nameFood}>Açai Bowl</Text>
-                  <Text style={styles.numberFood}>1 bowl</Text>
+            }
+          />
+
+          <Box
+            disabled={true}
+            styleBox={{ marginTop: 10,  }}
+            content={
+              <View style={styles.boxContentContainer}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <Text style={styles.title}>Total Calories</Text>
+                  <Text style={styles.calorieText}>{totalCalories}</Text>
                 </View>
-                <Text style={styles.caloFood}>180</Text>
+                <Divider width={1} />
               </View>
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginVertical: 10,
-                }}
-              >
-                <View style={{ flexDirection: 'column' }}>
-                  <Text style={styles.nameFood}>Omelette</Text>
-                  <Text style={styles.numberFood}>2 servings</Text>
-                </View>
-                <Text style={styles.caloFood}>102</Text>
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginVertical: 5,
-                }}
-              >
-                <Button
-                  icon={
-                    <Image
-                      style={{ height: 10, width: 10 }}
-                      source={require('../../assets/plus.png')}
-                    />
-                  }
-                  buttonStyle={styles.addBtn}
-                  onPress={() => {}}
-                />
-                <Button title='Add' type='clear' />
-              </View>
-            </View>
-          }
-        />
-        <Box
-          disabled={true}
-          styleBox={{ marginTop: 10 }}
-          content={
-            <View style={styles.boxContentContainer}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Text style={styles.title}>Lunch</Text>
-              </View>
-              <Divider width={1} />
+            }
+          />
+        </View>
+      );
 
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginVertical: 5,
-                }}
-              >
-                <Button
-                  icon={
-                    <Image
-                      style={{ height: 10, width: 10 }}
-                      source={require('../../assets/plus.png')}
-                    />
-                  }
-                  buttonStyle={styles.addBtn}
-                  onPress={() => {
-                    console.log('hi');
-                  }}
-                />
-                <Button title='Add' type='clear' />
-              </View>
-            </View>
-          }
-        />
-        <Box
-          disabled={true}
-          styleBox={{ marginTop: 10 }}
-          content={
-            <View style={styles.boxContentContainer}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Text style={styles.title}>Dinner</Text>
-              </View>
-              <Divider width={1} />
+      const renderFooter = () => (
+        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 5, backgroundColor : '#fff' , height: 40, width: 120, marginLeft : '70%', borderRadius : 20, justifyContent :"center"}}
+        onPress={() => navigation.navigate('SearchFood')}
+        >
+          <Button
+            icon={<Image style={{ height: 10, width: 10,  }} source={require('../../assets/plus.png')} />}
+            buttonStyle={styles.addBtn}
+            
+          />
+          <Button title='Add' type='clear' />
+        </TouchableOpacity>
+      );
 
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginVertical: 5,
-                }}
-              >
-                <Button
-                  icon={
-                    <Image
-                      style={{ height: 10, width: 10 }}
-                      source={require('../../assets/plus.png')}
-                    />
-                  }
-                  buttonStyle={styles.addBtn}
-                  onPress={() => {
-                    console.log('hi');
-                  }}
-                />
-                <Button title='Add' type='clear' />
+      return (
+        <View style={{  }}>
+          <FlatList
+            data={foodData}
+            keyExtractor={(item) => item.id ? item.id.toString() : item.created_at.toString()} // Use a fallback key
+            ListHeaderComponent={renderHeader}
+            ListFooterComponent={renderFooter}
+            renderItem={({ item }) => (
+              <FoodLogListItem item={item} onDelete={() => {}} />
+            )}
+            ListEmptyComponent={() => (
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                {loading ? (
+                  <ActivityIndicator size="large" color={COLORS.primary} />
+                ) : error ? (
+                  <Text style={{ color: 'red' }}>{error}</Text>
+                ) : (
+                  <Text></Text>
+                )}
               </View>
-            </View>
-          }
-        />
-        <Box
-          disabled={true}
-          styleBox={{ marginTop: 10 }}
-          content={
-            <View style={styles.boxContentContainer}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Text style={styles.title}>Snacks</Text>
-              </View>
-              <Divider width={1} />
+            )}
+          />
+          
+        </View>
+      );
+    };
 
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginVertical: 5,
-                }}
-              >
-                <Button
-                  icon={
-                    <Image
-                      style={{ height: 10, width: 10 }}
-                      source={require('../../assets/plus.png')}
-                    />
-                  }
-                  buttonStyle={styles.addBtn}
-                  onPress={() => {
-                    console.log('hi');
-                  }}
-                />
-                <Button title='Add' type='clear' />
-              </View>
-            </View>
-          }
-        />
-      </ScrollView>
-    </View>
-  );
-};
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-  },
-  containerContent: {
-    flex: 1,
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    alignItems: 'stretch',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginBottom: 10,
-  },
-  boxContentContainer: {
-    flex: 1,
-  },
-  resultContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  nameFood: {
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  numberFood: {
-    color: '#727272',
-    fontSize: 15,
-    fontWeight: '400',
-  },
-  caloFood: {
-    fontSize: 15,
-    fontWeight: '400',
-  },
-  addBtn: {
-    width: 18,
-    height: 18,
-    borderRadius: 100,
-  },
-  addContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  type: {
-    width: 200,
-    height: 30,
-    margin: 20,
-    backgroundColor: '#fff',
-    borderRadius: 15,
-    flexDirection: 'row',
-  },
-});
-export default DiaryFoodScreen;
+    const styles = StyleSheet.create({
+      container: {
+        flex: 1,
+        backgroundColor: COLORS.background,
+      },
+      title: {
+        fontSize: 18,
+        fontWeight: '700',
+        marginBottom: 10,
+      },
+      boxContentContainer: {
+        flex: 1,
+      
+      },
+      boxContentContainer1: {
+        flex: 1,
+        height : 700,
+      },
+      resultContainer: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      addBtn: {
+        width: 18,
+        height: 18,
+        borderRadius: 100,
+      },
+      type: {
+        width: 200,
+        height: 30,
+        margin: 20,
+        backgroundColor: '#fff',
+        borderRadius: 15,
+        flexDirection: 'row',
+      },
+    });
+
+    export default DiaryFoodScreen;

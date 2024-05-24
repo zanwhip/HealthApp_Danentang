@@ -13,105 +13,105 @@ import { Button, ListItem } from '@rneui/themed';
 import { COLORS } from '../constants';
 import { Pedometer } from 'expo-sensors';
 import { ProgressChart } from 'react-native-chart-kit';
-import supabase from '../config/database';
+import supabase from "../config/database";
 import { useSelector } from 'react-redux';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 
+
 const Homepages = ({ navigation }) => {
-  useEffect(() => {
-    fetchWaterData();
-  }, []);
 
-  const sendNotification = async () => {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: 'Water Reminder',
-        body: 'Please drink some water. Your water intake is less than 2000ml.',
-        sound: 'default',
-      },
-      trigger: null, // Send immediately
+
+ // Khai báo state để lưu trữ số liệu water và số lần nhấn nút plus
+ const [numberWater, setNumberWater] = useState(0);
+
+
+ const sessionId = useSelector((state) => state.reducers);
+ const IdUser = sessionId[sessionId.length - 1].uid
+
+
+ const fetchWaterData = () => {
+  supabase
+    .from('Water')
+    .select('numberWater')
+    .eq('idUser', IdUser) 
+    .then(response => {
+     if (response.data.length > 0) {
+       setNumberWater(response.data[0].numberWater);
+      } else {
+        setNumberWater(0);
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching water data:', error);
     });
-  };
+};
 
-  // Khai báo state để lưu trữ số liệu water và số lần nhấn nút plus
-  const [numberWater, setNumberWater] = useState(0);
-  const sessionId = useSelector((state) => state.uid);
-  const IdUser = sessionId;
+useEffect(() => {
+  fetchWaterData();
+}, []);
 
-  const fetchWaterData = async () => {
-    await supabase.from('Water').select('numberWater').eq('idUser', IdUser);
-    // .then((response) => {
-    //   if (response.data.length > 0) {
-    //     setNumberWater(response.data[0].numberWater);
-    //   } else {
-    //   }
-    // })
-    // .catch((error) => {
-    //   console.error('Error fetching water data:', error);
-    // });
-  };
+const handlePlusButtonPress = () => {
+  supabase
+    .from('Water')
+    .delete()
+    .eq('idUser', IdUser)
+    .then(deleteResponse => {
+      console.log('Rows deleted successfully:', deleteResponse);
+     supabase
+        .from('Water')
+        .insert([
+          { 
+            idUser: IdUser, 
+            numberWater: numberWater,
+          }
+        ])
+        .then(insertResponse => {
+          console.log('New row added successfully:', insertResponse);
+          // Cập nhật giá trị numberWater
+          setNumberWater(numberWater => {
+            const newNumberWater = numberWater + 100;
+            if (newNumberWater < 2000) {
+              
+            }
+            return newNumberWater;
+          });
+        })
+        .catch(insertError => {
+          console.error('Error adding new row:', insertError);
+        });
+    })
+    .catch(deleteError => {
+      console.error('Error deleting rows:', deleteError);
+    });
+};
 
-  useEffect(() => {
-    fetchWaterData();
-  }, []);
 
-  const handlePlusButtonPress = async () => {
-    await supabase.from('Water').delete().eq('idUser', IdUser);
-    // .then(async (deleteResponse) => {
-    //   console.log('Rows deleted successfully:', deleteResponse);
-    //   await supabase
-    //     .from('Water')
-    //     .insert([
-    //       {
-    //         idUser: IdUser,
-    //         numberWater: numberWater,
-    //       },
-    //     ])
-    //     .then((insertResponse) => {
-    //       console.log('New row added successfully:', insertResponse);
-    //       // Cập nhật giá trị numberWater
-    //       setNumberWater((numberWater) => {
-    //         const newNumberWater = numberWater + 100;
-    //         if (newNumberWater < 2000) {
-    //           sendNotification();
-    //         }
-    //         return newNumberWater;
-    //       });
-    //     })
-    //     .catch((insertError) => {
-    //       console.error('Error adding new row:', insertError);
-    //     });
-    // })
-    // .catch((deleteError) => {
-    //   console.error('Error deleting rows:', deleteError);
-    // });
-  };
+// const sendNotification = async () => {
+//   await scheduleNotificationAsync({
+//     content: {
+//       title: 'Water Reminder',
+//       body: 'Please drink some water. Your water intake is less than 2000ml.',
+//       sound: 'default',
+//     },
+//     trigger: null, // Send immediately
+//   });
+// };
 
-  // const sendNotification = async () => {
-  //   await scheduleNotificationAsync({
-  //     content: {
-  //       title: 'Water Reminder',
-  //       body: 'Please drink some water. Your water intake is less than 2000ml.',
-  //       sound: 'default',
-  //     },
-  //     trigger: null, // Send immediately
-  //   });
-  // };
 
   const chartConfig = {
-    backgroundGradientFrom: '#fff',
-    backgroundGradientTo: '#fff',
-    color: (opacity = 1) => `rgba(252, 180, 85, ${opacity})`,
+    backgroundGradientFrom: "#fff",
+    backgroundGradientTo: "#fff",
+    color: (opacity = 1) => `rgba(252, 180, 85, ${opacity})`, 
     strokeWidth: 2,
     barPercentage: 0.5,
     useShadowColorFromDataset: false,
-    fillShadowGradient: 'rgba(0, 255, 0, 0.5)',
+    fillShadowGradient: "rgba(0, 255, 0, 0.5)",
     fillShadowGradientOpacity: 1,
   };
   // Set tham số của đếm bước chân
   const [steps, setSteps] = useState(0);
-  const CaloExercise = steps * 0.05 + 0.1;
+      const CaloExercise = steps*0.05 + 0.1;
 
   useEffect(() => {
     Pedometer.isAvailableAsync().then(
@@ -132,23 +132,28 @@ const Homepages = ({ navigation }) => {
     );
   }, []);
 
+  
+
   const aimSteps = 20;
-  const percent_steps = steps / aimSteps;
+  const percent_steps = (steps / aimSteps)  ;
+
 
   const StepsData = {
-    labels: ['Steps'],
-    data: [, , percent_steps],
+    labels: ["Steps"], 
+    data: [,, percent_steps],
+   
   };
-  // Set tham số đêm calo
-  const goal = 2000;
-  const food = 1000;
-  const exercise = 200;
-  const left = goal - food + exercise;
+// Set tham số đêm calo 
+ const goal =  2000;
+ const food =  1000;
+ const exercise =  200;
+const left = goal - food + exercise 
 
-  const Calories = {
-    labels: ['Calo'],
-    data: [, , left / goal],
-  };
+const Calories = {
+  labels: ["Calo"], 
+  data: [,, left/goal],
+ 
+};
 
   return (
     <View style={[styles.flex1]}>
@@ -186,15 +191,15 @@ const Homepages = ({ navigation }) => {
             content={
               <View style={styles.boxContentContainer}>
                 <View style={styles.pieChartContainer}>
-                  <ProgressChart
-                    data={Calories}
-                    width={140}
-                    height={140}
-                    strokeWidth={26}
-                    radius={32}
-                    chartConfig={chartConfig}
-                    hideLegend={true}
-                  />
+                <ProgressChart
+                data={Calories}
+                width={140}
+                height={140}
+                strokeWidth={26}
+                radius={32}
+                chartConfig={chartConfig}
+                hideLegend={true}
+            />
                   <View style={styles.measureContainer}>
                     <Text style={styles.numberMeasure}>{left}</Text>
                     <Text style={styles.textMeasure}>left</Text>
@@ -243,7 +248,7 @@ const Homepages = ({ navigation }) => {
                     />
                     <View style={styles.infoWaterContainer}>
                       <Text style={styles.numberWater}>{numberWater}</Text>
-
+                      
                       <Text style={styles.unitWater}>milliliter</Text>
                     </View>
                   </View>
@@ -257,14 +262,14 @@ const Homepages = ({ navigation }) => {
                       }
                       buttonStyle={styles.controlWaterBtn}
                       onPress={() => {
-                        setNumberWater((numberWater) => numberWater - 100);
+                        setNumberWater(numberWater => numberWater - 100);
                       }}
                     />
                     <Button
-                      icon={<Image source={require('../../assets/plus.png')} />}
-                      buttonStyle={styles.controlWaterBtn}
-                      onPress={handlePlusButtonPress} // Gọi hàm xử lý sự kiện khi nút được nhấn
-                    />
+  icon={<Image source={require('../../assets/plus.png')} />}
+  buttonStyle={styles.controlWaterBtn}
+  onPress={handlePlusButtonPress} // Gọi hàm xử lý sự kiện khi nút được nhấn
+/>
                   </View>
                 </View>
               </View>
@@ -323,16 +328,16 @@ const Homepages = ({ navigation }) => {
                     </ListItem>
                   </View>
                   <View style={styles.exerciseMeasureContainer}>
-                    <View style={styles.pieChartContainer}>
-                      <ProgressChart
-                        data={StepsData}
-                        width={140}
-                        height={140}
-                        strokeWidth={26}
-                        radius={32}
-                        chartConfig={chartConfig}
-                        hideLegend={true}
-                      />
+                <View style={styles.pieChartContainer}>
+                    <ProgressChart
+                data={StepsData}
+                width={140}
+                height={140}
+                strokeWidth={26}
+                radius={32}
+                chartConfig={chartConfig}
+                hideLegend={true}
+            />
                       <View style={styles.measureContainer}>
                         <Image
                           style={{ height: 46, width: 42 }}
@@ -388,6 +393,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+   
   },
   measureContainer: {
     position: 'absolute',
@@ -496,14 +502,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
+    
   },
   exerciseInforContainer: {
     flex: 1,
+   
+    
   },
   exerciseMeasureContainer: {
+    
     flex: 1,
     justifyContent: 'center',
     alignItems: 'flex-end',
+    
+
   },
   addExerciseBtn: {
     width: 18,

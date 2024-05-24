@@ -20,6 +20,7 @@ const FoodLogListItem = ({ item, onDelete }) => {
     } catch (error) {
       Alert.alert('Error', 'Failed to delete the food log');
     }
+    
   };
 
   const handleDeletePress = () => {

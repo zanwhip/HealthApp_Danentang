@@ -72,7 +72,7 @@ const BottomTabNavigation = ({ navigation }) => {
 
       <Tab.Screen
         name='center'
-        component={DiaryFoodScreen}
+        component={Homepages}
         options={{
           tabBarIcon: ({ focused }) => {
             return <CenterControl focused={focused} navigation={navigation}/>;
