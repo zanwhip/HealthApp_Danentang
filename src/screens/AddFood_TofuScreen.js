@@ -5,12 +5,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../constants';
 import { AntDesign } from '@expo/vector-icons';
-const AddFood_TofuScreen = () => {
+const AddFood_TofuScreen = ({navigation}) => {
   return (
     <View>
     <View style={styles.header}>
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10, width: '100%'}}>
-  <Ionicons name="arrow-back" size={36} color="#fff" />
+    <TouchableOpacity onPress={() => navigation.goBack()}>
+      <Ionicons name="arrow-back" size={36} color="#fff" />
+    </TouchableOpacity>
   <Text style={styles.title}>Food Details</Text>
   <MaterialIcons name="done" size={36} color="#fff" />
 </View>

@@ -1,4 +1,4 @@
-import { View, Text,StyleSheet, ScrollView } from 'react-native'
+import { View, Text,StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { COLORS } from '../constants'
 import Header from '../components/header'
@@ -7,9 +7,9 @@ import { Entypo } from '@expo/vector-icons';
 import { ImageBackground } from 'react-native';
 
 
-const ExploreScreen = () => {
+const ExploreScreen = ({navigation}) => {
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <Header />
       <View style={styles.search}>
       <EvilIcons name="search" size={24} color="black" />
@@ -18,8 +18,8 @@ const ExploreScreen = () => {
         <Entypo name="list" size={24} color="black" />
       </View>
 
-
-      <View style={{ paddingHorizontal : 15,  }}>
+<ScrollView style={{ }}>
+      <View style={{ padding: 15,  }}>
         <Text>Suggested</Text>
         <View style={{ flexDirection : 'row' }}>
         <View style={styles.suggestedaround}>
@@ -40,7 +40,8 @@ const ExploreScreen = () => {
         {/* Active Plan */}
         <View style={{ marginHorizontal : 10 }}>
         <Text style={{ marginTop : 20,fontWeight :'bold', fontSize :18,}}>ACTIVE PLAN</Text>
-        <ImageBackground source={require('../assets/img/exercise.png')} style={styles.banner1} >
+        <TouchableOpacity onPress={() => navigation.navigate('Plan')}>
+        <ImageBackground source={require('../assets/img/HighProtein.png')} style={styles.banner1}   >
     <View>
       <Text style={styles.text1}>High Protein</Text>
       <Text style={styles.text}>28 days • Beginner • Daily</Text>
@@ -56,13 +57,16 @@ const ExploreScreen = () => {
     </View>
     </View>
   </ImageBackground>
+        </TouchableOpacity >
+       
   </View>
 
 
 {/* Popular */}
 <Text style={{ marginTop : 20,fontWeight :'bold', fontSize :18,margin : 10}}>POPULAR</Text>
 <ScrollView horizontal={true} style={{ marginHorizontal: 10 }}>
-        <ImageBackground source={require('../assets/img/HighProtein.png')} style={styles.banner2} >
+  <TouchableOpacity  onPress={() => navigation.navigate('Plan')}>
+  <ImageBackground source={require('../assets/img/exercise.png')} style={styles.banner2} >
     <View style={{ flexDirection :'column',  }}>
       <Text style={styles.text1}>Strong Glutes & Thighs</Text>
       <Text style={styles.text}>28 days • Intermediate • 2-4 days</Text>
@@ -78,16 +82,18 @@ const ExploreScreen = () => {
     </View>
     </View>
   </ImageBackground>
-
-  <ImageBackground source={require('../assets/img/HighProtein.png')} style={styles.banner2} >
-    <View style={{ flexDirection : 'column',  }}>
-      <Text style={styles.text1}>Beginner HIIT</Text>
-      <Text style={styles.text}>28 days • Beginner • 2-4 days</Text>
+  </TouchableOpacity>
+        
+  <TouchableOpacity  onPress={() => navigation.navigate('Plan')}>
+  <ImageBackground source={require('../assets/img/exercise.png')} style={styles.banner2} >
+    <View style={{ flexDirection :'column',  }}>
+      <Text style={styles.text1}>Strong Glutes & Thighs</Text>
+      <Text style={styles.text}>28 days • Intermediate • 2-4 days</Text>
     </View>
     <View style={{ flexDirection : 'row' }}>
     <View style={styles.statistic1}>
       <Text style={{ fontWeight : '400', color :'#FFF',paddingBottom : 5  }}>Caloric goal</Text>
-      <Text style={{ fontWeight : 'bold', color :'#FFF', fontSize: 20 }}>400kcal</Text>
+      <Text style={{ fontWeight : 'bold', color :'#FFF', fontSize: 20 }}>600kcal</Text>
     </View>
     <View style={styles.statistic1}>
       <Text style={{ fontWeight : '400', color :'#FFF', paddingBottom : 5 }}>Total exercises</Text>
@@ -95,6 +101,25 @@ const ExploreScreen = () => {
     </View>
     </View>
   </ImageBackground>
+  </TouchableOpacity>
+  <TouchableOpacity  onPress={() => navigation.navigate('Plan')}>
+  <ImageBackground source={require('../assets/img/exercise.png')} style={styles.banner2} >
+    <View style={{ flexDirection :'column',  }}>
+      <Text style={styles.text1}>Strong Glutes & Thighs</Text>
+      <Text style={styles.text}>28 days • Intermediate • 2-4 days</Text>
+    </View>
+    <View style={{ flexDirection : 'row' }}>
+    <View style={styles.statistic1}>
+      <Text style={{ fontWeight : '400', color :'#FFF',paddingBottom : 5  }}>Caloric goal</Text>
+      <Text style={{ fontWeight : 'bold', color :'#FFF', fontSize: 20 }}>600kcal</Text>
+    </View>
+    <View style={styles.statistic1}>
+      <Text style={{ fontWeight : '400', color :'#FFF', paddingBottom : 5 }}>Total exercises</Text>
+      <Text style={{ fontWeight : 'bold', color :'#FFF', fontSize: 20 }}>10</Text>
+    </View>
+    </View>
+  </ImageBackground>
+  </TouchableOpacity>
   </ScrollView>
         
      
@@ -163,7 +188,8 @@ const ExploreScreen = () => {
       </View>
       
       </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   )
 }
 
@@ -175,10 +201,11 @@ const styles = StyleSheet.create({
 
   },
   search : {
+    position : 'absolute',
     height : 50,
     width : '80%',
     backgroundColor : '#FFF',
-    top :  - 60,
+    top :  40,
     justifyContent : 'space-between',
     alignItems : 'center',
     marginHorizontal : '10%',
@@ -228,7 +255,7 @@ const styles = StyleSheet.create({
     marginTop : 20,
      fontWeight :'bold', 
      fontSize :18,
-     color : '#FFF'
+     color : '#000'
   },
   statistic : {
     backgroundColor : COLORS.primary, 

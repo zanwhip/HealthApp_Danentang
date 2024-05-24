@@ -1,16 +1,18 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { ImageBackground } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../constants';
 
-const PlanScreen = () => {
+const PlanScreen = ({navigation}) => {
   return (
     <View>
      <ImageBackground source={require('../assets/img/exercise.png')} style={styles.picture}>
      <View style={styles.Infor}>
         <View style={{ flexDirection :'row' ,padding : 20,  }}>
-        <Ionicons name="arrow-back" size={30} color="black" />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+      <Ionicons name="arrow-back" size={36} color="#fff" />
+    </TouchableOpacity>
             <Text style={styles.title}>Strong Glutes & Thighss</Text>
         </View>
         <ScrollView style={{ marginBottom : 600 }}>
@@ -65,8 +67,8 @@ const PlanScreen = () => {
         
         <View style={{ width : '100%', height : 300 }}></View>
         </ScrollView>
-        <View style={{ backgroundColor :COLORS.primary, height :50, width : '80%', marginHorizontal :'10%', justifyContent : 'center', alignItems : 'center', borderRadius : 15, alignContent :'center', position : 'absolute' , marginTop : 550}}>
-            <Text style={{  marginTop : 20, fontWeight :'bold',  fontSize :18, color : '#FFF', }}>Try Plan for Free</Text>
+        <View style={{ backgroundColor :COLORS.primary, height :50, width : '80%', marginHorizontal :'10%',  borderRadius : 15, alignItems :'center', position : 'absolute' , marginTop : 550, justifyContent :'center'}}>
+            <Text style={{   fontWeight :'bold',  fontSize :18, color : '#FFF', }}>Try Plan for Free</Text>
         </View>
     </View>
    
