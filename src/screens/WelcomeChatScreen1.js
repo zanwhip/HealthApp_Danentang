@@ -5,11 +5,12 @@ import { useEffect } from 'react';
 import ChatFaceData from '../Services/ChatFaceData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-export default function WelcomeChatScreen() {
+import { AntDesign } from '@expo/vector-icons';
+export default function WelcomeChatScreen({navigation}) {
 
     const [chatFaceData,setChatFaceData]=useState([]);
     const [selectedChatFace,setSelectedChatFace]=useState([]);
-    const navgitaion=useNavigation();
+    // const navigation=useNavigation();
     useEffect(()=>{
         setChatFaceData(ChatFaceData)
         checkFaceId();
@@ -27,6 +28,16 @@ export default function WelcomeChatScreen() {
     }
   return (
     <View style={{alignItems:'center',paddingTop:190}}>
+        <View>
+        <TouchableOpacity onPress={() => navigation.navigate('BottomTabNavigation')} style={{ top : -140, left : -180 }}>
+          <AntDesign
+            name='arrowleft'
+            size={30}
+            color='#000'
+            style={{ justifyContent: 'center' }}
+          />
+        </TouchableOpacity>
+        </View>
       <Text style={[{color:selectedChatFace?.primary}, {fontSize:30,}]}>Hello,</Text>
       <Text style={[{color:selectedChatFace?.primary}, {fontSize:30,fontWeight:'bold'}]}>I am {selectedChatFace.name}</Text>
         <Image source={{uri:selectedChatFace.image}} 
@@ -53,7 +64,7 @@ export default function WelcomeChatScreen() {
     <TouchableOpacity style={[{backgroundColor:selectedChatFace.primary}
         ,{marginTop:40,padding:17,width:Dimensions.get('screen').width*0.6,
          borderRadius:100,alignItems:'center'}]} 
-         onPress={()=>navgitaion.navigate('WelcomeChat')}>
+         onPress={()=>navigation.navigate('WelcomeChat')}>
         <Text style={{fontSize:16,color:'#fff'}}>Let's Chat</Text>
     </TouchableOpacity>
     </View>
