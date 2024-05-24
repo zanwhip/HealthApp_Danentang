@@ -75,7 +75,12 @@ const BottomTabNavigation = ({ navigation }) => {
         component={Homepages}
         options={{
           tabBarIcon: ({ focused }) => {
-            return <CenterControl focused={focused} navigation={navigation} />;
+            return (
+              <CenterControl
+                focused={focused ? true : false}
+                navigation={navigation}
+              />
+            );
           },
         }}
       />

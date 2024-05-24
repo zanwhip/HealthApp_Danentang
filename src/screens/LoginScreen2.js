@@ -117,26 +117,6 @@ const LoginScreen2 = ({ navigation }) => {
           ></View>
         </View>
       </View>
-      <View style={{ marginTop: -20 }}>
-        <TouchableOpacity style={styles.button1}>
-          <Text style={{ color: '#ADADAD' }}>Continue with Apple</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button1}>
-          <Text style={{ color: '#ADADAD' }}>Continue with Facebook</Text>
-        </TouchableOpacity>
-        <View
-          style={{
-            width: '60%',
-            marginHorizontal: '20%',
-            alignItems: 'center',
-            marginTop: 20,
-          }}
-        >
-          <Text style={{ color: '#ADADAD', textAlign: 'center' }}>
-            We will never post anything without your permission.
-          </Text>
-        </View>
-      </View>
     </View>
   );
 };

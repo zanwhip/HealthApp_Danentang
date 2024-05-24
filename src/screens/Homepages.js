@@ -134,9 +134,9 @@ const Homepages = ({ navigation }) => {
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'space-around',
+          justifyContent: 'flex-start',
           backgroundColor: COLORS.primary,
-          paddingTop: 20,
+          padding: 30,
           height: 100,
           width: '100%',
         }}
@@ -147,11 +147,19 @@ const Homepages = ({ navigation }) => {
             source={require('../../assets/avatar.png')}
           />
         </TouchableOpacity>
-
-        <Text style={{ color: COLORS.white, fontSize: 30, fontWeight: '700' }}>
-          Good Morning!
-        </Text>
-        <Image source={require('../../assets/clarity_notification-line.png')} />
+        <View
+          style={{
+            width: '70%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Text
+            style={{ color: COLORS.white, fontSize: 30, fontWeight: '700' }}
+          >
+            Welcome!
+          </Text>
+        </View>
       </View>
       <ScrollView
         style={[styles.flex1, styles.container]}
@@ -159,6 +167,7 @@ const Homepages = ({ navigation }) => {
       >
         <View style={styles.flex1}>
           <Box
+            disabled={true}
             title={'Calories'}
             content={
               <View style={styles.boxContentContainer}>
@@ -209,6 +218,7 @@ const Homepages = ({ navigation }) => {
         </View>
         <View style={styles.waterAndChatbotContainer}>
           <Box
+            disabled={true}
             title={'Water'}
             content={
               <View style={styles.boxContentContainer}>
@@ -268,6 +278,7 @@ const Homepages = ({ navigation }) => {
         </View>
         <View style={[styles.flex1, { marginTop: 29, marginBottom: 100 }]}>
           <Box
+            disabled={true}
             title={'Move during the day'}
             content={
               <View style={styles.exerciseContainer}>

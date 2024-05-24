@@ -1,32 +1,40 @@
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
 import supabase from '../config/database';
 
-const ResetPasswordScreen = () => {
+const ResetPasswordScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [retypePassword, setRetypePassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    resetPassword();
-  }, []);
-  const resetPassword = async () => {
-    if (password === retypePassword) {
-      const { data, error } = await supabase.auth.updateUser({
-        password: password,
-      });
+  const updatePassword = async () => {
+    // Kiểm tra mật khẩu và mật khẩu nhập lại
+    if (password !== retypePassword) {
+      Alert.alert('Error', 'Passwords do not match.');
+      return;
+    }
 
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('ok');
-      }
+    setLoading(true);
+
+    // Gọi API cập nhật mật khẩu từ Supabase
+    const { error } = await supabase.auth.api.updateUser(password);
+
+    setLoading(false);
+
+    if (error) {
+      console.error('Error updating password:', error.message);
+      Alert.alert('Error', 'Failed to update password. Please try again.');
+    } else {
+      // Hiển thị thông báo cập nhật mật khẩu thành công và quay lại màn hình đăng nhập
+      Alert.alert('Success', 'Password updated successfully.');
+      navigation.navigate('LoginScreen2');
     }
   };
 
@@ -51,14 +59,15 @@ const ResetPasswordScreen = () => {
           secureTextEntry={true}
         />
       </View>
-      <TouchableOpacity style={styles.button} onPress={resetPassword}>
+      <TouchableOpacity style={styles.button} onPress={updatePassword}>
         <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-          {loading ? 'Sending...' : 'Reset '}
+          {loading ? 'Sending...' : 'Reset'}
         </Text>
       </TouchableOpacity>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -70,7 +79,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: 'black',
-    // marginHorizontal: '30%',
   },
   input: {
     height: 55,

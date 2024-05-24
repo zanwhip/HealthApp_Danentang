@@ -1,5 +1,5 @@
 import { View, Text, Platform, TouchableOpacity, Image } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { COLORS } from '../constants';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
@@ -10,12 +10,11 @@ const CenterControl = ({ focused, navigation }) => {
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: COLORS.primary,
-        height: Platform.OS == 'ios' ? 80 : 60,
-        width: Platform.OS == 'ios' ? 80 : 60,
         top: Platform.OS == 'ios' ? -30 : -20,
-        borderRadius: Platform.OS == 'ios' ? 50 : 30,
+        borderRadius: Platform.OS == 'ios' ? 100 : 150,
         borderWidth: 10,
         borderColor: '#fff',
+        position: 'absolute',
       }}
     >
       <MaterialIcons
@@ -33,7 +32,7 @@ const CenterControl = ({ focused, navigation }) => {
               height: 60,
               width: 60,
               borderRadius: 30, // Half of height and width for a circle
-              top: -50, // Adjust as needed
+              top: -60, // Adjust as needed
               left: '-50%', // Center horizontally
               transform: [{ translateX: -45 }], // Adjust position to center
               justifyContent: 'center',
@@ -50,7 +49,7 @@ const CenterControl = ({ focused, navigation }) => {
               height: 60,
               width: 60,
               borderRadius: 30, // Half of height and width for a circle
-              top: -75, // Adjust as needed
+              top: -85, // Adjust as needed
               left: '20%', // Center horizontally
               transform: [{ translateX: -15 }], // Adjust position to center
               justifyContent: 'center',
@@ -71,7 +70,7 @@ const CenterControl = ({ focused, navigation }) => {
               height: 60,
               width: 60,
               borderRadius: 30, // Half of height and width for a circle
-              top: -50, // Adjust as needed
+              top: -60, // Adjust as needed
               left: '100%', // Center horizontally
               transform: [{ translateX: 15 }], // Adjust position to center
               backgroundColor: COLORS.primary,

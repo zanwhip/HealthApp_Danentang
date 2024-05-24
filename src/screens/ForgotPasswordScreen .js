@@ -1,34 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  StyleSheet,
-  Text,
   View,
-  TouchableOpacity,
+  Text,
+  StyleSheet,
   TextInput,
+  TouchableOpacity,
+  Alert,
 } from 'react-native';
-import { COLORS } from '../constants';
 import supabase from '../config/database';
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const [userSession, setUserSession] = useState(null);
+
+  useEffect(() => {
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        navigation.navigate('ResetPassword');
+      }
+    });
+  }, []);
 
   const resetPassword = async () => {
-    const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+    setLoading(true);
+    const { error } = await supabase.auth.api.resetPasswordForEmail(email);
+    setLoading(false);
+
     if (error) {
       console.log(error);
+      Alert.alert('Error', error.message);
     } else {
-      // console.log(data);
-      // navigation.navigate('ResetPassword');
-      supabase.auth.onAuthStateChange(async (event, session) => {
-        setUserSession(session);
-        if (!userSession?.user) navigation.navigate('ResetPassword');
-      });
-    }
-    console.log(data);
-    if (!data) {
-      Alert.alert('Please check your inbox for email verification!');
+      Alert.alert('Success', 'Please check your inbox for email verification!');
     }
   };
 
@@ -48,7 +50,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
       </View>
       <TouchableOpacity style={styles.button} onPress={resetPassword}>
         <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-          {loading ? 'Sending...' : 'Countinue '}
+          {loading ? 'Sending...' : 'Continue'}
         </Text>
       </TouchableOpacity>
     </View>
@@ -66,7 +68,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: 'black',
-    // marginHorizontal: '30%',
   },
   input: {
     height: 55,
