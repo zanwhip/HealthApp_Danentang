@@ -1,3 +1,4 @@
+// ExerciseDailyDiaryScreen.js
 import React, { useState, useEffect } from 'react';
 import {
   ScrollView,
@@ -18,29 +19,17 @@ import { useRoute } from '@react-navigation/native';
 import supabase from '../config/database';
 import TimeCount from '../components/TimeCount';
 
-const chartData = {
-  labels: ['', '', 'c'],
-  data: [, , 0.7],
-};
-const chartConfig = {
-  backgroundGradientFrom: '#fff',
-  backgroundGradientTo: '#fff',
-  color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`, // Đỏ
-  strokeWidth: 2,
-  barPercentage: 0.5,
-  useShadowColorFromDataset: false,
-  fillShadowGradient: 'rgba(0, 255, 0, 0.5)',
-  fillShadowGradientOpacity: 1,
-};
-
 const ExerciseDailyDiaryScreen = ({ navigation }) => {
   const [filteredExercises, setFilteredExercises] = useState([]);
   const [steps, setSteps] = useState(0);
+  const [totalCalories, setTotalCalories] = useState(0);
+  const [totalGoalCalories, setTotalGoalCalories] = useState(100);
   const CaloExercise = steps * 0.05 + 0.1;
 
   const route = useRoute();
   const IdUser = route.params;
   console.log('>>>> User Id : ', IdUser);
+
   async function fetchExerciseProcessData() {
     let { data: ExerciseProcess, error } = await supabase
       .from('ExProcess')
@@ -55,8 +44,79 @@ const ExerciseDailyDiaryScreen = ({ navigation }) => {
     }
   }
 
+
+  async function saveExerciseCaloData() {
+    let { data: existingData, error: fetchError } = await supabase
+        .from('ExerciseCalo')
+        .select('*')
+        .eq('idUser', IdUser);
+
+    if (fetchError) {
+        console.error('Error fetching existing data:', fetchError);
+        return;
+    }
+
+    if (existingData.length > 0) {
+        // If data already exists, update it
+        const { id } = existingData[0];
+        const { error: updateError } = await supabase
+            .from('ExerciseCalo')
+            .update({ totalGoalCalories, totalCalories })
+            .eq('id', id);
+
+        if (updateError) {
+            console.error('Error updating data:', updateError);
+        } else {
+            console.log('Data updated successfully');
+        }
+    } else {
+        // If no data exists, insert new data
+        const { error: insertError } = await supabase
+            .from('ExerciseCalo')
+            .insert([
+                {
+                    idUser: IdUser,
+                    totalGoalCalories: totalGoalCalories,
+                    totalCalories: totalCalories
+                }
+            ]);
+
+        if (insertError) {
+            console.error('Error saving data:', insertError);
+        } else {
+            console.log('Data saved successfully');
+        }
+    }
+}
+
+
+ 
+
+  
+  async function fetchExerciseCaloData() {
+    let { data: ExerciseCalo, error } = await supabase
+      .from('ExerciseCalo')
+      .select(`*`)
+      .eq('idUser', IdUser);
+      
+    if (error) {
+      console.error('Error fetching ExerciseCalo data:', error);
+    } else {
+      console.log('ExerciseCalo data:', ExerciseCalo);
+ 
+      if (ExerciseCalo.length > 0) {
+        const { totalCalories, totalGoalCalories } = ExerciseCalo[0];
+        setTotalCalories(totalCalories);
+        setTotalGoalCalories(totalGoalCalories);
+      }
+    }
+  }
+  
+  
   useEffect(() => {
     fetchExerciseProcessData();
+    saveExerciseCaloData();
+    fetchExerciseCaloData();
   }, []);
 
   useEffect(() => {
@@ -77,18 +137,34 @@ const ExerciseDailyDiaryScreen = ({ navigation }) => {
       }
     );
   }, []);
-
-  // Tính toán lượng calo và console log
   useEffect(() => {
+    let totalCaloriesBurned = 0;
     filteredExercises.forEach((item) => {
-      const elapsedTime = item.Time; // Thời gian của bài tập
-      const caloriesBurned = item.Exercise.CaloriesExercise * elapsedTime;
-      console.log(
-        `Calories burned for ${item.Exercise.typeExercise}:`,
-        caloriesBurned
-      );
+      const caloriesBurned = item.Exercise.CaloriesExercise;
+      totalCaloriesBurned += caloriesBurned;
     });
+    setTotalCalories(totalCaloriesBurned);
   }, [filteredExercises]);
+
+  useEffect(() => {
+    let totalCaloriesBurned = 0;
+    filteredExercises.forEach((item) => {
+      const caloriesBurned = item.Exercise.CaloriesExercise;
+    
+      totalCaloriesBurned += caloriesBurned;
+    
+    });
+    setTotalGoalCalories(totalCaloriesBurned)
+    setTotalCalories(totalCaloriesBurned-totalCaloriesBurned);
+   
+  }, [filteredExercises]);
+
+  const handleExerciseComplete = (calories) => {
+    setTotalCalories((prevTotal) => prevTotal + calories);
+  };
+
+
+  const percent = ({totalCalories})/({totalGoalCalories}+1)*100;
 
   return (
     <View style={styles.container}>
@@ -104,7 +180,7 @@ const ExerciseDailyDiaryScreen = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => navigation.navigate('CalendarScreen')}
           >
-            <Feather name='credit-card' size={30} color='#fff' />
+            <Feather name="credit-card" size={30} color="#fff" />
           </TouchableOpacity>
 
           <Text style={styles.title}>Today</Text>
@@ -140,122 +216,50 @@ const ExerciseDailyDiaryScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <View style={styles.statistic}>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row' , justifyContent: 'space-between', alignItems :'space-between', width : '100%', height : 40}}>
               <Text style={styles.title1}>Daily Goals</Text>
               <TouchableOpacity
-                onPress={() => navigation.navigate('EditDailyGoals', { steps })}
-              >
+                onPress={() => navigation.navigate('EditDailyGoals', { steps })}>
                 <FontAwesome
-                  name='pencil'
+                  name="pencil"
                   size={26}
                   color={COLORS.primary}
-                  style={{ left: 90 }}
+                  style={{ }}
                 />
               </TouchableOpacity>
             </View>
 
             <View style={{ flexDirection: 'row' }}>
-              <View style={{ justifyContent: 'center', marginTop: 40 }}>
+              <View style={{ justifyContent: 'center', marginTop: 30,  }}>
                 <ProgressChart
-                  data={chartData}
+                  data={{
+                    labels: ['', '', 'c'],
+                    data: [, , totalCalories / (totalGoalCalories + 0.0000000000000001)],
+                  }}
                   width={180}
                   height={200}
                   strokeWidth={26}
                   radius={32}
-                  chartConfig={chartConfig}
+                  chartConfig={{
+                    backgroundGradientFrom: '#fff',
+                    backgroundGradientTo: '#fff',
+                    color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`,
+                    strokeWidth: 2,
+                    barPercentage: 0.5,
+                    useShadowColorFromDataset: false,
+                    fillShadowGradient: 'rgba(0, 255, 0, 0.5)',
+                    fillShadowGradientOpacity: 1,
+                  }}
                   hideLegend={true}
                 />
-                <View style={{ bottom: 120, alignItems: 'center' }}>
-                  <Text style={{ fontSize: 16 }}>Total : </Text>
-                  <Text style={{ fontSize: 26, fontWeight: 'bold' }}>50%</Text>
+                <View style={{ bottom: 120, alignItems: 'center',  }}>
+                  <Text style={{ fontSize: 16 }}>Total </Text>
+                  <Text style={{ fontSize: 26, fontWeight: 'bold' }}>
+                 {totalCalories}
+                  </Text>
                 </View>
               </View>
-              <View style={{ right: -10 }}>
-                <Text style={{ marginLeft: 80, fontWeight: 'bold' }}>
-                  Daily Goals
-                </Text>
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    paddingHorizontal: 10,
-                  }}
-                >
-                  <Text
-                    style={{
-                      marginTop: 10,
-                      fontSize: 20,
-                      fontWeight: '400',
-                      marginLeft: -100,
-                    }}
-                  >
-                    Steps
-                  </Text>
-                  <Text
-                    style={{ color: '#737373', fontSize: 12, marginLeft: 30 }}
-                  >
-                    {steps}{' '}
-                  </Text>
-                  <View
-                    style={{ flexDirection: 'row', height: 30, width: '100%' }}
-                  >
-                    <Image
-                      source={require('../assets/icon/step.png')}
-                      style={{ height: 30, width: 30, marginRight: 6 }}
-                    />
-                    <Progress.Bar
-                      progress={steps / 100}
-                      width={120}
-                      height={18}
-                      borderRadius={7}
-                      color='#5BB6AF'
-                      style={{ margin: 6 }}
-                    />
-                  </View>
-                </View>
-
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    paddingHorizontal: 10,
-                  }}
-                >
-                  <Text
-                    style={{
-                      marginTop: 10,
-                      fontSize: 20,
-                      fontWeight: '400',
-                      marginLeft: -100,
-                    }}
-                  >
-                    Calories{' '}
-                  </Text>
-                  <Text
-                    style={{ color: '#737373', fontSize: 12, marginLeft: 30 }}
-                  >
-                    {CaloExercise.toFixed(2)}{' '}
-                  </Text>
-                  <View
-                    style={{ flexDirection: 'row', height: 30, width: '100%' }}
-                  >
-                    <Image
-                      source={require('../assets/icon/calo.png')}
-                      style={{ height: 30, width: 30, marginRight: 6 }}
-                    />
-                    <Progress.Bar
-                      progress={CaloExercise / 100}
-                      width={120}
-                      height={18}
-                      borderRadius={7}
-                      color='#F2B455'
-                      style={{ margin: 6 }}
-                    />
-                  </View>
-                </View>
-              </View>
+              
             </View>
           </View>
           <View style={styles.statistic}>
@@ -271,25 +275,16 @@ const ExerciseDailyDiaryScreen = ({ navigation }) => {
             >
               <View
                 style={{
-                  width: '50%',
+                  width: '100%',
                   alignItems: 'center',
                   justifyContent: 'center',
                   backgroundColor: COLORS.primary,
                   borderRadius: 10,
                 }}
               >
-                <Text>Workouts</Text>
+                <Text style={{ fontWeight :'bold', color :'#fff', fontSize : 20 }}>Workouts</Text>
               </View>
-              <View
-                style={{
-                  width: '50%',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Text>Weight</Text>
               </View>
-            </View>
 
             {filteredExercises.map((item) => (
               <View
@@ -324,12 +319,12 @@ const ExerciseDailyDiaryScreen = ({ navigation }) => {
                   <Text style={{ color: '#737373' }}>{item.Time}s</Text>
                 </View>
                 <View>
-                  {/* <TouchableOpacity onPress={() => {setSteps(item.step);}}></TouchableOpacity> */}
                   <TimeCount
                     duration={item.Time}
                     steps={steps}
-                    calories={CaloExercise}
+                    calories={item.Exercise.CaloriesExercise}
                     IdExProcess={item.idExProcess}
+                    onComplete={handleExerciseComplete} // Pass the callback here
                   />
                 </View>
               </View>
@@ -348,7 +343,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
     flex: 1,
   },
-
   title: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -385,5 +379,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     paddingHorizontal: 20,
+  
   },
 });

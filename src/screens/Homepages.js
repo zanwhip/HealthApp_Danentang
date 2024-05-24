@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Box from '../components/Box';
 import PieChart from 'react-native-pie-chart';
 import { Button, ListItem } from '@rneui/themed';
@@ -15,13 +15,115 @@ import { Pedometer } from 'expo-sensors';
 import { ProgressChart } from 'react-native-chart-kit';
 import supabase from "../config/database";
 import { useSelector } from 'react-redux';
-import * as Notifications from 'expo-notifications';
-import * as Permissions from 'expo-permissions';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 const Homepages = ({ navigation }) => {
+  const [foodData, setFoodData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [bmr, setBmr] = useState(null);
 
 
+  const fetchFoodLogs = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('Food')
+        .select()
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        setError(error.message);
+      } else {
+        setFoodData(data);
+        console.log('Fetched data:', data);
+      }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+
+  
+  const calculateAge = (DateOfBirth) => {
+    const dob = new Date(DateOfBirth);
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  const calculateBMR = (weight, height, age, gender) => {
+    // Chuyển đổi cân nặng từ kilograms sang pounds (1 kilogram ≈ 2.20462 pounds)
+    const weightInPounds = weight * 2.20462;
+
+    // Chuyển đổi chiều cao từ centimeters sang inches (1 centimeter ≈ 0.393701 inches)
+    const heightInInches = height * 0.393701;
+    
+    let bmr = 0;
+    if (gender === 'male') {
+      // Công thức tính BMR cho nam giới
+    
+      bmr = 10 * weightInPounds + 6.25 * heightInInches - 5 * age + 5;
+    } else if (gender === 'female') {
+      // Công thức tính BMR cho nữ giới
+      bmr = 10 * weightInPounds + 6.25 * heightInInches - 5 * age - 161;
+    }
+    return bmr;
+  };
+
+
+  const fetchUserData = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('User')
+        .select()
+        .eq('IdUser', sessionID[sessionID.length - 1].uid);
+
+      if (error) {
+        setError(error.message);
+      } else {
+        const user = data[0];
+        setUserData(user);
+        console.log('Fetched user data:', user);
+
+        // Tính toán BMR
+         const bmr = calculateBMR(user.Weight, user.Height, calculateAge(user.DateOfBirth), user.Gender);
+      
+        console.log('cao',user.Height,)
+        console.log('nặng',user.Weight,)
+        console.log('cao', calculateAge(user.DateOfBirth))
+        console.log('cao', user.Gender,)
+        console.log('BMR:', bmr.toFixed(0));
+        setBmr(bmr.toFixed(0))
+      }
+    } catch (error) {
+      setError(error.message);
+      console.log('Error fetching user data:', error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchFoodLogs();
+      fetchUserData();
+    }, [])
+  );
+
+  const totalCalories = foodData.reduce((total, item) => total + item.cal, 0);
+
+  const sessionID = useSelector((state) => state.reducers);
+  const remainingCalories = bmr - totalCalories;
+  const chartpercent = (totalCalories/bmr)*100
+  
  // Khai báo state để lưu trữ số liệu water và số lần nhấn nút plus
  const [numberWater, setNumberWater] = useState(0);
 
@@ -87,16 +189,7 @@ const handlePlusButtonPress = () => {
 };
 
 
-// const sendNotification = async () => {
-//   await scheduleNotificationAsync({
-//     content: {
-//       title: 'Water Reminder',
-//       body: 'Please drink some water. Your water intake is less than 2000ml.',
-//       sound: 'default',
-//     },
-//     trigger: null, // Send immediately
-//   });
-// };
+
 
 
   const chartConfig = {
@@ -144,11 +237,9 @@ const handlePlusButtonPress = () => {
    
   };
 // Set tham số đêm calo 
- const goal =  2000;
- const food =  1000;
+ const goal =  1950;
  const exercise =  200;
-const left = goal - food + exercise 
-
+const left = bmr-totalCalories
 const Calories = {
   labels: ["Calo"], 
   data: [,, left/goal],
@@ -209,15 +300,15 @@ const Calories = {
                   <View style={styles.resultContainer}>
                     <Image source={require('../../assets/flag.png')} />
                     <View style={styles.resultInforContainer}>
-                      <Text style={styles.textResult}>Goal</Text>
-                      <Text style={styles.numberResult}>{goal}</Text>
+                      <Text style={styles.textResult}>BMR</Text>
+                      <Text style={styles.numberResult}>{bmr}</Text>
                     </View>
                   </View>
                   <View style={styles.resultContainer}>
                     <Image source={require('../../assets/forkknife.png')} />
                     <View style={styles.resultInforContainer}>
                       <Text style={styles.textResult}>Food</Text>
-                      <Text style={styles.numberResult}>{food}</Text>
+                      <Text style={styles.numberResult}>{totalCalories}</Text>
                     </View>
                   </View>
                   <View style={styles.resultContainer}>

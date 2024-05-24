@@ -40,7 +40,7 @@ const ExploreScreen = ({navigation}) => {
         {/* Active Plan */}
         <View style={{ marginHorizontal : 10 }}>
         <Text style={{ marginTop : 20,fontWeight :'bold', fontSize :18,}}>ACTIVE PLAN</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Plan')}>
         <ImageBackground source={require('../assets/img/HighProtein.png')} style={styles.banner1}   >
     <View>
       <Text style={styles.text1}>High Protein</Text>
@@ -57,7 +57,7 @@ const ExploreScreen = ({navigation}) => {
     </View>
     </View>
   </ImageBackground>
-        </TouchableOpacity>onPress={() => navigation.navigate('Plan')}
+        </TouchableOpacity >
        
   </View>
 

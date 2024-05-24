@@ -1,30 +1,28 @@
+// TimeCount.js
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import supabase from '../config/database';
 
-const TimeCount = ({ duration, steps, calories, IdExProcess }) => {
+const TimeCount = ({ duration, steps, calories, IdExProcess, onComplete }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [remainingTime, setRemainingTime] = useState(0);
+  const [remainingTime, setRemainingTime] = useState(duration);
   const [isCompleted, setIsCompleted] = useState(false);
 
-  const SaveDataToDB  = async () => {
-    
+  const saveDataToDB = async () => {
     const { error } = await supabase
-    .from('ExProcess')
-    .update({ step: steps, calory : Math.ceil(calories) })
-    .eq('idExProcess', IdExProcess)
-    if(error != null) {
-    console.log(">>>> Error while saving to db ", error)
+      .from('ExProcess')
+      .update({ step: steps, calory: Math.ceil(calories) })
+      .eq('idExProcess', IdExProcess);
+    if (error) {
+      console.log(">>>> Error while saving to db ", error);
     }
-
-  }
-
+  };
 
   const handlePauseResume = () => {
-    setIsPlaying(prev => !prev);
-    setIsCompleted(false); // Đặt lại trạng thái khi bắt đầu countdown lại
-    SaveDataToDB()
+    setIsPlaying((prev) => !prev);
+    setIsCompleted(false); // Reset state when starting countdown again
+    saveDataToDB();
     if (isPlaying) {
       const elapsedTime = duration - remainingTime;
       console.log(`Elapsed time: ${elapsedTime} seconds`);
@@ -49,6 +47,7 @@ const TimeCount = ({ duration, steps, calories, IdExProcess }) => {
             onComplete={() => {
               console.log('Timer finished');
               setIsCompleted(true);
+              onComplete(calories); // Call the onComplete callback with calories burned
               return [false, 0];
             }}
           >
