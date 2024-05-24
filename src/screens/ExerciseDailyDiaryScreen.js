@@ -31,31 +31,36 @@ const chartData = {
    
   
 const ExerciseDailyDiaryScreen =  ({navigation}) => {
-//   const IniStep =  
-const [filteredExercises, setFilteredExercises] = useState([]);
-const [steps, setSteps] = useState(0);
-const [calories, setCalories] = useState(0);
+  const [filteredExercises, setFilteredExercises] = useState([]);
+  const [steps, setSteps] = useState(0);
+  const CaloExercise = steps*0.05 + 0.1;
 
-const route = useRoute();
+  const route = useRoute();
+   const IdUser = route.params;
+  console.log(">>>> User Id : ",IdUser)
+   async function fetchExerciseProcessData() {
+    let { data: ExerciseProcess, error } = await supabase
+      .from('ExProcess')
+      .select(`*, Exercise(id, typeExercise, CaloriesExercise)`)
+      .eq('IdUser',IdUser);
 
-useEffect(() => {
-    async function fetchExerciseProcessData() {
-        let { data: ExerciseProcess, error } = await supabase
-            .from('ExProcess')
-            .select(`*, Exercise(id, typeExercise, CaloriesExercise)`);
-
-        if (error) {
-            console.error("Error fetching data:", error);
-        } else {
-            console.log("Exercise data:", ExerciseProcess);
-            setFilteredExercises(ExerciseProcess);
-        }
+    if (error) {
+      console.error("Error fetching data:", error);
+    } else {
+      console.log("Exercise data:", ExerciseProcess);
+      setFilteredExercises(ExerciseProcess)
     }
+  }
 
+
+   useEffect(() => {
     fetchExerciseProcessData();
-}, []);
+  }, []);
 
-useEffect(() => {
+
+
+
+  useEffect(() => {
     Pedometer.isAvailableAsync().then(
         (result) => {
             if (result) {
@@ -82,6 +87,11 @@ useEffect(() => {
         console.log(`Calories burned for ${item.Exercise.typeExercise}:`, caloriesBurned);
     });
 }, [filteredExercises]);
+
+
+
+ 
+  
 
 
     
@@ -147,10 +157,10 @@ useEffect(() => {
 
             <View style={{ justifyContent :'center', alignContent :'center', alignItems :'center' , paddingHorizontal : 10}}>
             <Text style={{ marginTop : 10, fontSize : 20, fontWeight :"400" , marginLeft : -100,}}>Calories </Text>
-            <Text style={{ color : '#737373', fontSize : 12,  marginLeft : 30}}>Done </Text>
+            <Text style={{ color : '#737373', fontSize : 12,  marginLeft : 30}}>{CaloExercise.toFixed(2)} </Text>
             <View style={{ flexDirection :'row', height : 30, width : '100%'}}>  
             <Image source={require('../assets/icon/calo.png')} style={{ height : 30, width : 30, marginRight : 6 }} />          
-            <Progress.Bar progress={100 / 100} width={120} height={18} borderRadius={7} color='#F2B455' style={{margin : 6}}/>
+            <Progress.Bar progress={CaloExercise / 100} width={120} height={18} borderRadius={7} color='#F2B455' style={{margin : 6}}/>
             </View>
             </View>
 
@@ -171,15 +181,15 @@ useEffect(() => {
         </View>
         
         {filteredExercises.map((item) => (
-            
-                  <View style={{ height : 70, width : '100%', marginHorizontal : 20, backgroundColor : '#F6F5F5', borderRadius : 10, flexDirection : 'row', marginTop : 12, justifyContent : 'space-between', paddingHorizontal : 20, alignItems:'center'}}>
+                  <View  key={item.idExProcess} style={{ height : 70, width : '100%', marginHorizontal : 20, backgroundColor : '#F6F5F5', borderRadius : 10, flexDirection : 'row', marginTop : 12, justifyContent : 'space-between', paddingHorizontal : 20, alignItems:'center'}} >
                   <Image source={require('../assets/icon/run.png')} style={{ height : 50, width : 50, marginRight : 6 }} />     
                   <View style={{ left : -40 }}>
-                      <Text style={{ fontSize : 18,  }}>{item.Exercise.typeExercise}</Text>
+                      <Text style={{ fontSize : 18,  }} onPress={() => {setSteps(item.step); fetchExerciseProcessData();}}>{item.Exercise.typeExercise}</Text>
                       <Text style={{ color : '#737373' }}>{item.Time}s</Text>
                   </View>
                   <View>
-                     <TimeCount duration={item.Time} />
+                    {/* <TouchableOpacity onPress={() => {setSteps(item.step);}}></TouchableOpacity> */}
+                  <TimeCount duration={item.Time} steps={steps} calories={CaloExercise} IdExProcess={item.idExProcess} />
                   </View>
                   </View>
         ))}

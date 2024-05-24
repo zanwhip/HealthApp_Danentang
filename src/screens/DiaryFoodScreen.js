@@ -14,6 +14,7 @@ import SwitchButton from '../components/SwitchButton';
 import { COLORS } from '../constants';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { Divider, Button } from '@rneui/themed';
+import {  useSelector } from 'react-redux';
 
 const DiaryFoodScreen = ({ navigation }) => {
   const switchBtnContent = [
@@ -28,6 +29,7 @@ const DiaryFoodScreen = ({ navigation }) => {
       onChecked: false,
     },
   ];
+  const sessionID = useSelector((state) => state);
 
   return (
     <View style={styles.container}>
@@ -38,7 +40,7 @@ const DiaryFoodScreen = ({ navigation }) => {
         <TouchableOpacity style={{  width : '50%', justifyContent: 'center', height : 30, alignItems :'center', backgroundColor : COLORS.primary , borderRadius : 15}}   >
             <Text style={{ color: '#fff'}}>Food</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ marginHorizontal : 10, width : '40%', justifyContent: 'center', height : 30, alignItems :'center' }} onPress={() => navigation.navigate('ExerciseDailyDiary')}>
+        <TouchableOpacity style={{ marginHorizontal : 10, width : '40%', justifyContent: 'center', height : 30, alignItems :'center' }} onPress={() => navigation.navigate('ExerciseDailyDiary',sessionID.reducers[(sessionID.reducers.length-1)])}>
             <Text style={{ color:  COLORS.primary }}>Exercise</Text>
         </TouchableOpacity>
     </View>

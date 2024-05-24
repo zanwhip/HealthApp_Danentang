@@ -34,6 +34,7 @@ const LoginScreen2 = ({ navigation }) => {
         throw error;
       }
       if (data != null) {
+        
         dispatch(getSessionId(data.user.id));
         navigation.navigate('BottomTabNavigation');
       } else {

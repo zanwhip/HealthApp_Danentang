@@ -5,6 +5,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS } from '../constants';
 import { ProgressChart} from "react-native-chart-kit";
+import { useSelector } from 'react-redux';
+import supabase from '../config/database';
 
 const chartData = {
     labels: ["a", "b", "c"], 
@@ -29,6 +31,9 @@ const chartData = {
     fillShadowGradient: "rgba(0, 255, 0, 0.5)",
     fillShadowGradientOpacity: 1,
   };
+
+
+
   // Function to convert hex color to RGB
   function hexToRgb(hex) {
     // Kiểm tra xem hex có tồn tại không
@@ -40,6 +45,30 @@ const chartData = {
   }
 const AddExerciseScreen = ({navigation, route}) => {
   const { exercise } = route.params;
+  const sessionId = useSelector((state) => state);
+  console.log(sessionId)
+  const insertToDb = async () => {
+    try {
+      const { error } = await supabase.from("ExProcess").insert({
+        Time: exercise.Time,
+        calory : 0,
+        step : 0,
+        IdExercise: exercise.id,
+        IdUser: sessionId.reducers[(sessionId.reducers.length-1)],
+      });
+      console.log(error)
+      if(error == null) {
+        navigation.navigate('ExerciseDailyDiary',sessionId.reducers[(sessionId.reducers.length-1)])
+      }
+  
+      
+    } catch (error) {
+      console.log(">>>. Error while creating table ExProcess ! == ",error)
+    }
+  }
+
+
+
   return (
     <View>
       <View style={styles.header}>
@@ -48,7 +77,7 @@ const AddExerciseScreen = ({navigation, route}) => {
       <Ionicons name="arrow-back" size={36} color="#fff" />
     </TouchableOpacity>
     <Text style={styles.title}>Add Exercise</Text>
-    <TouchableOpacity onPress={() => navigation.navigate('ExerciseDailyDiary')}>
+    <TouchableOpacity onPress={() => insertToDb()}>
     <MaterialIcons name="done" size={36} color="#fff" />
     </TouchableOpacity>
   </View>
