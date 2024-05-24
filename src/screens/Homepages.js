@@ -15,30 +15,52 @@ import { Pedometer } from 'expo-sensors';
 import { ProgressChart } from 'react-native-chart-kit';
 import supabase from "../config/database";
 import { useSelector } from 'react-redux';
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
+
 
 const Homepages = ({ navigation }) => {
 
+  useEffect(() => {
+    fetchWaterData();
+    const requestPermissions = async () => {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      if (status !== 'granted') {
+        alert('You need to enable notifications in settings.');
+      }
+    };
+
+    requestPermissions();
+  }, []);
+
+  const sendNotification = async () => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'Water Reminder',
+        body: 'Please drink some water. Your water intake is less than 2000ml.',
+        sound: 'default',
+      },
+      trigger: null, // Send immediately
+    });
+  };
+
+
  // Khai báo state để lưu trữ số liệu water và số lần nhấn nút plus
  const [numberWater, setNumberWater] = useState(0);
-
  const sessionId = useSelector((state) => state);
-
  const IdUser =sessionId.reducers[0]
 
-//  console.log('dfygsdfdjhfdsfhds              ',IdUser);
 
  const fetchWaterData = () => {
   supabase
     .from('Water')
     .select('numberWater')
-    .eq('idUser', IdUser) // Lọc theo IdUser hiện tại
+    .eq('idUser', IdUser) 
     .then(response => {
-      // Kiểm tra nếu có kết quả trả về
-      if (response.data.length > 0) {
-        // Lấy số liệu nước từ kết quả trả về và cập nhật giá trị numberWater
-        setNumberWater(response.data[0].numberWater);
+     if (response.data.length > 0) {
+       setNumberWater(response.data[0].numberWater);
       } else {
-        // Nếu không có kết quả, giữ nguyên giá trị hiện tại của numberWater
+        
       }
     })
     .catch(error => {
@@ -46,12 +68,10 @@ const Homepages = ({ navigation }) => {
     });
 };
 
-// Gọi hàm fetchWaterData trong useEffect để lấy dữ liệu khi component được tạo ra
 useEffect(() => {
   fetchWaterData();
 }, []);
 
- // Function to handle button press
 const handlePlusButtonPress = () => {
   supabase
     .from('Water')
@@ -59,8 +79,7 @@ const handlePlusButtonPress = () => {
     .eq('idUser', IdUser)
     .then(deleteResponse => {
       console.log('Rows deleted successfully:', deleteResponse);
-      // Sau khi xóa thành công, thêm một bản ghi mới
-      supabase
+     supabase
         .from('Water')
         .insert([
           { 
@@ -71,7 +90,13 @@ const handlePlusButtonPress = () => {
         .then(insertResponse => {
           console.log('New row added successfully:', insertResponse);
           // Cập nhật giá trị numberWater
-          setNumberWater(numberWater => numberWater + 100);
+          setNumberWater(numberWater => {
+            const newNumberWater = numberWater + 100;
+            if (newNumberWater < 2000) {
+              sendNotification();
+            }
+            return newNumberWater;
+          });
         })
         .catch(insertError => {
           console.error('Error adding new row:', insertError);
@@ -81,6 +106,19 @@ const handlePlusButtonPress = () => {
       console.error('Error deleting rows:', deleteError);
     });
 };
+
+
+// const sendNotification = async () => {
+//   await scheduleNotificationAsync({
+//     content: {
+//       title: 'Water Reminder',
+//       body: 'Please drink some water. Your water intake is less than 2000ml.',
+//       sound: 'default',
+//     },
+//     trigger: null, // Send immediately
+//   });
+// };
+
 
   const chartConfig = {
     backgroundGradientFrom: "#fff",

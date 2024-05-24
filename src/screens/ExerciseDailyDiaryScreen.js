@@ -12,9 +12,6 @@ import supabase from "../config/database";
 import TimeCount from '../components/TimeCount';
 
 
-const cals = 100;
-const exercises = 40;
-const TimeExercise = 10;
 const chartData = {
     labels: ["", "", "c"], 
     data: [,, 0.7],
@@ -34,29 +31,58 @@ const chartData = {
    
   
 const ExerciseDailyDiaryScreen =  ({navigation}) => {
+//   const IniStep =  
+const [filteredExercises, setFilteredExercises] = useState([]);
+const [steps, setSteps] = useState(0);
+const [calories, setCalories] = useState(0);
 
+const route = useRoute();
 
-  const [steps, setSteps] = useState(0);
-   const route = useRoute();
+useEffect(() => {
+    async function fetchExerciseProcessData() {
+        let { data: ExerciseProcess, error } = await supabase
+            .from('ExProcess')
+            .select(`*, Exercise(id, typeExercise, CaloriesExercise)`);
 
-  useEffect(() => {
-    Pedometer.isAvailableAsync().then(
-      (result) => {
-        if (result) {
-          const subscription = Pedometer.watchStepCount((result) => {
-            setSteps(result.steps);
-          });
-
-          return () => {
-            subscription && subscription.remove();
-          };
+        if (error) {
+            console.error("Error fetching data:", error);
+        } else {
+            console.log("Exercise data:", ExerciseProcess);
+            setFilteredExercises(ExerciseProcess);
         }
-      },
-      (error) => {
-        console.error('Could not get Pedometer availability:', error);
-      }
+    }
+
+    fetchExerciseProcessData();
+}, []);
+
+useEffect(() => {
+    Pedometer.isAvailableAsync().then(
+        (result) => {
+            if (result) {
+                const subscription = Pedometer.watchStepCount((result) => {
+                    setSteps(result.steps);
+                });
+
+                return () => {
+                    subscription && subscription.remove();
+                };
+            }
+        },
+        (error) => {
+            console.error('Could not get Pedometer availability:', error);
+        }
     );
-  }, []);
+}, []);
+
+// Tính toán lượng calo và console log
+useEffect(() => {
+    filteredExercises.forEach((item) => {
+        const elapsedTime = item.Time; // Thời gian của bài tập
+        const caloriesBurned = item.Exercise.CaloriesExercise * elapsedTime;
+        console.log(`Calories burned for ${item.Exercise.typeExercise}:`, caloriesBurned);
+    });
+}, [filteredExercises]);
+
 
     
   return (
@@ -129,15 +155,6 @@ const ExerciseDailyDiaryScreen =  ({navigation}) => {
             </View>
 
 
-            <View style={{ justifyContent :'center', alignContent :'center', alignItems :'center' , paddingHorizontal : 10}}>
-            <Text style={{ marginTop : 10, fontSize : 20, fontWeight :"400" , marginLeft : -100,}}>Steps</Text>
-            <Text style={{ color : '#737373', fontSize : 12,  marginLeft : 30}}>2/5 </Text>
-            <View style={{ flexDirection :'row', height : 30, width : '100%'}}>  
-            <Image source={require('../assets/icon/routine.png')} style={{ height : 30, width : 30, marginRight : 6 }} />          
-            <Progress.Bar progress={40 / 100} width={120} height={18} borderRadius={7} color='#B50036' style={{margin : 6}}/>
-            </View>
-            </View>
-
         </View>
         </View>
         
@@ -152,39 +169,21 @@ const ExerciseDailyDiaryScreen =  ({navigation}) => {
           </View>
            
         </View>
-
-        <View style={{ height : 70, width : '100%', marginHorizontal : 20, backgroundColor : '#F6F5F5', borderRadius : 10, flexDirection : 'row', marginTop : 12, justifyContent : 'space-between', paddingHorizontal : 20, alignItems:'center'}}>
-        <Image source={require('../assets/icon/dance.png')} style={{ height : 50, width : 50, marginRight : 6 }} />     
-        <View style={{ left : -60 }}>
-            <Text style={{ fontSize : 18,  }}>Dance</Text>
-            <Text style={{ color : '#737373' }}>1 hr</Text>
-        </View>
-        <View>
-           <TimeCount duration={TimeExercise} />
-        </View>
-        </View>
         
-        <View style={{ height : 70, width : '100%', marginHorizontal : 20, backgroundColor : '#F6F5F5', borderRadius : 10, flexDirection : 'row', marginTop : 12, justifyContent : 'space-between', paddingHorizontal : 20, alignItems:'center'}}>
-        <Image source={require('../assets/icon/run.png')} style={{ height : 50, width : 50, marginRight : 6 }} />     
-        <View style={{ left : -40 }}>
-            <Text style={{ fontSize : 18,  }}>Dance</Text>
-            <Text style={{ color : '#737373' }}>1 hr</Text>
-        </View>
-        <View>
-           <TimeCount duration={TimeExercise} />
-        </View>
-        </View>
+        {filteredExercises.map((item) => (
+            
+                  <View style={{ height : 70, width : '100%', marginHorizontal : 20, backgroundColor : '#F6F5F5', borderRadius : 10, flexDirection : 'row', marginTop : 12, justifyContent : 'space-between', paddingHorizontal : 20, alignItems:'center'}}>
+                  <Image source={require('../assets/icon/run.png')} style={{ height : 50, width : 50, marginRight : 6 }} />     
+                  <View style={{ left : -40 }}>
+                      <Text style={{ fontSize : 18,  }}>{item.Exercise.typeExercise}</Text>
+                      <Text style={{ color : '#737373' }}>{item.Time}s</Text>
+                  </View>
+                  <View>
+                     <TimeCount duration={item.Time} />
+                  </View>
+                  </View>
+        ))}
         
-        <View style={{ height : 70, width : '100%', marginHorizontal : 20, backgroundColor : '#F6F5F5', borderRadius : 10, flexDirection : 'row', marginTop : 12, justifyContent : 'space-between', paddingHorizontal : 20, alignItems:'center'}}>
-        <Image source={require('../assets/icon/run.png')} style={{ height : 50, width : 50, marginRight : 6 }} />     
-        <View style={{ left : -40 }}>
-            <Text style={{ fontSize : 18,  }}>Dance</Text>
-            <Text style={{ color : '#737373' }}>1 hr</Text>
-        </View>
-        <View>
-           <TimeCount duration={TimeExercise} />
-        </View>
-        </View>
     </View>
       </View>
 

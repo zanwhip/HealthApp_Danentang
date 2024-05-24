@@ -8,7 +8,7 @@ import {
 import { AntDesign } from '@expo/vector-icons';
 import { COLORS } from '../constants';
 import supabase from '../config/database';
-import React, { useEffect, useState } from 'react'; // Import useState from 'react'
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSessionId } from '../redux/actions/Actions';
 
@@ -19,8 +19,9 @@ const LoginScreen2 = ({ navigation }) => {
   const dispatch = useDispatch();
   const sessionID = useSelector((state) => state);
   useEffect(() => {
-    console.log(sessionID)
+    console.log(sessionID);
   }, [sessionID]);
+
   const handleLogin = async () => {
     try {
       setLoading(true);
@@ -33,9 +34,7 @@ const LoginScreen2 = ({ navigation }) => {
         throw error;
       }
       if (data != null) {
-        
         dispatch(getSessionId(data.user.id));
-
         navigation.navigate('BottomTabNavigation');
       } else {
         showNotification('error', 'Log in failed. Please try again.');
@@ -47,14 +46,15 @@ const LoginScreen2 = ({ navigation }) => {
       setLoading(false);
     }
   };
+
   return (
     <View>
       <View style={styles.container}>
         <TouchableOpacity>
           <AntDesign
-            name='arrowleft'
+            name="arrowleft"
             size={27}
-            color='black'
+            color="black"
             style={styles.icon}
           />
         </TouchableOpacity>
@@ -65,15 +65,15 @@ const LoginScreen2 = ({ navigation }) => {
           value={email}
           onChangeText={setEmail}
           style={styles.input}
-          placeholder='Email Address'
-          keyboardType='email-address'
+          placeholder="Email Address"
+          keyboardType="email-address"
         />
         <TextInput
           value={password}
           onChangeText={setPassword}
           secureTextEntry={true}
           style={styles.input}
-          placeholder='Password'
+          placeholder="Password"
         />
       </View>
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
@@ -87,6 +87,7 @@ const LoginScreen2 = ({ navigation }) => {
           justifyContent: 'center',
           alignItems: 'center',
         }}
+        onPress={() => navigation.navigate('ForgotPasswordScreen')}
       >
         <Text style={{ color: COLORS.primary, marginTop: 20 }}>
           Forgot Password ?
@@ -189,4 +190,5 @@ const styles = StyleSheet.create({
     borderWidth: 0.2,
   },
 });
+
 export default LoginScreen2;

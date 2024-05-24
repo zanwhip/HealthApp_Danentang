@@ -8,30 +8,39 @@ import EditDailyGoalsScreen from '../screens/EditDailyGoalsScreen';
 import ExerciseDailyDiaryScreen from '../screens/ExerciseDailyDiaryScreen';
 import ExerciseDetailsScreen from '../screens/ExerciseDetailsScreen';
 import ProfileFoodScreen from '../screens/ProfileFoodScreen';
-// PHƯƠNG HÀ
 import AddFood_GoldfishScreen from '../screens/AddFood_GoldfishScreen';
 import AddFood_TofuScreen from '../screens/AddFood_TofuScreen';
 import SearchBreakfast from '../screens/SearchBreakfast';
 import SearchExercise from '../screens/SearchExercise';
-//Lê văn hải
 import CalendarScreen from '../screens/CalendarScreen';
 import LoginScreen from '../screens/LoginScreen';
 import LoginScreen1 from '../screens/LoginScreen1';
 import LoginScreen2 from '../screens/LoginScreen2';
 import SignUpScreen from '../screens/SignUpScreen';
-
 import SearchFoodScreen from '../screens/SearchFoodScreen';
 import APIcodeFood from '../screens/APIcodeFoodScreen';
 import ChatScreen from '../screens/WelcomeChatScreen1';
 import WelcomeChatScreen from '../screens/ChatScreen';
-
 import PlanScreen from '../screens/PlanScreen';
-
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-
 import DiaryFoodScreen from '../screens/DiaryFoodScreen';
 import UserInformationScreen from '../screens/UserInformationScreen';
+import ForgotPasswordScreen from '../screens/ForgotPasswordScreen ';
+import { Linking } from 'react-native';
 
+const linking = {
+  prefixes: ['exp://192.168.100.8:8081'], // Thay bằng URL thực tế của bạn
+  config: {
+    screens: {
+      ResetPasswordScreen: {
+        path: 'reset-password',
+        parse: {
+          access_token: (token) => `${token}`,
+        },
+      },
+    },
+  },
+};
 const Stack = createNativeStackNavigator();
 
 const client = new ApolloClient({
@@ -56,7 +65,7 @@ function AppNavigation() {
           <Stack.Screen name='SignUpScreen' component={SignUpScreen} />
           <Stack.Screen name='UserInformationScreen' component={UserInformationScreen} />
          
-         
+          <Stack.Screen name='ForgotPasswordScreen' component={ForgotPasswordScreen} />
           <Stack.Screen name='BottomTabNavigation' component={BottomTabNavigation} options={{ headerShown: false,}}
           />
           <Stack.Screen name='chat' component={ChatScreen} />
