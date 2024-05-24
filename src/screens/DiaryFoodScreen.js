@@ -14,7 +14,7 @@ import SwitchButton from '../components/SwitchButton';
 import { COLORS } from '../constants';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { Divider, Button } from '@rneui/themed';
-import {  useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const DiaryFoodScreen = ({ navigation }) => {
   const switchBtnContent = [
@@ -29,23 +29,53 @@ const DiaryFoodScreen = ({ navigation }) => {
       onChecked: false,
     },
   ];
-  const sessionID = useSelector((state) => state);
+  const sessionID = useSelector((state) => state.reducers);
 
+  console.log(sessionID[sessionID.length - 1].uid);
   return (
     <View style={styles.container}>
       <HeaderToday navigation={navigation} />
-      <ScrollView style={{ paddingHorizontal: 20 ,}}>
-        <View style={{ justifyContent :'center', alignContent : 'center', alignItems : 'center', width : '100%' }}>
-        <View style={styles.type}>
-        <TouchableOpacity style={{  width : '50%', justifyContent: 'center', height : 30, alignItems :'center', backgroundColor : COLORS.primary , borderRadius : 15}}   >
-            <Text style={{ color: '#fff'}}>Food</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{ marginHorizontal : 10, width : '40%', justifyContent: 'center', height : 30, alignItems :'center' }} onPress={() => navigation.navigate('ExerciseDailyDiary',sessionID.reducers[(sessionID.reducers.length-1)])}>
-            <Text style={{ color:  COLORS.primary }}>Exercise</Text>
-        </TouchableOpacity>
-    </View>
+      <ScrollView style={{ paddingHorizontal: 20 }}>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+          }}
+        >
+          <View style={styles.type}>
+            <TouchableOpacity
+              style={{
+                width: '50%',
+                justifyContent: 'center',
+                height: 30,
+                alignItems: 'center',
+                backgroundColor: COLORS.primary,
+                borderRadius: 15,
+              }}
+            >
+              <Text style={{ color: '#fff' }}>Food</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                marginHorizontal: 10,
+                width: '40%',
+                justifyContent: 'center',
+                height: 30,
+                alignItems: 'center',
+              }}
+              onPress={() =>
+                navigation.navigate(
+                  'ExerciseDailyDiary',
+                  sessionID[sessionID.length - 1].uid
+                )
+              }
+            >
+              <Text style={{ color: COLORS.primary }}>Exercise</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-     
 
         <Box
           disabled={true}
@@ -189,9 +219,7 @@ const DiaryFoodScreen = ({ navigation }) => {
                     />
                   }
                   buttonStyle={styles.addBtn}
-                  onPress={() => {
-                    console.log('hi');
-                  }}
+                  onPress={() => {}}
                 />
                 <Button title='Add' type='clear' />
               </View>
@@ -373,14 +401,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
-  type :{
-    width : 200, 
-    height : 30, 
-    margin : 20, 
-    backgroundColor : '#fff', 
-    borderRadius : 15, 
-   flexDirection : 'row',
-   
-     },
+  type: {
+    width: 200,
+    height: 30,
+    margin: 20,
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    flexDirection: 'row',
+  },
 });
 export default DiaryFoodScreen;

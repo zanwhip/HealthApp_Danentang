@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TextInput, Button, ActivityIndicator, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TextInput,
+  Button,
+  ActivityIndicator,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Camera } from 'expo-camera';
 import { gql, useLazyQuery } from '@apollo/client';
 import { Ionicons } from '@expo/vector-icons';
 import FoodListItem from '../components/FoodListItem';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import supabase from '../config/database';
 
 const query = gql`
   query search($ingr: String, $upc: String) {
@@ -47,7 +58,7 @@ const SearchFoodScreen = ({ navigation }) => {
   };
 
   const toggleCameraFacing = () => {
-    setFacing(current => (current === 'back' ? 'front' : 'back'));
+    setFacing((current) => (current === 'back' ? 'front' : 'back'));
   };
 
   if (!permission) {
@@ -59,8 +70,10 @@ const SearchFoodScreen = ({ navigation }) => {
     // Camera permissions are not granted yet.
     return (
       <View style={styles.container}>
-        <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
-        <Button onPress={requestPermission} title="Grant permission" />
+        <Text style={{ textAlign: 'center' }}>
+          We need your permission to show the camera
+        </Text>
+        <Button onPress={requestPermission} title='Grant permission' />
       </View>
     );
   }
@@ -82,7 +95,10 @@ const SearchFoodScreen = ({ navigation }) => {
           }}
         >
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={toggleCameraFacing}
+            >
               <Text style={styles.text}>Flip Camera</Text>
             </TouchableOpacity>
           </View>
@@ -102,7 +118,9 @@ const SearchFoodScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+      <View
+        style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}
+      >
         <TextInput
           value={search}
           onChangeText={setSearch}

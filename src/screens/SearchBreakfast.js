@@ -100,8 +100,6 @@ const SearchBreakfast = ({ navigation }) => {
   var [recents, setRecents] = useState(true);
   var [favorites, setFavorites] = useState(false);
 
-  const breakfastItems = useSelector((state) => state);
-  console.log(breakfastItems);
   const switchBtnContent = [
     {
       id: 1,

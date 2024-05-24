@@ -1,10 +1,10 @@
-import { ADD_BREAKFAST, SESSION_ID } from './ActionTypes';
+import { ADD_FOOD, USER_ID } from './ActionTypes';
 
-export const addItemToBreakfast = (item) => ({
-  type: ADD_BREAKFAST,
+export const addItemToFood = (item) => ({
+  type: ADD_FOOD,
   payload: item,
 });
-export const getSessionId = (id) => ({
-  type: SESSION_ID,
+export const getUserId = (id) => ({
+  type: USER_ID,
   payload: id,
 });

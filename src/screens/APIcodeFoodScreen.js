@@ -1,55 +1,76 @@
-// screens/HomeScreen.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
   FlatList,
-  Button,
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
-  TextInput,
 } from 'react-native';
-import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import dayjs from 'dayjs';
+import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
+import supabase from '../config/database';
 import FoodLogListItem from '../components/FoodLogListItem';
 import { COLORS } from '../constants';
-import { AntDesign, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 
-const query = gql`
-  query foodLogsForDate($date: Date!, $user_id: String!) {
-    foodLogsForDate(date: $date, user_id: $user_id) {
-      food_id
-      user_id
-      created_at
-      label
-      kcal
-      id
-    }
-  }
-`;
 const APIcodeFood = ({ navigation }) => {
   const user_id = 'vadim';
+  const [foodData, setFoodData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const { data, loading, error } = useQuery(query, {
-    variables: {
-      date: dayjs().format('YYYY-MM-DD'),
-      user_id,
-    },
-  });
+  const fetchFoodLogs = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('Food')
+        .select()
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        setError(error.message);
+      } else {
+        setFoodData(data);
+      }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchFoodLogs();
+    }, [])
+  );
 
   if (loading) {
-    return <ActivityIndicator />;
+    return (
+      <View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: COLORS.primary,
+          height: '100%',
+        }}
+      >
+        <ActivityIndicator />
+      </View>
+    );
   }
 
   if (error) {
     return <Text>Failed to fetch data</Text>;
   }
 
-  const totalCalories = data.foodLogsForDate.reduce(
-    (total, item) => total + item.kcal,
-    0
-  );
+  const totalCalories = foodData.reduce((total, item) => total + item.cal, 0);
+  const foodList = foodData.map((item) => item.nameFood);
+
+  const handleDeleteFood = (idFood) => {
+    setFoodData(foodData.filter((item) => item.idFood !== idFood));
+  };
 
   return (
     <View style={styles.container}>
@@ -62,13 +83,7 @@ const APIcodeFood = ({ navigation }) => {
             style={{ justifyContent: 'center' }}
           />
         </TouchableOpacity>
-        <View
-          style={{
-            width: '100%',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        <View style={styles.headerTitle}>
           <Text style={styles.Text}>Add Food</Text>
         </View>
         <TouchableOpacity onPress={() => navigation.navigate('SearchFood')}>
@@ -79,27 +94,20 @@ const APIcodeFood = ({ navigation }) => {
       <View style={styles.headerRow}>
         <Text></Text>
         <Text style={styles.subtitle}>Calories</Text>
-
-        <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>
-          {totalCalories}
-        </Text>
+        <Text style={styles.calorieText}>{totalCalories}</Text>
       </View>
-      <View
-        style={{
-          height: '100%',
-          backgroundColor: COLORS.background,
-          borderTopLeftRadius: 15,
-          borderTopRightRadius: 15,
-          padding: 15,
-        }}
-      >
+
+      <View style={styles.listContainer}>
         <FlatList
           style={{ marginBottom: 150 }}
           showsVerticalScrollIndicator={false}
-          data={data.foodLogsForDate}
+          data={foodData}
           contentContainerStyle={{ gap: 5 }}
-          renderItem={({ item }) => <FoodLogListItem item={item} />}
+          renderItem={({ item }) => (
+            <FoodLogListItem item={item} onDelete={handleDeleteFood} />
+          )}
         />
+        <Text>{foodData.foodName}</Text>
       </View>
     </View>
   );
@@ -130,30 +138,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 30,
   },
+  headerTitle: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   Text: {
     fontSize: 24,
     fontWeight: 'bold',
     color: 'white',
   },
-  input: {
-    height: 50,
-    width: '85%',
-    color: '#7F7F7F',
+  calorieText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
-  container_1: {
-    backgroundColor: '#EEEEEE',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    flex: 1,
-    padding: 10,
-  },
-  search: {
-    width: '90%',
-    backgroundColor: '#FFF',
-    justifyContent: 'center',
-    marginTop: 15,
-    alignItems: 'center',
-    borderRadius: 250,
+  listContainer: {
+    height: '100%',
+    backgroundColor: COLORS.background,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    padding: 15,
   },
 });
 

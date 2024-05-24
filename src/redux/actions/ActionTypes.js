@@ -1,3 +1,2 @@
-export const ADD_BREAKFAST = 'ADD_BREAKFAST';
-export const SESSION_ID = 'SESSION_ID';
-
+export const ADD_FOOD = 'ADD_FOOD';
+export const USER_ID = 'USER_ID';

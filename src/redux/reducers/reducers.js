@@ -1,17 +1,14 @@
-import { ADD_BREAKFAST, SESSION_ID } from '../actions/ActionTypes';
+import { ADD_FOOD, USER_ID } from '../actions/ActionTypes';
 
 const reducers = (state = [], action) => {
   switch (action.type) {
-    case ADD_BREAKFAST:
-      return [...state, action.payload];
-    case SESSION_ID: 
-    return [...state, action.payload];
+    case ADD_FOOD:
+      return [...state, { food: action.payload }];
+    case USER_ID:
+      return [...state, { uid: action.payload }];
     default:
       return state;
-    
   }
 };
-
-
 
 export default reducers;

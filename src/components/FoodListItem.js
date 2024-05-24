@@ -1,9 +1,12 @@
 // FoodListItem.js
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { gql, useMutation } from '@apollo/client';
 import { useNavigation } from '@react-navigation/native';
+import supabase from '../config/database';
+import { useDispatch } from 'react-redux';
+import { addItemToFood } from '../redux/actions/Actions';
 
 const INSERT_FOOD_LOG_MUTATION = gql`
   mutation MyMutation(
@@ -29,21 +32,19 @@ const INSERT_FOOD_LOG_MUTATION = gql`
 `;
 
 const FoodListItem = ({ item }) => {
-  const [logFood] = useMutation(INSERT_FOOD_LOG_MUTATION, {
-    refetchQueries: ['foodLogsForDate'],
-  });
   const navigation = useNavigation();
 
   const onPlusPressed = async () => {
-    await logFood({
-      variables: {
-        food_id: item.food.foodId,
-        kcal: item.food.nutrients.ENERC_KCAL,
-        label: item.food.label,
-        user_id: 'vadim',
-      },
+    const { error } = await supabase.from('Food').insert({
+      nameFood: item.food.label,
+      cal: item.food.nutrients.ENERC_KCAL,
     });
-    navigation.goBack();
+
+    if (error) {
+      console.log(error);
+    } else {
+      navigation.goBack();
+    }
   };
 
   return (
@@ -56,7 +57,7 @@ const FoodListItem = ({ item }) => {
           {item.food.nutrients.ENERC_KCAL} cal, {item.food.brand}
         </Text>
       </View>
-      <AntDesign name="pluscircleo" size={24} color="royalblue" />
+      <AntDesign name='pluscircleo' size={24} color='royalblue' />
     </TouchableOpacity>
   );
 };

@@ -10,17 +10,13 @@ import { COLORS } from '../constants';
 import supabase from '../config/database';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSessionId } from '../redux/actions/Actions';
+import { getUserId } from '../redux/actions/Actions';
 
 const LoginScreen2 = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const sessionID = useSelector((state) => state);
-  useEffect(() => {
-    console.log(sessionID);
-  }, [sessionID]);
 
   const handleLogin = async () => {
     try {
@@ -34,8 +30,7 @@ const LoginScreen2 = ({ navigation }) => {
         throw error;
       }
       if (data != null) {
-        
-        dispatch(getSessionId(data.user.id));
+        dispatch(getUserId(data.user.id));
         navigation.navigate('BottomTabNavigation');
       } else {
         showNotification('error', 'Log in failed. Please try again.');
@@ -53,9 +48,9 @@ const LoginScreen2 = ({ navigation }) => {
       <View style={styles.container}>
         <TouchableOpacity>
           <AntDesign
-            name="arrowleft"
+            name='arrowleft'
             size={27}
-            color="black"
+            color='black'
             style={styles.icon}
           />
         </TouchableOpacity>
@@ -66,15 +61,15 @@ const LoginScreen2 = ({ navigation }) => {
           value={email}
           onChangeText={setEmail}
           style={styles.input}
-          placeholder="Email Address"
-          keyboardType="email-address"
+          placeholder='Email Address'
+          keyboardType='email-address'
         />
         <TextInput
           value={password}
           onChangeText={setPassword}
           secureTextEntry={true}
           style={styles.input}
-          placeholder="Password"
+          placeholder='Password'
         />
       </View>
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
