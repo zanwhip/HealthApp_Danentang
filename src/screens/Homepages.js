@@ -42,10 +42,6 @@ const Homepages = ({ navigation }) => {
       });
   };
 
-  useEffect(() => {
-    fetchWaterData();
-  }, []);
-
   const handlePlusButtonPress = () => {
     supabase
       .from('Water')
@@ -79,17 +75,6 @@ const Homepages = ({ navigation }) => {
         console.error('Error deleting rows:', deleteError);
       });
   };
-
-  // const sendNotification = async () => {
-  //   await scheduleNotificationAsync({
-  //     content: {
-  //       title: 'Water Reminder',
-  //       body: 'Please drink some water. Your water intake is less than 2000ml.',
-  //       sound: 'default',
-  //     },
-  //     trigger: null, // Send immediately
-  //   });
-  // };
 
   const chartConfig = {
     backgroundGradientFrom: '#fff',

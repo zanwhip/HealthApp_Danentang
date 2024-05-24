@@ -57,7 +57,7 @@ const ExploreScreen = ({navigation}) => {
     </View>
     </View>
   </ImageBackground>
-        </TouchableOpacity>
+        </TouchableOpacity>onPress={() => navigation.navigate('Plan')}
        
   </View>
 

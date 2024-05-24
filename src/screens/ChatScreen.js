@@ -1,4 +1,4 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Bubble, GiftedChat, InputToolbar, Send } from 'react-native-gifted-chat'
 import { useState } from 'react';
@@ -8,9 +8,10 @@ import GlobalApi from '../Services/GlobalApi';
 import { FontAwesome } from '@expo/vector-icons';
 import ChatFaceData from '../Services/ChatFaceData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AntDesign } from '@expo/vector-icons';
 
 CHAT_BOT_FACE='https://res.cloudinary.com/dknvsbuyy/image/upload/v1685678135/chat_1_c7eda483e3.png'
-export default function ChatScreen() {
+export default function ChatScreen({navigation}) {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
     const [chatFaceColor,setChatFaceColor]=useState();
@@ -92,6 +93,7 @@ export default function ChatScreen() {
 
    const renderBubble =(props)=> {
         return (
+          
           <Bubble
             {...props}
             wrapperStyle={{
@@ -147,7 +149,14 @@ export default function ChatScreen() {
     }
   return (
     <View style={{ flex: 1,backgroundColor:'#fff' }}>
-
+<TouchableOpacity onPress={() => navigation.navigate('chat')} style={{ margin : 30, height : 50, width : 50,  }}>
+          <AntDesign
+            name='arrowleft'
+            size={30}
+            color='#000'
+            style={{ justifyContent: 'center' }}
+          />
+        </TouchableOpacity>
       <GiftedChat
       messages={messages}
       isTyping={loading}
